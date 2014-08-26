@@ -13,11 +13,13 @@ describe 'mariadb::galera55' do
     runner.converge('mariadb::galera55')
   end
   let(:shellout) do
-    double(run_command: nil, error!: nil, stdout: '1', stderr: double(empty?: true), exitstatus: 0, :live_stream= => nil)
+    double(run_command: nil, error!: nil, stdout: '1',
+           stderr: double(empty?: true), exitstatus: 0, :live_stream= => nil)
   end
   before do
     allow(Mixlib::ShellOut).to receive(:new).and_return(shellout)
-    stub_search(:node, "mariadb_galera_cluster_name:galera_cluster").and_return([stub_node("galera1"),stub_node("galera2")])
+    stub_search(:node, 'mariadb_galera_cluster_name:galera_cluster')
+      .and_return([stub_node('galera1'), stub_node('galera2')])
   end
 
   it 'Installs Mariadb package' do

@@ -14,11 +14,14 @@ describe 'mariadb::galera10-rsync' do
     runner.converge('mariadb::galera10')
   end
   let(:shellout) do
-    double(run_command: nil, error!: nil, stdout: '1', stderr: double(empty?: true), exitstatus: 0, :live_stream= => nil)
+    double(run_command: nil, error!: nil, stdout: '1',
+           stderr: double(empty?: true), exitstatus: 0,
+           :live_stream= => nil)
   end
   before do
     allow(Mixlib::ShellOut).to receive(:new).and_return(shellout)
-    stub_search(:node, "mariadb_galera_cluster_name:galera_cluster").and_return([stub_node("galera1"),stub_node("galera2")])
+    stub_search(:node, 'mariadb_galera_cluster_name:galera_cluster')
+      .and_return([stub_node('galera1'), stub_node('galera2')])
   end
 
   it 'Installs Mariadb package' do
@@ -65,15 +68,23 @@ describe 'mariadb::galera10-rsync' do
   end
 
   it 'Does not correct Grants for debian-sys-maint user if it s ok' do
-    expect(Mixlib::ShellOut).to receive(:new).with("/usr/bin/mysql --user=\"debian-sys-maint\" --password=\"please-change-me\" -r -B -N -e \"SELECT 1\"")
+    expect(Mixlib::ShellOut).to receive(:new)
+      .with('/usr/bin/mysql --user="debian-sys-maint" ' + \
+            '--password="please-change-me" -r -B -N -e "SELECT 1"')
     expect(chef_run).to_not run_execute('correct-debian-grants')
   end
 
   context 'debian-sys-maint is not good' do
-    let(:shellout) { double(run_command: nil, error!: true, stdout: 'ERROR 1045 (28000): Access denied for user \'debian-sys-maint\'@\'localhost\' (using password: YES)', stderr: double(empty?: false), exitstatus: 1, :live_stream= => nil) }
-    before {
+    let(:shellout) do
+      double(run_command: nil, error!: true,
+             stdout: 'ERROR 1045 (28000): Access denied for user ' + \
+               '\'debian-sys-maint\'@\'localhost\' (using password: YES)',
+             stderr: double(empty?: false), exitstatus: 1,
+             :live_stream= => nil)
+    end
+    before do
       allow(Mixlib::ShellOut).to receive(:new).and_return(shellout)
-    }
+    end
     it 'it correct debian-sys-maint grants' do
       expect(chef_run).to run_execute('correct-debian-grants')
     end
@@ -92,11 +103,14 @@ describe 'mariadb::galera10-xtrabackup' do
     runner.converge('mariadb::galera10')
   end
   let(:shellout) do
-    double(run_command: nil, error!: nil, stdout: '1', stderr: double(empty?: true), exitstatus: 0, :live_stream= => nil)
+    double(run_command: nil, error!: nil, stdout: '1',
+           stderr: double(empty?: true), exitstatus: 0,
+           :live_stream= => nil)
   end
   before do
     allow(Mixlib::ShellOut).to receive(:new).and_return(shellout)
-    stub_search(:node, "mariadb_galera_cluster_name:galera_cluster").and_return([stub_node("galera1"),stub_node("galera2")])
+    stub_search(:node, 'mariadb_galera_cluster_name:galera_cluster')
+     .and_return([stub_node('galera1'), stub_node('galera2')])
   end
 
   it 'Installs Mariadb package' do

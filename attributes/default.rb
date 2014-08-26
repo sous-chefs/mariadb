@@ -107,7 +107,8 @@ default['mariadb']['debian']['host']     = 'localhost'
 #
 # mariadb default install configuration
 #
-# install valid values are 'apt', (for now, and 'yum' or 'from_source' in the future)
+# install valid values are 'apt'
+# (only apt for now, and 'yum' or 'from_source' in the future)
 default['mariadb']['install'] = 'apt'
 
 #
