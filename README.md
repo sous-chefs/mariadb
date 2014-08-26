@@ -1,5 +1,10 @@
-mariadb Cookbook
-==============
+MariaDB Cookbook
+================
+
+[![Build Status](https://travis-ci.org/sinfomicien/mariadb.png)](https://travis-ci.org/sinfomicien/mariadb)
+
+Description
+-----------
 
 This cookbook contains all the stuffs to install and configure a mariadb server on a dpkg compliant system (typically debian)
 
