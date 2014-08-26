@@ -1,6 +1,6 @@
 case node['mariadb']['install']
 when 'apt'
-  if node['mariadb']['install']['use_default_repository']
+  if node['mariadb']['apt']['use_default_repository']
     apt_repository "mariadb-5.5" do
       uri "http://ftp.igh.cnrs.fr/pub/mariadb/repo/5.5/debian"
       distribution "wheezy"

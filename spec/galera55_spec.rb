@@ -8,6 +8,7 @@ describe 'mariadb::galera55' do
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
       node.set['mariadb']['rspec'] = true
+      node.set['mariadb']['apt']['use_default_repository'] = true
     end
     runner.converge('mariadb::galera55')
   end
