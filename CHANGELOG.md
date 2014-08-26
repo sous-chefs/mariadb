@@ -3,6 +3,10 @@ mariadb CHANGELOG
 
 This file is used to list changes made in each version of the mariadb cookbook.
 
+0.1.7
+-----
+- [nicolas.blanc] -  Correct a typo (unnecessary call to run_command)
+
 0.1.6
 -----
 - [nicolas.blanc] -  improve Galera configuration management
