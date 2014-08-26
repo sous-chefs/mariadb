@@ -17,12 +17,12 @@
 # limitations under the License.
 #
 
-if node[:mariadb][:galera][:wsrep_sst_method] == 'rsync'
+if node['mariadb']['galera']['wsrep_sst_method'] == 'rsync'
   package 'rsync' do
     action :install
   end
 else
-  if node[:mariadb][:galera][:wsrep_sst_method] == 'xtrabackup'
+  if node['mariadb']['galera']['wsrep_sst_method'] == 'xtrabackup'
     package 'percona-xtrabackup' do
       action :install
     end
@@ -41,14 +41,14 @@ if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo]
 else
   galera_cluster_nodes = search(
     :node, \
-    "mariadb_galera_cluster_name:#{node[:mariadb][:galera][:cluster_name]}"
+    "mariadb_galera_cluster_name:#{node['mariadb']['galera']['cluster_name']}"
   )
 end
 
 first = true
 gcomm = 'gcomm://'
 galera_cluster_nodes.each do |lnode|
-  if lnode.name != node['name']
+  if lnode.name != node.name
     gcomm += ',' unless first
     gcomm += lnode.name
     first = false
@@ -59,17 +59,17 @@ galera_options = {}
 
 galera_options['wsrep_cluster_address'] = gcomm
 galera_options['wsrep_cluster_name']    = \
-  node[:mariadb][:galera][:cluster_name]
+  node['mariadb']['galera']['cluster_name']
 galera_options['wsrep_sst_method']      = \
-  node[:mariadb][:galera][:wsrep_sst_method]
-if node[:mariadb][:galera].attribute?('wsrep_sst_auth')
+  node['mariadb']['galera']['wsrep_sst_method']
+if node['mariadb']['galera'].attribute?('wsrep_sst_auth')
   galera_options['wsrep_sst_auth']        = \
-    node[:mariadb][:galera][:wsrep_sst_auth]
+    node['mariadb']['galera']['wsrep_sst_auth']
 end
 galera_options['wsrep_provider']        = \
-  node[:mariadb][:galera][:wsrep_provider]
-galera_options['wsrep_slave_threads']   = node[:cpu][:total] * 4
-node[:mariadb][:galera][:options].each do |key, value|
+  node['mariadb']['galera']['wsrep_provider']
+galera_options['wsrep_slave_threads']   = node['cpu']['total'] * 4
+node['mariadb']['galera']['options'].each do |key, value|
   galera_options[key] = value
 end
 

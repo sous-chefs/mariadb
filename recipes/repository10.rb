@@ -1,8 +1,8 @@
 case node['mariadb']['install']
 when 'apt'
-  include_recipe 'apt::default'
-
   if node['mariadb']['apt']['use_default_repository']
+    include_recipe 'apt::default'
+
     apt_repository 'mariadb-10.0' do
       uri 'http://ftp.igh.cnrs.fr/pub/mariadb/repo/10.0/debian'
       distribution 'wheezy'

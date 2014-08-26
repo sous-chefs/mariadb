@@ -6,6 +6,6 @@ bundler_args: --without development
 gemfile:
 - Gemfile
 script:
-- bundle exec foodcritic
+- bundle exec foodcritic .
 - bundle exec rubocop
 - bundle exec rspec
