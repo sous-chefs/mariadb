@@ -44,7 +44,7 @@ describe 'mariadb::galera10-rsync' do
 
   it 'Configure Replication' do
     expect(chef_run).to render_file('/etc/mysql/conf.d/replication.cnf')
-      .with_content(%r(^log_bin = /var/log/mysql/mariadb-bin$))
+      .with_content(%r{^log_bin = /var/log/mysql/mariadb-bin$})
   end
 
   it 'Create Galera conf file' do
@@ -55,7 +55,7 @@ describe 'mariadb::galera10-rsync' do
         mode:  '0640'
       )
     expect(chef_run).to render_file('/etc/mysql/conf.d/galera.cnf')
-      .with_content(%r(^wsrep_cluster_address = gcomm://galera1,galera2$))
+      .with_content(%r{^wsrep_cluster_address = gcomm://galera1,galera2$})
   end
 
   it 'Create Debian conf file' do

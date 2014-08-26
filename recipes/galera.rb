@@ -48,11 +48,10 @@ end
 first = true
 gcomm = 'gcomm://'
 galera_cluster_nodes.each do |lnode|
-  if lnode.name != node.name
-    gcomm += ',' unless first
-    gcomm += lnode.name
-    first = false
-  end
+  next unless lnode.name != node.name
+  gcomm += ',' unless first
+  gcomm += lnode.name
+  first = false
 end
 
 galera_options = {}
@@ -82,7 +81,7 @@ template '/etc/mysql/conf.d/galera.cnf' do
   variables galera_template_variables
   owner 'root'
   group 'mysql'
-  mode  '0640'
+  mode '0640'
 end
 
 #
@@ -93,7 +92,7 @@ template '/etc/mysql/debian.cnf' do
   source 'debian.cnf.erb'
   owner 'root'
   group 'root'
-  mode  '0600'
+  mode '0600'
 end
 
 execute 'correct-debian-grants' do
@@ -106,7 +105,7 @@ execute 'correct-debian-grants' do
     node['mariadb']['debian']['user'] + \
     "'@'" + node['mariadb']['debian']['host'] + "' IDENTIFIED BY '" + \
     node['mariadb']['debian']['password'] + "' WITH GRANT OPTION\""
-  action  :run
+  action :run
   only_if do
     cmd = shell_out("/usr/bin/mysql --user=\"" + \
       node['mariadb']['debian']['user'] + \

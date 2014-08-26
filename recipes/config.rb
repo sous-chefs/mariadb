@@ -21,7 +21,7 @@ template '/etc/mysql/my.cnf' do
   source 'my.cnf.erb'
   owner 'root'
   group 'root'
-  mode  '0644'
+  mode '0644'
 end
 
 innodb_options = {}
@@ -57,8 +57,10 @@ innodb_options['innodb_log_buffer_size'] = \
 innodb_options['innodb_file_per_table']  = \
   node['mariadb']['innodb']['file_per_table']
 innodb_options['innodb_open_files']    = node['mariadb']['innodb']['open_files']
-innodb_options['innodb_io_capacity']   = node['mariadb']['innodb']['io_capacity']
-innodb_options['innodb_flush_method']  = node['mariadb']['innodb']['flush_method']
+innodb_options['innodb_io_capacity']   = \
+  node['mariadb']['innodb']['io_capacity']
+innodb_options['innodb_flush_method']  = \
+  node['mariadb']['innodb']['flush_method']
 node['mariadb']['innodb']['options'].each do |key, value|
   innodb_options[key] = value
 end
@@ -71,7 +73,7 @@ template '/etc/mysql/conf.d/innodb.cnf' do
   )
   owner 'root'
   group 'mysql'
-  mode  '0640'
+  mode '0640'
 end
 
 replication_opts = {}
@@ -98,5 +100,5 @@ template '/etc/mysql/conf.d/replication.cnf' do
   )
   owner 'root'
   group 'mysql'
-  mode  '0640'
+  mode '0640'
 end

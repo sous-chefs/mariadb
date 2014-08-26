@@ -38,7 +38,7 @@ describe 'mariadb::galera55' do
 
   it 'Configure Replication' do
     expect(chef_run).to render_file('/etc/mysql/conf.d/replication.cnf')
-      .with_content(%r(^log_bin = /var/log/mysql/mariadb-bin$))
+      .with_content(%r{^log_bin = /var/log/mysql/mariadb-bin$})
   end
 
   it 'Create Galera conf file' do
