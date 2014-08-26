@@ -109,7 +109,6 @@ execute 'correct-debian-grants' do
       cmd = shell_out("/usr/bin/mysql --user=\"" + node['mariadb']['debian']['user'] + \
         "\" --password=\"" + node['mariadb']['debian']['password'] + \
         "\" -r -B -N -e \"SELECT 1\"")
-      cmd.run_command
       cmd.error!
   end
 end
