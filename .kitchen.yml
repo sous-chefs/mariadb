@@ -1,0 +1,20 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: debian-7.6
+    driver_config:
+      box: chef/debian-7.6
+
+suites:
+  - name: default
+    run_list:
+      - recipe[mariadb::default]
+    attributes:
+      mariadb:
+        apt:
+          use_default_repository: true
