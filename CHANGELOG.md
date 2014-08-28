@@ -3,6 +3,10 @@ mariadb CHANGELOG
 
 This file is used to list changes made in each version of the mariadb cookbook.
 
+0.1.8
+-----
+- [nicolas.blanc] -  Add ignore-failure to debian grants correct, as it can break on initial setup
+
 0.1.7
 -----
 - [nicolas.blanc] -  Correct a typo (unnecessary call to run_command)

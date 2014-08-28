@@ -113,4 +113,5 @@ execute 'correct-debian-grants' do
       "\" -r -B -N -e \"SELECT 1\"")
     cmd.error!
   end
+  ignore_failure true
 end
