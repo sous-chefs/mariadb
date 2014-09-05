@@ -4,7 +4,10 @@ at_exit { ChefSpec::Coverage.report! }
 
 describe 'centos::mariadb::default' do
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(platform: 'centos', version: '6.4', step_into: ['mariadb_configuration']) do |node|
+    runner = ChefSpec::Runner.new(
+                                   platform: 'centos', version: '6.4',
+                                   step_into: ['mariadb_configuration']
+                                 ) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
     end
@@ -17,7 +20,7 @@ describe 'centos::mariadb::default' do
 
   it 'Configure includedir in /etc/my.cnf' do
     expect(chef_run).to render_file('/etc/my.cnf')
-      .with_content(/\/etc\/my.cnf.d/)
+      .with_content(%r{/etc/my.cnf.d})
   end
 
   it 'Configure replication in /etc/my.cnf.d/replication.cnf' do
@@ -43,7 +46,10 @@ end
 
 describe 'centos::mariadb::client' do
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(platform: 'centos', version: '6.4', step_into: ['mariadb_configuration']) do |node|
+    runner = ChefSpec::Runner.new(
+                                   platform: 'centos', version: '6.4',
+                                   step_into: ['mariadb_configuration']
+                                 ) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
     end

@@ -4,7 +4,10 @@ at_exit { ChefSpec::Coverage.report! }
 
 describe 'debian::mariadb::galera55' do
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(platform: 'debian', version: '7.4', step_into: ['mariadb_configuration']) do |node|
+    runner = ChefSpec::Runner.new(
+                                   platform: 'debian', version: '7.4',
+                                   step_into: ['mariadb_configuration']
+                                 ) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
       node.set['mariadb']['install']['version'] = '5.5'

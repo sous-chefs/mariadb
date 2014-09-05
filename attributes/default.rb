@@ -1,6 +1,6 @@
 # platform dependent attributes
 case node['platform']
-when "redhat", "centos", "fedora"
+when 'redhat', 'centos', 'fedora'
   default['mariadb']['configuration']['path'] = '/etc'
   default['mariadb']['configuration']['includedir'] = '/etc/my.cnf.d'
   default['mariadb']['mysqld']['socket'] = '/var/lib/mysql/mysql.sock'
@@ -14,7 +14,6 @@ else
   default['mariadb']['client']['socket'] = '/var/run/mysqld/mysqld.sock'
   default['mariadb']['mysqld_safe']['socket'] = '/var/run/mysqld/mysqld.sock'
 end
-
 
 #
 # mysqld default configuration
@@ -119,7 +118,8 @@ default['mariadb']['debian']['host']     = 'localhost'
 #
 # mariadb default install configuration
 #
-# install valid value is 'package', hope to have 'from_source' in the near future
+# install valid value is 'package',
+#  hope to have 'from_source' in the near future
 default['mariadb']['install']['type'] = 'package'
 default['mariadb']['install']['version'] = '10.0'
 

@@ -21,13 +21,13 @@ case node['mariadb']['install']['type']
 when 'package'
   include_recipe "#{cookbook_name}::repository"
 
-  case node["platform"]
-  when "debian", "ubuntu"
+  case node['platform']
+  when 'debian', 'ubuntu'
     package "mariadb-server-#{node['mariadb']['install']['version']}" do
       action :install
     end
-  when "redhat", "centos", "fedora"
-    package "MariaDB-server" do
+  when 'redhat', 'centos', 'fedora'
+    package 'MariaDB-server' do
       action :install
     end
   end

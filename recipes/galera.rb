@@ -22,13 +22,13 @@ when 'package'
   # include MariaDB repositories
   include_recipe "#{cookbook_name}::repository"
 
-  case node["platform"]
-  when "debian", "ubuntu"
+  case node['platform']
+  when 'debian', 'ubuntu'
     package "mariadb-galera-server-#{node['mariadb']['install']['version']}" do
       action :install
     end
-  when "redhat", "centos", "fedora"
-    package "MariaDB-Galera-server" do
+  when 'redhat', 'centos', 'fedora'
+    package 'MariaDB-Galera-server' do
       action :install
     end
   end
@@ -101,14 +101,14 @@ end
 # Under debian system we have to change the debian-sys-maint default password.
 # This password is the same for the overall cluster.
 #
-if platform?("debian","ubuntu")
+if platform?('debian', 'ubuntu')
   template '/etc/mysql/debian.cnf' do
     source 'debian.cnf.erb'
     owner 'root'
     group 'root'
     mode '0600'
   end
-  
+
   execute 'correct-debian-grants' do
     command 'mysql -r -B -N -e "GRANT SELECT, INSERT, UPDATE, DELETE, ' + \
       'CREATE, DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, INDEX, ' + \
