@@ -4,7 +4,7 @@ os = backend.check_os[:family]
 
 includedir = '/etc/mysql/conf.d'
 case os
-when 'Fedora' , 'CentOS', 'RedHat'
+when 'Fedora', 'CentOS', 'RedHat'
   includedir = '/etc/my.cnf.d'
 end
 

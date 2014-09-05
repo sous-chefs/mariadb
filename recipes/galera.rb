@@ -93,7 +93,7 @@ end
 
 mariadb_configuration 'galera' do
   section 'mysqld'
-  option  galera_options
+  option galera_options
   action :add
 end
 
