@@ -39,5 +39,18 @@ describe 'centos::mariadb::default' do
   it 'Configure Replication' do
     expect(chef_run).to add_mariadb_configuration('replication')
   end
+end
 
+describe 'centos::mariadb::client' do
+  let(:chef_run) do
+    runner = ChefSpec::Runner.new(platform: 'centos', version: '6.4', step_into: ['mariadb_configuration']) do |node|
+      node.automatic['memory']['total'] = '2048kB'
+      node.automatic['ipaddress'] = '1.1.1.1'
+    end
+    runner.converge('mariadb::client')
+  end
+
+  it 'Install MariaDB Client Package' do
+    expect(chef_run).to install_package('MariaDB-client')
+  end
 end

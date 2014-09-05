@@ -9,7 +9,6 @@ describe 'debian::mariadb::galera55' do
       node.automatic['ipaddress'] = '1.1.1.1'
       node.set['mariadb']['install']['version'] = '5.5'
       node.set['mariadb']['rspec'] = true
-      node.set['mariadb']['use_default_repository'] = true
     end
     runner.converge('mariadb::galera')
   end
@@ -59,9 +58,5 @@ describe 'debian::mariadb::galera55' do
         group: 'root',
         mode:  '0600'
       )
-  end
-
-  it 'Install mariadb 5.5 repository' do
-    expect(chef_run).to add_apt_repository('mariadb-5.5')
   end
 end

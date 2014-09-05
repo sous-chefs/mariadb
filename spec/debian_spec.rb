@@ -30,5 +30,18 @@ describe 'debian::mariadb::default' do
   it 'Configure Replication' do
     expect(chef_run).to add_mariadb_configuration('replication')
   end
+end
 
+describe 'debian::mariadb::client' do
+  let(:chef_run) do
+    runner = ChefSpec::Runner.new(platform: 'debian', version: '7.4', step_into: ['mariadb_configuration']) do |node|
+      node.automatic['memory']['total'] = '2048kB'
+      node.automatic['ipaddress'] = '1.1.1.1'
+    end
+    runner.converge('mariadb::client')
+  end
+
+  it 'Install MariaDB Client Package' do
+    expect(chef_run).to install_package('mariadb-client-10.0')
+  end
 end
