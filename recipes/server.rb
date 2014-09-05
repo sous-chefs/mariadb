@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: mariadb
-# Recipe:: default
+# Recipe:: server
 #
 # Copyright 2014, blablacar.com
 #
@@ -17,10 +17,22 @@
 # limitations under the License.
 #
 
-include_recipe "#{cookbook_name}::repository55"
+case node['mariadb']['install']['type']
+when 'package'
+  include_recipe "#{cookbook_name}::repository"
 
-package 'mariadb-galera-server-5.5' do
-  action :install
+  case node["platform"]
+  when "debian", "ubuntu"
+    package "mariadb-server-#{node['mariadb']['install']['version']}" do
+      action :install
+    end
+  when "redhat", "centos", "fedora"
+    package "MariaDB-server" do
+      action :install
+    end
+  end
+when 'from_source'
+  # To be filled as soon as possible
 end
 
-include_recipe "#{cookbook_name}::galera"
+include_recipe "#{cookbook_name}::config"

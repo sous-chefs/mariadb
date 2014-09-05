@@ -2,9 +2,9 @@ require 'spec_helper'
 
 at_exit { ChefSpec::Coverage.report! }
 
-describe 'mariadb::default' do
+describe 'debian::mariadb::default' do
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(platform: 'debian', version: '7.4') do |node|
+    runner = ChefSpec::Runner.new(platform: 'debian', version: '7.4', step_into: ['mariadb_configuration']) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
     end
@@ -16,6 +16,7 @@ describe 'mariadb::default' do
   end
 
   it 'Configure InnoDB with attributes' do
+    expect(chef_run).to add_mariadb_configuration('innodb')
     expect(chef_run).to render_file('/etc/mysql/conf.d/innodb.cnf')
       .with_content(/innodb_buffer_pool_size = 256M/)
     expect(chef_run).to create_template('/etc/mysql/conf.d/innodb.cnf')
@@ -24,6 +25,10 @@ describe 'mariadb::default' do
         group: 'mysql',
         mode:  '0640'
       )
+  end
+
+  it 'Configure Replication' do
+    expect(chef_run).to add_mariadb_configuration('replication')
   end
 
 end

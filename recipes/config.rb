@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-template '/etc/mysql/my.cnf' do
+template node['mariadb']['configuration']['path'] + '/my.cnf' do
   source 'my.cnf.erb'
   owner 'root'
   group 'root'
@@ -65,15 +65,10 @@ node['mariadb']['innodb']['options'].each do |key, value|
   innodb_options[key] = value
 end
 
-template '/etc/mysql/conf.d/innodb.cnf' do
-  source 'conf.d.generic.erb'
-  variables(
-    section: 'mysqld',
-    options: innodb_options
-  )
-  owner 'root'
-  group 'mysql'
-  mode '0640'
+mariadb_configuration 'innodb' do
+  section 'mysqld'
+  option innodb_options
+  action :add
 end
 
 replication_opts = {}
@@ -92,13 +87,9 @@ if node['mariadb']['replication'].key?('options')
     replication_opts[key] = value
   end
 end
-template '/etc/mysql/conf.d/replication.cnf' do
-  source 'conf.d.generic.erb'
-  variables(
-    section: 'mysqld',
-    options: replication_opts
-  )
-  owner 'root'
-  group 'mysql'
-  mode '0640'
+
+mariadb_configuration 'replication' do
+  section 'mysqld'
+  option replication_opts
+  action :add
 end

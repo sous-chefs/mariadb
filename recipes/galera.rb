@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: mariadb
-# Recipe:: default
+# Recipe:: galera
 #
 # Copyright 2014, blablacar.com
 #
@@ -16,6 +16,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+case node['mariadb']['install']['type']
+when 'package'
+  # include MariaDB repositories
+  include_recipe "#{cookbook_name}::repository"
+
+  case node["platform"]
+  when "debian", "ubuntu"
+    package "mariadb-galera-server-#{node['mariadb']['install']['version']}" do
+      action :install
+    end
+  when "redhat", "centos", "fedora"
+    package "MariaDB-Galera-server" do
+      action :install
+    end
+  end
+when 'from_source'
+  # To be filled as soon as possible
+end
 
 if node['mariadb']['galera']['wsrep_sst_method'] == 'rsync'
   package 'rsync' do
@@ -72,46 +91,42 @@ node['mariadb']['galera']['options'].each do |key, value|
   galera_options[key] = value
 end
 
-galera_template_variables = {
-  section: 'mysqld',
-  options: galera_options
-}
-template '/etc/mysql/conf.d/galera.cnf' do
-  source 'conf.d.generic.erb'
-  variables galera_template_variables
-  owner 'root'
-  group 'mysql'
-  mode '0640'
+mariadb_configuration 'galera' do
+  section 'mysqld'
+  option  galera_options
+  action :add
 end
 
 #
 # Under debian system we have to change the debian-sys-maint default password.
 # This password is the same for the overall cluster.
 #
-template '/etc/mysql/debian.cnf' do
-  source 'debian.cnf.erb'
-  owner 'root'
-  group 'root'
-  mode '0600'
-end
-
-execute 'correct-debian-grants' do
-  command 'mysql -r -B -N -e "GRANT SELECT, INSERT, UPDATE, DELETE, ' + \
-    'CREATE, DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, INDEX, ' + \
-    'ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY TABLES, ' + \
-    'LOCK TABLES, EXECUTE, REPLICATION SLAVE, REPLICATION CLIENT, ' + \
-    'CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, ' + \
-    "CREATE USER, EVENT, TRIGGER ON *.* TO '" + \
-    node['mariadb']['debian']['user'] + \
-    "'@'" + node['mariadb']['debian']['host'] + "' IDENTIFIED BY '" + \
-    node['mariadb']['debian']['password'] + "' WITH GRANT OPTION\""
-  action :run
-  only_if do
-    cmd = shell_out("/usr/bin/mysql --user=\"" + \
-      node['mariadb']['debian']['user'] + \
-      "\" --password=\"" + node['mariadb']['debian']['password'] + \
-      "\" -r -B -N -e \"SELECT 1\"")
-    cmd.error!
+if platform?("debian","ubuntu")
+  template '/etc/mysql/debian.cnf' do
+    source 'debian.cnf.erb'
+    owner 'root'
+    group 'root'
+    mode '0600'
   end
-  ignore_failure true
+  
+  execute 'correct-debian-grants' do
+    command 'mysql -r -B -N -e "GRANT SELECT, INSERT, UPDATE, DELETE, ' + \
+      'CREATE, DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, INDEX, ' + \
+      'ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY TABLES, ' + \
+      'LOCK TABLES, EXECUTE, REPLICATION SLAVE, REPLICATION CLIENT, ' + \
+      'CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, ' + \
+      "CREATE USER, EVENT, TRIGGER ON *.* TO '" + \
+      node['mariadb']['debian']['user'] + \
+      "'@'" + node['mariadb']['debian']['host'] + "' IDENTIFIED BY '" + \
+      node['mariadb']['debian']['password'] + "' WITH GRANT OPTION\""
+    action :run
+    only_if do
+      cmd = shell_out("/usr/bin/mysql --user=\"" + \
+        node['mariadb']['debian']['user'] + \
+        "\" --password=\"" + node['mariadb']['debian']['password'] + \
+        "\" -r -B -N -e \"SELECT 1\"")
+      cmd.error!
+    end
+    ignore_failure true
+  end
 end

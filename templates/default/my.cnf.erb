@@ -33,7 +33,9 @@ nice		= 0
 # * Basic Settings
 #
 user		= <%= node['mariadb']['mysqld']['user']            %>
+<% if node['mariadb']['mysqld'].attribute?('pid_file') %>
 pid-file	= <%= node['mariadb']['mysqld']['pid_file']        %>
+<% end %>
 socket		= <%= node['mariadb']['mysqld']['socket']          %>
 port		= <%= node['mariadb']['mysqld']['port']            %>
 basedir		= <%= node['mariadb']['mysqld']['basedir']         %>
@@ -175,5 +177,5 @@ key_buffer		= <%= node['mariadb']['isamchk']['key_buffer'] %>
 # * IMPORTANT: Additional settings that can override those from this file!
 #   The files must end with '.cnf', otherwise they'll be ignored.
 #
-!includedir /etc/mysql/conf.d/
+!includedir <%= node['mariadb']['configuration']['includedir'] %>/
 

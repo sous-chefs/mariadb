@@ -1,11 +1,25 @@
+# platform dependent attributes
+case node['platform']
+when "redhat", "centos", "fedora"
+  default['mariadb']['configuration']['path'] = '/etc'
+  default['mariadb']['configuration']['includedir'] = '/etc/my.cnf.d'
+  default['mariadb']['mysqld']['socket'] = '/var/lib/mysql/mysql.sock'
+  default['mariadb']['client']['socket'] = '/var/lib/mysql/mysql.sock'
+  default['mariadb']['mysqld_safe']['socket'] = '/var/lib/mysql/mysql.sock'
+else
+  default['mariadb']['configuration']['path'] = '/etc/mysql'
+  default['mariadb']['configuration']['includedir'] = '/etc/mysql/conf.d'
+  default['mariadb']['mysqld']['socket'] = '/var/run/mysqld/mysqld.sock'
+  default['mariadb']['mysqld']['pid_file'] = '/var/run/mysqld/mysqld.pid'
+  default['mariadb']['client']['socket'] = '/var/run/mysqld/mysqld.sock'
+  default['mariadb']['mysqld_safe']['socket'] = '/var/run/mysqld/mysqld.sock'
+end
+
+
 #
 # mysqld default configuration
 #
 default['mariadb']['mysqld']['user']                    = 'mysql'
-default['mariadb']['mysqld']['pid_file']                = '/var/run/mysqld' + \
-  '/mysqld.pid'
-default['mariadb']['mysqld']['socket']                  = '/var/run/mysqld' + \
-  '/mysqld.sock'
 default['mariadb']['mysqld']['port']                    = '3306'
 default['mariadb']['mysqld']['basedir']                 = '/usr'
 default['mariadb']['mysqld']['datadir']                 = '/var/lib/mysql'
@@ -87,18 +101,16 @@ default['mariadb']['isamchk']['key_buffer'] = '16M'
 #
 # mysqld_safe default configuration
 #
-default['mariadb']['mysqld_safe']['socket']  = '/var/run/mysqld/mysqld.sock'
 default['mariadb']['mysqld_safe']['options'] = {}
 
 #
 # client default configuration
 #
 default['mariadb']['client']['port']    = 3306
-default['mariadb']['client']['socket']  = '/var/run/mysqld/mysqld.sock'
 default['mariadb']['client']['options'] = {}
 
 #
-# debian specific conficguration
+# debian specific configuration
 #
 default['mariadb']['debian']['user']     = 'debian-sys-maint'
 default['mariadb']['debian']['password'] = 'please-change-me'
@@ -107,11 +119,11 @@ default['mariadb']['debian']['host']     = 'localhost'
 #
 # mariadb default install configuration
 #
-# install valid values are 'apt'
-# (only apt for now, and 'yum' or 'from_source' in the future)
-default['mariadb']['install'] = 'apt'
+# install valid value is 'package', hope to have 'from_source' in the near future
+default['mariadb']['install']['type'] = 'package'
+default['mariadb']['install']['version'] = '10.0'
 
 #
-# apt default configuration
+# package(apt or yum) default configuration
 #
-default['mariadb']['apt']['use_default_repository'] = false
+default['mariadb']['use_default_repository'] = false

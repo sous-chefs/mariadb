@@ -17,4 +17,4 @@
 # limitations under the License.
 #
 
-include_recipe "#{cookbook_name}::10"
+include_recipe "#{cookbook_name}::server"

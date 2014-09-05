@@ -9,6 +9,8 @@ platforms:
   - name: debian-7.6
     driver_config:
       box: chef/debian-7.6
+  - name: ubuntu-12.04
+  - name: centos-6.4
 
 suites:
   - name: default
@@ -16,5 +18,4 @@ suites:
       - recipe[mariadb::default]
     attributes:
       mariadb:
-        apt:
-          use_default_repository: true
+        use_default_repository: true
