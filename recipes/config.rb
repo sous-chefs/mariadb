@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-template '/etc/mysql/my.cnf' do
+template node['mariadb']['configuration']['path'] + '/my.cnf' do
   source 'my.cnf.erb'
   owner 'root'
   group 'root'
@@ -56,7 +56,7 @@ innodb_options['innodb_log_buffer_size'] = \
   node['mariadb']['innodb']['log_buffer_size']
 innodb_options['innodb_file_per_table']  = \
   node['mariadb']['innodb']['file_per_table']
-innodb_options['innodb_open_files']    = node['mariadb']['innodb']['open_files']
+innodb_options['innodb_open_files'] = node['mariadb']['innodb']['open_files']
 innodb_options['innodb_io_capacity']   = \
   node['mariadb']['innodb']['io_capacity']
 innodb_options['innodb_flush_method']  = \
@@ -65,19 +65,14 @@ node['mariadb']['innodb']['options'].each do |key, value|
   innodb_options[key] = value
 end
 
-template '/etc/mysql/conf.d/innodb.cnf' do
-  source 'conf.d.generic.erb'
-  variables(
-    section: 'mysqld',
-    options: innodb_options
-  )
-  owner 'root'
-  group 'mysql'
-  mode '0640'
+mariadb_configuration 'innodb' do
+  section 'mysqld'
+  option innodb_options
+  action :add
 end
 
 replication_opts = {}
-replication_opts['log_bin']          = node['mariadb']['replication']['log_bin']
+replication_opts['log_bin'] = node['mariadb']['replication']['log_bin']
 replication_opts['log_bin_index']    = \
   node['mariadb']['replication']['log_bin_index']
 replication_opts['expire_logs_days'] = \
@@ -92,13 +87,9 @@ if node['mariadb']['replication'].key?('options')
     replication_opts[key] = value
   end
 end
-template '/etc/mysql/conf.d/replication.cnf' do
-  source 'conf.d.generic.erb'
-  variables(
-    section: 'mysqld',
-    options: replication_opts
-  )
-  owner 'root'
-  group 'mysql'
-  mode '0640'
+
+mariadb_configuration 'replication' do
+  section 'mysqld'
+  option replication_opts
+  action :add
 end

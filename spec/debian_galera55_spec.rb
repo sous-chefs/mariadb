@@ -2,15 +2,18 @@ require 'spec_helper'
 
 at_exit { ChefSpec::Coverage.report! }
 
-describe 'mariadb::galera55' do
+describe 'debian::mariadb::galera55' do
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(platform: 'debian', version: '7.4') do |node|
+    runner = ChefSpec::Runner.new(
+                                   platform: 'debian', version: '7.4',
+                                   step_into: ['mariadb_configuration']
+                                 ) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
+      node.set['mariadb']['install']['version'] = '5.5'
       node.set['mariadb']['rspec'] = true
-      node.set['mariadb']['apt']['use_default_repository'] = true
     end
-    runner.converge('mariadb::galera55')
+    runner.converge('mariadb::galera')
   end
   let(:shellout) do
     double(run_command: nil, error!: nil, stdout: '1',
@@ -42,6 +45,7 @@ describe 'mariadb::galera55' do
   end
 
   it 'Create Galera conf file' do
+    expect(chef_run).to add_mariadb_configuration('galera')
     expect(chef_run).to create_template('/etc/mysql/conf.d/galera.cnf')
       .with(
         user:  'root',
@@ -57,9 +61,5 @@ describe 'mariadb::galera55' do
         group: 'root',
         mode:  '0600'
       )
-  end
-
-  it 'Install mariadb 5.5 repository' do
-    expect(chef_run).to add_apt_repository('mariadb-5.5')
   end
 end

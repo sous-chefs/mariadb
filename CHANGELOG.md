@@ -3,6 +3,15 @@ mariadb CHANGELOG
 
 This file is used to list changes made in each version of the mariadb cookbook.
 
+0.2.0
+-----
+- [nicolas.blanc] -  Add rpm/yum management
+- [nicolas.blanc] -  Refactor the whole recipes list and management to ease it
+- [nicolas.blanc] -  Correct the Documentation
+- [nicolas.blanc] -  Rename the provider (from extraconf to configuration), and add matchers to it
+- [nicolas.blanc] -  Add a recipe to manage client only installation
+- [nicolas.blanc] -  Refactor all tests to manage new platform (centos/redhat/fedora)
+
 0.1.8
 -----
 - [nicolas.blanc] -  Add ignore-failure to debian grants correct, as it can break on initial setup

@@ -1,9 +1,17 @@
 require 'spec_helper'
 
-describe file('/etc/mysql/conf.d/innodb.cnf') do
+os = backend.check_os[:family]
+
+includedir = '/etc/mysql/conf.d'
+case os
+when 'Fedora', 'CentOS', 'RedHat'
+  includedir = '/etc/my.cnf.d'
+end
+
+describe file(includedir + '/innodb.cnf') do
   it { should be_file }
 end
 
-describe file('/etc/mysql/conf.d/replication.cnf') do
+describe file(includedir + '/replication.cnf') do
   it { should be_file }
 end

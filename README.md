@@ -6,14 +6,14 @@ MariaDB Cookbook
 Description
 -----------
 
-This cookbook contains all the stuffs to install and configure a mariadb server on a dpkg compliant system (typically debian)
+This cookbook contains all the stuffs to install and configure a mariadb server on a dpkg/apt compliant system (typically debian), or a rpm/yum compliant system (typically centos)
 
 
 Requirements
 ------------
 
 #### repository
-- `mariadb` - This cookbook need that you have a valid apt repository installed with th mariadn official package
+- `mariadb` - This cookbook need that you have a valid apt repository installed with the mariadb official packages
 
 #### packages
 - `percona-xtrabackup` - if you want to use the xtrabckup SST Auth for galera cluster.
@@ -22,7 +22,8 @@ Requirements
 
 #### operating system
 - `debian` - this cookbook is fully tested on debian
-- `ubuntu` - not tested on ubuntu, but should work
+- `ubuntu` - not fully tested on ubuntu, but should work
+- `centos` - not fully tested on centos, but should work
 
 Attributes
 ----------
@@ -36,10 +37,10 @@ Attributes
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['mariadb']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
+    <td><tt>['mariadb']['install']['version']</tt></td>
+    <td>String</td>
+    <td>Version to install (currently 10.0 et 5.5)</td>
+    <td><tt>10.0</tt></td>
   </tr>
 </table>
 
@@ -50,10 +51,10 @@ To install a default server for mariadb choose the version you want (MariaDB 5.5
 
 List of availables recipes:
 
-- mariadb::10
-- mariadb::55
-- mariadb::galera10
-- mariadb::galera55
+- mariadb::default (just call server recipe with default options)
+- mariadb::server
+- mariadb::galera
+- mariadb::client
 
 Contributing
 ------------

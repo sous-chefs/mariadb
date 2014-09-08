@@ -4,14 +4,17 @@ include Chef::Mixin::ShellOut
 
 at_exit { ChefSpec::Coverage.report! }
 
-describe 'mariadb::galera10-rsync' do
+describe 'debian::mariadb::galera10-rsync' do
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(platform: 'debian', version: '7.4') do |node|
+    runner = ChefSpec::Runner.new(
+                                   platform: 'debian', version: '7.4',
+                                   step_into: ['mariadb_configuration']
+                                 ) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
       node.set['mariadb']['rspec'] = true
     end
-    runner.converge('mariadb::galera10')
+    runner.converge('mariadb::galera')
   end
   let(:shellout) do
     double(run_command: nil, error!: nil, stdout: '1',
@@ -48,6 +51,7 @@ describe 'mariadb::galera10-rsync' do
   end
 
   it 'Create Galera conf file' do
+    expect(chef_run).to add_mariadb_configuration('galera')
     expect(chef_run).to create_template('/etc/mysql/conf.d/galera.cnf')
       .with(
         user:  'root',
@@ -92,15 +96,18 @@ describe 'mariadb::galera10-rsync' do
 
 end
 
-describe 'mariadb::galera10-xtrabackup' do
+describe 'debian::mariadb::galera10-xtrabackup' do
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(platform: 'debian', version: '7.4') do |node|
+    runner = ChefSpec::Runner.new(
+                                   platform: 'debian', version: '7.4',
+                                   step_into: ['mariadb_configuration']
+                                 ) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
       node.set['mariadb']['galera']['wsrep_sst_method'] = 'xtrabackup'
       node.set['mariadb']['rspec'] = true
     end
-    runner.converge('mariadb::galera10')
+    runner.converge('mariadb::galera')
   end
   let(:shellout) do
     double(run_command: nil, error!: nil, stdout: '1',
