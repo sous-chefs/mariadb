@@ -42,6 +42,12 @@ Attributes
     <td>Version to install (currently 10.0 et 5.5)</td>
     <td><tt>10.0</tt></td>
   </tr>
+  <tr>
+    <td><tt>['mariadb']['use_default_repository']</tt></td>
+    <td>String</td>
+    <td>Wether to install MariaDB default repository or not. If you don't have a local repo containing packages, put it to true</td>
+    <td><tt>false</tt></td>
+  </tr>
 </table>
 
 Usage
