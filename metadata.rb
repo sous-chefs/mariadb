@@ -1,10 +1,10 @@
 name 'mariadb'
-maintainer 'blablacar.com'
-maintainer_email 'nicolas.blanc@blablacar.com'
+maintainer 'Nicolas Blanc'
+maintainer_email 'sinfomicien@gmail.com'
 license 'Apache 2.0'
 description 'Installs/Configures MariaDB'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version '0.2.1'
+version '0.2.2'
 
 supports 'ubuntu'
 supports 'debian', '>= 7.0'
