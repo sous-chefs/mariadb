@@ -7,6 +7,10 @@ group :lint do
   gem 'rspec'
 end
 
+group :packaging do
+  gem 'stove'
+end
+
 group :unit do
   gem 'berkshelf', '~> 3.1'
   gem 'chefspec', '~> 3.4'

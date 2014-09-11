@@ -1,7 +1,10 @@
 mariadb CHANGELOG
-===============
+=================
 
 This file is used to list changes made in each version of the mariadb cookbook.
+0.2.1
+-----
+- [nicolas.blanc] - Use stove to package (remove PaxHeaders.*)
 
 0.2.0
 -----
