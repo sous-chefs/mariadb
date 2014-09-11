@@ -44,7 +44,7 @@ Attributes
   </tr>
   <tr>
     <td><tt>['mariadb']['use_default_repository']</tt></td>
-    <td>String</td>
+    <td>Boolean</td>
     <td>Wether to install MariaDB default repository or not. If you don't have a local repo containing packages, put it to true</td>
     <td><tt>false</tt></td>
   </tr>
