@@ -21,15 +21,29 @@ case node['mariadb']['install']['type']
 when 'package'
   include_recipe "#{cookbook_name}::repository"
 
-  case node['platform']
-  when 'debian', 'ubuntu'
-    package "mariadb-client-#{node['mariadb']['install']['version']}" do
-      action :install
+  case node['platform_family']
+  when 'rhel'
+    node.default['mariadb']['client']['packages'] = \
+      %w{MariaDB-client MariaDB-devel}
+
+    # On CentOS at least, there's a conflict between MariaDB and mysql-libs
+    package 'mysql-libs' do
+      action :remove
     end
-  when 'redhat', 'centos', 'fedora'
-    package 'MariaDB-client' do
-      action :install
-    end
+  when 'fedora'
+    node.default['mariadb']['client']['packages'] = \
+      %w{mariadb mariadb-devel}
+  when 'suse'
+    node.default['mariadb']['client']['packages'] = \
+      %w{mariadb-community-server-client libmariadbclient-devel}
+  when 'debian'
+    node.default['mariadb']['client']['packages'] = \
+      %W{mariadb-client-#{node['mariadb']['install']['version']}
+         libmariadbclient-dev}
+  end
+
+  node['mariadb']['client']['packages'].each do |name|
+    package name
   end
 when 'from_source'
   # To be filled as soon as possible

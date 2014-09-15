@@ -62,6 +62,14 @@ List of availables recipes:
 - mariadb::galera
 - mariadb::client
 
+Please be ware that by default, the root password is empty! If you want have changed it use the `node['mariadb']['server_root_password']` attribute to put a correct value
+
+#### mariadb::galera
+
+When installing the mariadb::galera on debian recipe, You have to take care of one specific attribute:
+`default['mariadb']['debian']['password']` which default to 'please-change-me'
+As wee need to have the same password for this user on the whole cluster nodes... We will change the default install one by the content of this attribute.
+
 Contributing
 ------------
 

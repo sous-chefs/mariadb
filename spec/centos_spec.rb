@@ -17,7 +17,6 @@ describe 'centos::mariadb::default' do
   it 'Installs Mariadb package' do
     expect(chef_run).to install_package('MariaDB-server')
   end
-
   it 'Configure includedir in /etc/my.cnf' do
     expect(chef_run).to render_file('/etc/my.cnf')
       .with_content(%r{/etc/my.cnf.d})
@@ -56,7 +55,15 @@ describe 'centos::mariadb::client' do
     runner.converge('mariadb::client')
   end
 
+  it 'Remove mysql-libs package' do
+    expect(chef_run).to remove_package('mysql-libs')
+  end
+
   it 'Install MariaDB Client Package' do
     expect(chef_run).to install_package('MariaDB-client')
+  end
+
+  it 'Install MariaDB Client Devel Package' do
+    expect(chef_run).to install_package('MariaDB-devel')
   end
 end

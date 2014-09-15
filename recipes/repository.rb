@@ -13,7 +13,7 @@ if node['mariadb']['use_default_repository']
     apt_repository "mariadb-#{node['mariadb']['install']['version']}" do
       uri 'http://ftp.igh.cnrs.fr/pub/mariadb/repo/' + \
           node['mariadb']['install']['version'] + '/debian'
-      distribution 'wheezy'
+      distribution node['lsb']['codename']
       components ['main']
       keyserver 'keyserver.ubuntu.com'
       key '0xcbcb082a1bb943db'
@@ -22,6 +22,7 @@ if node['mariadb']['use_default_repository']
     include_recipe 'yum::default'
 
     yum_repository "mariadb-#{node['mariadb']['install']['version']}" do
+      description 'MariaDB Official Repository'
       baseurl 'http://yum.mariadb.org/' + \
               node['mariadb']['install']['version'] + '/centos6-amd64'
       gpgkey 'https://yum.mariadb.org/RPM-GPG-KEY-MariaDB'

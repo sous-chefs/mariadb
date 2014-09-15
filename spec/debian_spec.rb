@@ -50,4 +50,8 @@ describe 'debian::mariadb::client' do
   it 'Install MariaDB Client Package' do
     expect(chef_run).to install_package('mariadb-client-10.0')
   end
+
+  it 'Install MariaDB Client Devel Package' do
+    expect(chef_run).to install_package('libmariadbclient-dev')
+  end
 end
