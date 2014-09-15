@@ -24,7 +24,7 @@ when 'package'
   case node['platform_family']
   when 'rhel'
     node.default['mariadb']['client']['packages'] = \
-      %w{MariaDB-client MariaDB-devel}
+      %w(MariaDB-client MariaDB-devel)
 
     # On CentOS at least, there's a conflict between MariaDB and mysql-libs
     package 'mysql-libs' do
@@ -32,14 +32,14 @@ when 'package'
     end
   when 'fedora'
     node.default['mariadb']['client']['packages'] = \
-      %w{mariadb mariadb-devel}
+      %w(mariadb mariadb-devel)
   when 'suse'
     node.default['mariadb']['client']['packages'] = \
-      %w{mariadb-community-server-client libmariadbclient-devel}
+      %w(mariadb-community-server-client libmariadbclient-devel)
   when 'debian'
     node.default['mariadb']['client']['packages'] = \
-      %W{mariadb-client-#{node['mariadb']['install']['version']}
-         libmariadbclient-dev}
+      %W(mariadb-client-#{node['mariadb']['install']['version']}
+         libmariadbclient-dev)
   end
 
   node['mariadb']['client']['packages'].each do |name|
