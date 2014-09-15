@@ -17,12 +17,15 @@ describe 'centos::mariadb::default' do
   it 'Installs Mariadb package' do
     expect(chef_run).to install_package('MariaDB-server')
   end
+
   it 'Configure includedir in /etc/my.cnf' do
+    expect(chef_run).to create_template('/etc/my.cnf')
     expect(chef_run).to render_file('/etc/my.cnf')
       .with_content(%r{/etc/my.cnf.d})
   end
 
   it 'Configure replication in /etc/my.cnf.d/replication.cnf' do
+    expect(chef_run).to create_template('/etc/my.cnf.d/replication.cnf')
     expect(chef_run).to render_file('/etc/my.cnf.d/replication.cnf')
   end
 

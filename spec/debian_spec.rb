@@ -14,6 +14,12 @@ describe 'debian::mariadb::default' do
     runner.converge('mariadb::default')
   end
 
+  it 'Configure includedir in /etc/mysql/my.cnf' do
+    expect(chef_run).to create_template('/etc/mysql/my.cnf')
+    expect(chef_run).to render_file('/etc/mysql/my.cnf')
+      .with_content(%r{/etc/mysql/conf.d})
+  end
+
   it 'Installs Mariadb package' do
     expect(chef_run).to install_package('mariadb-server-10.0')
   end
@@ -32,6 +38,7 @@ describe 'debian::mariadb::default' do
 
   it 'Configure Replication' do
     expect(chef_run).to add_mariadb_configuration('replication')
+    expect(chef_run).to create_template('/etc/mysql/conf.d/replication.cnf')
   end
 end
 
