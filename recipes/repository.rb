@@ -12,7 +12,7 @@ if node['mariadb']['use_default_repository']
 
     apt_repository "mariadb-#{node['mariadb']['install']['version']}" do
       uri 'http://ftp.igh.cnrs.fr/pub/mariadb/repo/' + \
-          node['mariadb']['install']['version'] + '/debian'
+          node['mariadb']['install']['version'] + '/' +  node['platform']
       distribution node['lsb']['codename']
       components ['main']
       keyserver 'keyserver.ubuntu.com'
