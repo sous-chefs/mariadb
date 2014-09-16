@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-at_exit { ChefSpec::Coverage.report! }
-
 describe 'centos::mariadb::default' do
   let(:chef_run) do
     runner = ChefSpec::Runner.new(
@@ -38,6 +36,15 @@ describe 'centos::mariadb::default' do
         user:  'root',
         group: 'mysql',
         mode:  '0640'
+      )
+  end
+
+  it 'Create /var/log/mysql directory' do
+    expect(chef_run).to create_directory('/var/log/mysql')
+      .with(
+        user:  'mysql',
+        group: 'mysql',
+        mode:  '0755'
       )
   end
 

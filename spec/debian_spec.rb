@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-at_exit { ChefSpec::Coverage.report! }
-
 describe 'debian::mariadb::default' do
   let(:chef_run) do
     runner = ChefSpec::Runner.new(
@@ -40,6 +38,11 @@ describe 'debian::mariadb::default' do
     expect(chef_run).to add_mariadb_configuration('replication')
     expect(chef_run).to create_template('/etc/mysql/conf.d/replication.cnf')
   end
+
+  it 'restart mysql service' do
+    expect(chef_run).to restart_service('mysql')
+  end
+
 end
 
 describe 'debian::mariadb::client' do

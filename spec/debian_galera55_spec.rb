@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-at_exit { ChefSpec::Coverage.report! }
-
 describe 'debian::mariadb::galera55' do
   let(:chef_run) do
     runner = ChefSpec::Runner.new(

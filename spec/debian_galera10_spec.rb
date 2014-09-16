@@ -2,8 +2,6 @@ require 'spec_helper'
 
 include Chef::Mixin::ShellOut
 
-at_exit { ChefSpec::Coverage.report! }
-
 describe 'debian::mariadb::galera10-rsync' do
   let(:chef_run) do
     runner = ChefSpec::Runner.new(
