@@ -1,6 +1,6 @@
 # MariaDB is a module containing mariadb cookbook helper
 module MariaDB
-# Helper module for mariadb cookbook
+  # Helper module for mariadb cookbook
   module Helper
     require 'socket'
     require 'timeout'
@@ -24,9 +24,8 @@ module MariaDB
       false
     end
 
-# Trying to determine if we need to restart the mysql service
-    def mariadb_service_restart_required?(ip, port, socket)
-      puts 'original one'
+    # Trying to determine if we need to restart the mysql service
+    def mariadb_service_restart_required?(ip, port, _socket)
       restart = false
       restart = true unless port_open?(ip, port)
       restart
