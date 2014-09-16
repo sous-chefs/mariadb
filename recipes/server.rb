@@ -30,9 +30,30 @@ when 'package'
     package 'MariaDB-server' do
       action :install
     end
+
+    directory '/var/log/mysql' do
+      action :create
+      user 'mysql'
+      group 'mysql'
+      mode '0755'
+    end
   end
 when 'from_source'
   # To be filled as soon as possible
 end
 
 include_recipe "#{cookbook_name}::config"
+
+# restart the service if needed
+# workaround idea from https://github.com/stissot
+Chef::Resource::Service.send(:include, MariaDB::Helper)
+service 'mysql' do
+  action :restart
+  only_if do
+    mariadb_service_restart_required?(
+      '127.0.0.1',
+      node['mariadb']['mysqld']['port'],
+      node['mariadb']['mysqld']['socket']
+    )
+  end
+end
