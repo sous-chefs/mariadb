@@ -1,17 +1,11 @@
 require 'spec_helper'
 
-os = backend.check_os[:family]
-
-includedir = '/etc/mysql/conf.d'
-case os
+package_server_name = 'mariadb-server-10.0'
+case backend.check_os[:family]
 when 'Fedora', 'CentOS', 'RedHat'
-  includedir = '/etc/my.cnf.d'
+  package_server_name = 'MariaDB-server'
 end
 
-describe file(includedir + '/innodb.cnf') do
-  it { should be_file }
-end
-
-describe file(includedir + '/replication.cnf') do
-  it { should be_file }
+describe package(package_server_name) do
+  it { should be_installed }
 end
