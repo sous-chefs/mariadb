@@ -19,7 +19,7 @@ describe 'debian::mariadb::default' do
     runner.converge('mariadb::default')
   end
   before do
-   allow(TCPSocket).to receive(:new).and_return(tcpsocket_obj)
+    allow(TCPSocket).to receive(:new).and_return(tcpsocket_obj)
   end
 
   it 'Configure includedir in /etc/mysql/my.cnf' do
