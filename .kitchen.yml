@@ -19,3 +19,11 @@ suites:
     attributes:
       mariadb:
         use_default_repository: true
+  - name: port_changed
+    run_list:
+      - recipe[mariadb::default]
+    attributes:
+      mariadb:
+        use_default_repository: true
+        mysqld:
+          port: 3307
