@@ -1,6 +1,13 @@
 require 'spec_helper'
 
 describe 'debian::mariadb::default' do
+  let(:tcpsocket_obj) do
+    double(
+      'TCPSocket',
+      close: true
+    )
+  end
+
   let(:chef_run) do
     runner = ChefSpec::Runner.new(
                                    platform: 'debian', version: '7.4',
@@ -10,6 +17,9 @@ describe 'debian::mariadb::default' do
       node.automatic['ipaddress'] = '1.1.1.1'
     end
     runner.converge('mariadb::default')
+  end
+  before do
+   allow(TCPSocket).to receive(:new).and_return(tcpsocket_obj)
   end
 
   it 'Configure includedir in /etc/mysql/my.cnf' do
@@ -40,7 +50,7 @@ describe 'debian::mariadb::default' do
   end
 
   it 'restart mysql service' do
-    expect(chef_run).to restart_service('mysql')
+    expect(chef_run).to_not restart_service('mysql')
   end
 
 end
