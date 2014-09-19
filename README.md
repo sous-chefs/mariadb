@@ -19,6 +19,7 @@ Requirements
 - `percona-xtrabackup` - if you want to use the xtrabckup SST Auth for galera cluster.
 - `socat` - if you want to use the xtrabckup SST Auth for galera cluster.
 - `rsync` - if you want to use the rsync SST Auth for galera cluster.
+- `debconf-utils` - if you use debian platform family.
 
 #### operating system
 - `debian` - this cookbook is fully tested on debian
@@ -48,6 +49,24 @@ Attributes
     <td>Wether to install MariaDB default repository or not. If you don't have a local repo containing packages, put it to true</td>
     <td><tt>false</tt></td>
   </tr>
+  <tr>
+    <td><tt>['mariadb']['server_root_password']</tt></td>
+    <td>String</td>
+    <td>local root password</td>
+    <td><tt></tt></td>
+  </tr>
+  <tr>
+    <td><tt>['mariadb']['forbid_remote_root']</tt></td>
+    <td>Boolean</td>
+    <td>Wether to activate root remote access</td>
+    <td><tt>true</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['mariadb']['allow_root_pass_change']</tt></td>
+    <td>Boolean</td>
+    <td>Wether to allow the recipe to change root password after the first install</td>
+    <td><tt>false</tt></td>
+  </tr>
 </table>
 
 Usage
@@ -62,7 +81,7 @@ List of availables recipes:
 - mariadb::galera
 - mariadb::client
 
-Please be ware that by default, the root password is empty! If you want have changed it use the `node['mariadb']['server_root_password']` attribute to put a correct value
+Please be ware that by default, the root password is empty! If you want have changed it use the `node['mariadb']['server_root_password']` attribute to put a correct value. And by default the remote root access is not activated. Use `node['mariadb']['forbid_remote_root']` attribute to change it.
 
 #### mariadb::galera
 

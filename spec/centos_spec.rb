@@ -51,6 +51,10 @@ describe 'centos::mariadb::default' do
   it 'Configure Replication' do
     expect(chef_run).to add_mariadb_configuration('replication')
   end
+
+  it 'Don t execute root password change at install' do
+    expect(chef_run).to_not run_execute('change first install root password')
+  end
 end
 
 describe 'centos::mariadb::client' do

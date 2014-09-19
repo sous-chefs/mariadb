@@ -1,0 +1,24 @@
+<%
+# Value obtained via the debconf-get-selections tool on debian wheezy
+  case node['mariadb']['install']['version']
+  when '5.5' -%>
+mariadb-server-5.5     mysql-server/root_password_again        select  <%= node['mariadb']['server_root_password'] %>
+mariadb-server-5.5     mysql-server/root_password      select  <%= node['mariadb']['server_root_password'] %>
+mariadb-server-5.5     mysql-server/error_setting_password     error
+mariadb-server-5.5     mysql-server-5.1/nis_warning    note
+mariadb-server-5.5     mysql-server-5.1/start_on_boot  boolean true
+mariadb-server-5.5     mariadb-server-5.5/really_downgrade    boolean false
+mariadb-server-5.5     mysql-server-5.1/postrm_remove_databases        boolean false
+mariadb-server-5.5     mysql-server/password_mismatch  error
+mariadb-server-5.5     mysql-server/no_upgrade_when_using_ndb  error
+<% else -%>
+mariadb-server-10.0	mysql-server/root_password_again	select	<%= node['mariadb']['server_root_password'] %>
+mariadb-server-10.0	mysql-server/root_password	select	<%= node['mariadb']['server_root_password'] %>
+mariadb-server-10.0	mysql-server/error_setting_password	boolean	false
+mariadb-server-10.0	mysql-server-5.1/nis_warning	note	
+mariadb-server-10.0	mysql-server-5.1/start_on_boot	boolean	true
+mariadb-server-10.0	mariadb-server-10.0/really_downgrade	boolean	false
+mariadb-server-10.0	mysql-server-5.1/postrm_remove_databases	boolean	false
+mariadb-server-10.0	mysql-server/password_mismatch	boolean	false
+mariadb-server-10.0	mysql-server/no_upgrade_when_using_ndb	boolean	true
+<% end -%>

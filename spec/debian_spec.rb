@@ -32,6 +32,10 @@ describe 'debian::mariadb::default' do
     expect(chef_run).to install_package('mariadb-server-10.0')
   end
 
+  it 'Installs debconf-utils package' do
+    expect(chef_run).to install_package('debconf-utils')
+  end
+
   it 'Configure InnoDB with attributes' do
     expect(chef_run).to add_mariadb_configuration('innodb')
     expect(chef_run).to render_file('/etc/mysql/conf.d/innodb.cnf')
@@ -49,8 +53,28 @@ describe 'debian::mariadb::default' do
     expect(chef_run).to create_template('/etc/mysql/conf.d/replication.cnf')
   end
 
+  it 'Configure Preseeding' do
+    expect(chef_run).to create_directory('/var/cache/local/preseeding')
+    expect(chef_run).to create_template('/var/cache/local/' \
+                                        'preseeding/mariadb-server.seed')
+  end
+
+  it 'execute preseeding load' do
+    execute = chef_run.execute('preseed mariadb-server')
+    expect(execute).to do_nothing
+  end
+
   it 'restart mysql service' do
     expect(chef_run).to_not restart_service('mysql')
+  end
+
+  it 'Create Grants file' do
+    expect(chef_run).to create_template('/etc/mariadb_grants')
+  end
+
+  it 'execute grants file' do
+    execute = chef_run.execute('install-grants')
+    expect(execute).to do_nothing
   end
 
 end

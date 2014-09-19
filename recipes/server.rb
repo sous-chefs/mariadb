@@ -23,20 +23,9 @@ when 'package'
 
   case node['platform']
   when 'debian', 'ubuntu'
-    package "mariadb-server-#{node['mariadb']['install']['version']}" do
-      action :install
-    end
+    include_recipe "#{cookbook_name}::_debian_server"
   when 'redhat', 'centos', 'fedora'
-    package 'MariaDB-server' do
-      action :install
-    end
-
-    directory '/var/log/mysql' do
-      action :create
-      user 'mysql'
-      group 'mysql'
-      mode '0755'
-    end
+    include_recipe "#{cookbook_name}::_redhat_server"
   end
 when 'from_source'
   # To be filled as soon as possible
@@ -55,5 +44,39 @@ service 'mysql' do
       node['mariadb']['mysqld']['port'],
       node['mariadb']['mysqld']['socket']
     )
+  end
+end
+
+if node['mariadb']['allow_root_pass_change']
+  # Used to change root password after first install
+  # Still experimental
+  if node['mariadb']['server_root_password'].empty?
+    md5 = Digest::MD5.hexdigest('empty')
+  else
+    md5 = Digest::MD5.hexdigest(node['mariadb']['server_root_password'])
+  end
+
+  file '/etc/mysql_root_change' do
+    content md5
+    action :create
+    notifies :run, 'execute[install-grants]', :immediately
+  end
+end
+
+if  node['mariadb']['allow_root_pass_change'] ||
+    node['mariadb']['forbid_remote_root']
+  execute 'install-grants' do
+    command '/bin/bash /etc/mariadb_grants \'' + \
+            node['mariadb']['server_root_password'] + '\''
+    only_if { File.exists?('/etc/mariadb_grants') }
+    action :nothing
+  end
+
+  template '/etc/mariadb_grants' do
+    source 'mariadb_grants.erb'
+    owner 'root'
+    group 'root'
+    mode '0600'
+    notifies :run, 'execute[install-grants]', :immediately
   end
 end

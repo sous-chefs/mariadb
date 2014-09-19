@@ -64,3 +64,8 @@ describe 'verify the tuning attributes set in ' \
     end
   end
 end
+
+describe command('/usr/bin/mysql -u root -pgsql' \
+                 ' -D mysql -r -B -N -e "SELECT 1"') do
+  it { should return_stdout '1' }
+end

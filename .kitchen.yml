@@ -24,6 +24,7 @@ suites:
       - recipe[mariadb::default]
     attributes:
       mariadb:
+        server_root_password: gsql
         use_default_repository: true
         mysqld:
           port: 3307

@@ -2,44 +2,58 @@ mariadb CHANGELOG
 =================
 
 This file is used to list changes made in each version of the mariadb cookbook.
+0.2.3
+-----
+- [BUG #4] - Add a real management of mysql root password
+- [ENH #5] - Now restart mysql service when port is changed
+- [ENH #7] - Remove or add root remote access via attribute
+- [DOCS] - Complete documentations
+- [TEST] - Add a lot of chefspec and kitchen/serverspec tests
+
+0.2.2
+-----
+- [sinfomicien] - Correct repository install under debian family
+- [sinfomicien] - Correct client install to add dev files
+- [sinfomicien] - Correct and add multiples tests
+
 0.2.1
 -----
-- [nicolas.blanc] - Use stove to package (remove PaxHeaders.*)
+- [sinfomicien] - Use stove to package (remove PaxHeaders.*)
 
 0.2.0
 -----
-- [nicolas.blanc] -  Add rpm/yum management
-- [nicolas.blanc] -  Refactor the whole recipes list and management to ease it
-- [nicolas.blanc] -  Correct the Documentation
-- [nicolas.blanc] -  Rename the provider (from extraconf to configuration), and add matchers to it
-- [nicolas.blanc] -  Add a recipe to manage client only installation
-- [nicolas.blanc] -  Refactor all tests to manage new platform (centos/redhat/fedora)
+- [sinfomicien] -  Add rpm/yum management
+- [sinfomicien] -  Refactor the whole recipes list and management to ease it
+- [sinfomicien] -  Correct the Documentation
+- [sinfomicien] -  Rename the provider (from extraconf to configuration), and add matchers to it
+- [sinfomicien] -  Add a recipe to manage client only installation
+- [sinfomicien] -  Refactor all tests to manage new platform (centos/redhat/fedora)
 
 0.1.8
 -----
-- [nicolas.blanc] -  Add ignore-failure to debian grants correct, as it can break on initial setup
+- [sinfomicien] -  Add ignore-failure to debian grants correct, as it can break on initial setup
 
 0.1.7
 -----
-- [nicolas.blanc] -  Correct a typo (unnecessary call to run_command)
+- [sinfomicien] -  Correct a typo (unnecessary call to run_command)
 
 0.1.6
 -----
-- [nicolas.blanc] -  improve Galera configuration management
-- [nicolas.blanc] -  Add new rspec tests
-- [nicolas.blanc] -  Create Kitchen test suite
+- [sinfomicien] -  improve Galera configuration management
+- [sinfomicien] -  Add new rspec tests
+- [sinfomicien] -  Create Kitchen test suite
 
 0.1.5
 -----
-- [nicolas.blanc] -  improve attributes management
+- [sinfomicien] -  improve attributes management
 
 0.1.4
 -----
-- [nicolas.blanc] - adapt galera55 recipe to use a generic galera recipe
-- [nicolas.blanc] - use a generic galera recipe to create the galera10 recipe
-- [nicolas.blanc] - Improve documentation 
+- [sinfomicien] - adapt galera55 recipe to use a generic galera recipe
+- [sinfomicien] - use a generic galera recipe to create the galera10 recipe
+- [sinfomicien] - Improve documentation 
 
 
 0.1.0
 -----
-- [nicolas.blanc] - Initial release of mariadb
+- [sinfomicien] - Initial release of mariadb
