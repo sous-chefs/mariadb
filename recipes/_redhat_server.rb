@@ -18,6 +18,7 @@
 #
 package 'MariaDB-server' do
   action :install
+  notifies :start, 'service[mysql]', :immediately
   notifies :run, 'execute[change first install root password]', :immediately
 end
 
@@ -29,8 +30,7 @@ directory '/var/log/mysql' do
 end
 
 execute 'change first install root password' do
-  command '/etc/init.d/mysql start ; ' \
-          '/usr/bin/mysqladmin -u root password \'' + \
+  command '/usr/bin/mysqladmin -u root password \'' + \
           node['mariadb']['server_root_password'] + '\''
   action :nothing
   not_if { node['mariadb']['server_root_password'].empty? }
