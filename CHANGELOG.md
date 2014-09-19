@@ -2,6 +2,11 @@ mariadb CHANGELOG
 =================
 
 This file is used to list changes made in each version of the mariadb cookbook.
+0.2.4
+-----
+- [BUG #10] - Correct a FC004 broken rule
+- [BUG #9] - Correct foodcritic tests (add --epic-fail any to be sure it fails when a broken rule is detected)
+
 0.2.3
 -----
 - [BUG #4] - Add a real management of mysql root password
