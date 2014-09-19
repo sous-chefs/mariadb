@@ -68,7 +68,7 @@ if  node['mariadb']['allow_root_pass_change'] ||
   execute 'install-grants' do
     command '/bin/bash /etc/mariadb_grants \'' + \
             node['mariadb']['server_root_password'] + '\''
-    only_if { File.exists?('/etc/mariadb_grants') }
+    only_if { File.exist?('/etc/mariadb_grants') }
     action :nothing
   end
 
