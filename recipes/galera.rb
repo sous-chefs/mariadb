@@ -24,13 +24,9 @@ when 'package'
 
   case node['platform']
   when 'debian', 'ubuntu'
-    package "mariadb-galera-server-#{node['mariadb']['install']['version']}" do
-      action :install
-    end
+    include_recipe "#{cookbook_name}::_debian_galera"
   when 'redhat', 'centos', 'fedora'
-    package 'MariaDB-Galera-server' do
-      action :install
-    end
+    include_recipe "#{cookbook_name}::_redhat_galera"
   end
 when 'from_source'
   # To be filled as soon as possible
@@ -121,11 +117,12 @@ if platform?('debian', 'ubuntu')
       node['mariadb']['debian']['password'] + "' WITH GRANT OPTION\""
     action :run
     only_if do
-      cmd = shell_out("/usr/bin/mysql --user=\"" + \
+      cmd = Mixlib::ShellOut.new("/usr/bin/mysql --user=\"" + \
         node['mariadb']['debian']['user'] + \
         "\" --password=\"" + node['mariadb']['debian']['password'] + \
         "\" -r -B -N -e \"SELECT 1\"")
-      cmd.error!
+      cmd.run_command
+      cmd.error?
     end
     ignore_failure true
   end

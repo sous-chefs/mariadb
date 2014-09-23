@@ -15,7 +15,7 @@ describe 'debian::mariadb::galera10-rsync' do
     runner.converge('mariadb::galera')
   end
   let(:shellout) do
-    double(run_command: nil, error!: nil, stdout: '1',
+    double(run_command: nil, error!: nil, error?: false, stdout: '1',
            stderr: double(empty?: true), exitstatus: 0,
            :live_stream= => nil)
   end
@@ -78,7 +78,7 @@ describe 'debian::mariadb::galera10-rsync' do
 
   context 'debian-sys-maint is not good' do
     let(:shellout) do
-      double(run_command: nil, error!: true,
+      double(run_command: nil, error!: true, error?: true,
              stdout: 'ERROR 1045 (28000): Access denied for user ' + \
                '\'debian-sys-maint\'@\'localhost\' (using password: YES)',
              stderr: double(empty?: false), exitstatus: 1,
@@ -108,7 +108,7 @@ describe 'debian::mariadb::galera10-xtrabackup' do
     runner.converge('mariadb::galera')
   end
   let(:shellout) do
-    double(run_command: nil, error!: nil, stdout: '1',
+    double(run_command: nil, error!: nil, error?: false, stdout: '1',
            stderr: double(empty?: true), exitstatus: 0,
            :live_stream= => nil)
   end

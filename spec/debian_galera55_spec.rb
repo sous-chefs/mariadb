@@ -14,7 +14,7 @@ describe 'debian::mariadb::galera55' do
     runner.converge('mariadb::galera')
   end
   let(:shellout) do
-    double(run_command: nil, error!: nil, stdout: '1',
+    double(run_command: nil, error!: nil, error?: true, stdout: '1',
            stderr: double(empty?: true), exitstatus: 0, :live_stream= => nil)
   end
   before do
