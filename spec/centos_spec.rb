@@ -39,15 +39,6 @@ describe 'centos::mariadb::default' do
       )
   end
 
-  it 'Create /var/log/mysql directory' do
-    expect(chef_run).to create_directory('/var/log/mysql')
-      .with(
-        user:  'mysql',
-        group: 'mysql',
-        mode:  '0755'
-      )
-  end
-
   it 'Configure Replication' do
     expect(chef_run).to add_mariadb_configuration('replication')
   end

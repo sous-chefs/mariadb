@@ -19,6 +19,12 @@ suites:
     attributes:
       mariadb:
         use_default_repository: true
+  - name: galera
+    run_list:
+      - recipe[mariadb::galera]
+    attributes:
+      mariadb:
+        use_default_repository: true
   - name: port_changed
     run_list:
       - recipe[mariadb::default]

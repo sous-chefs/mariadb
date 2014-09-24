@@ -2,6 +2,13 @@ mariadb CHANGELOG
 =================
 
 This file is used to list changes made in each version of the mariadb cookbook.
+0.2.5
+-----
+- [ENH #11] - Fix the galera root password preseed
+- [BUG #12] - Fix the debian-sys-maint user creation/password change
+- [TEST] - Add new tests for the new features (galera)
+- [DOCS] - Complete Changelog
+
 0.2.4
 -----
 - [BUG #10] - Correct a FC004 broken rule

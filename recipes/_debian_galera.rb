@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: mariadb
-# Recipe:: _debian_server
+# Recipe:: _debian_galera
 #
 # Copyright 2014, blablacar.com
 #
@@ -30,21 +30,21 @@ directory '/var/cache/local/preseeding' do
   recursive true
 end
 
-template '/var/cache/local/preseeding/mariadb-server.seed' do
+template '/var/cache/local/preseeding/mariadb-galera-server.seed' do
   source 'mariadb-server.seed.erb'
   owner 'root'
   group 'root'
   mode '0600'
-  variables(package_name: 'mariadb-server')
-  notifies :run, 'execute[preseed mariadb-server]', :immediately
+  variables(package_name: 'mariadb-galera-server')
+  notifies :run, 'execute[preseed mariadb-galera-server]', :immediately
 end
 
-execute 'preseed mariadb-server' do
+execute 'preseed mariadb-galera-server' do
   command '/usr/bin/debconf-set-selections ' \
-          '/var/cache/local/preseeding/mariadb-server.seed'
+          '/var/cache/local/preseeding/mariadb-galera-server.seed'
   action :nothing
 end
 
-package "mariadb-server-#{node['mariadb']['install']['version']}" do
+package "mariadb-galera-server-#{node['mariadb']['install']['version']}" do
   action :install
 end

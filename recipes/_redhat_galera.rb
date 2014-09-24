@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: mariadb
-# Recipe:: _redhat_server
+# Recipe:: _redhat_galera
 #
 # Copyright 2014, blablacar.com
 #
@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-package 'MariaDB-server' do
+package 'MariaDB-Galera-server' do
   action :install
   notifies :create, 'directory[/var/log/mysql]', :immediately
   notifies :start, 'service[mysql]', :immediately
