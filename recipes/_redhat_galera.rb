@@ -30,6 +30,10 @@ directory '/var/log/mysql' do
   mode '0755'
 end
 
+service 'mysql' do
+  action :nothing
+end
+
 execute 'change first install root password' do
   command '/usr/bin/mysqladmin -u root password \'' + \
           node['mariadb']['server_root_password'] + '\''
