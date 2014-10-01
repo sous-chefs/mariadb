@@ -15,10 +15,4 @@ attribute :master_connect_retry, kind_of: [String, nil], default: nil
 attribute :master_port, kind_of: [Integer, nil], default: nil
 attribute :master_log_pos, kind_of: [Integer, nil], default: nil
 attribute :master_log_file, kind_of: [String, nil], default: nil
-attribute :master_use_gtid,
-          kind_of: %w(
-            current_pos
-            slave_pos
-            no
-          ),
-          default: 'no'
+attribute :master_use_gtid, kind_of: String, default: 'no'

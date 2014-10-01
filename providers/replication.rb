@@ -28,7 +28,7 @@ action :add do
     end
   else
     # Use GTID replication
-    sql_string += ', MASTER_USE_GTID=\'' + new_resource.master_use_gtid + '\';'
+    sql_string += ', MASTER_USE_GTID=' + new_resource.master_use_gtid + ';'
   end
   execute 'add_replication_from_master_' + new_resource.name do
     command '/bin/echo "' + sql_string + '" | /usr/bin/mysql'
