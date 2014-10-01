@@ -19,6 +19,12 @@ suites:
     attributes:
       mariadb:
         use_default_repository: true
+  - name: replication
+    run_list:
+      - recipe[mariadb_test::replication]
+    attributes:
+      mariadb:
+        use_default_repository: true
   - name: galera
     run_list:
       - recipe[mariadb::galera]
