@@ -71,4 +71,25 @@ describe 'centos::mariadb::client' do
   it 'Install MariaDB Client Devel Package' do
     expect(chef_run).to install_package('MariaDB-devel')
   end
+  context 'Without development files' do
+    let(:chef_run) do
+      runner = ChefSpec::Runner.new(
+                                     platform: 'centos', version: '6.4',
+                                     step_into: ['mariadb_configuration']
+                                   ) do |node|
+        node.automatic['memory']['total'] = '2048kB'
+        node.automatic['ipaddress'] = '1.1.1.1'
+        node.set['mariadb']['client']['development_files'] = false
+      end
+      runner.converge('mariadb::client')
+    end
+
+    it 'Install MariaDB Client Package' do
+      expect(chef_run).to install_package('MariaDB-client')
+    end
+
+    it 'Don t install MariaDB Client Devel Package' do
+      expect(chef_run).to_not install_package('MariaDB-devel')
+    end
+  end
 end

@@ -11,7 +11,7 @@ if node['mariadb']['use_default_repository']
     include_recipe 'apt::default'
 
     apt_repository "mariadb-#{node['mariadb']['install']['version']}" do
-      uri 'http://ftp.igh.cnrs.fr/pub/mariadb/repo/' + \
+      uri 'http://' + node['mariadb']['apt_repository']['base_url'] + '/' + \
           node['mariadb']['install']['version'] + '/' +  node['platform']
       distribution node['lsb']['codename']
       components ['main']

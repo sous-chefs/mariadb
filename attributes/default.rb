@@ -110,6 +110,7 @@ default['mariadb']['mysqld_safe']['options'] = {}
 #
 default['mariadb']['client']['port']    = 3306
 default['mariadb']['client']['options'] = {}
+default['mariadb']['client']['development_files'] = true
 
 #
 # debian specific configuration
@@ -130,3 +131,5 @@ default['mariadb']['install']['version'] = '10.0'
 # package(apt or yum) default configuration
 #
 default['mariadb']['use_default_repository'] = false
+default['mariadb']['apt_repository']['base_url'] = \
+  'ftp.igh.cnrs.fr/pub/mariadb/repo'

@@ -67,6 +67,18 @@ Attributes
     <td>Wether to allow the recipe to change root password after the first install</td>
     <td><tt>false</tt></td>
   </tr>
+  <tr>
+    <td><tt>['mariadb']['client']['development_files']</tt></td>
+    <td>Boolean</td>
+    <td>Wether to install development files in client recipe</td>
+    <td><tt>true</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['mariadb']['apt_repository']['base_url']</tt></td>
+    <td>String</td>
+    <td>The http base url to use when installing from default repository</td>
+    <td><tt>'ftp.igh.cnrs.fr/pub/mariadb/repo'</tt></td>
+  </tr>
 </table>
 
 Usage
@@ -83,11 +95,18 @@ List of availables recipes:
 
 Please be ware that by default, the root password is empty! If you want have changed it use the `node['mariadb']['server_root_password']` attribute to put a correct value. And by default the remote root access is not activated. Use `node['mariadb']['forbid_remote_root']` attribute to change it.
 
+Sometimes, the default apt repository used for apt does not work (see issue #6). In this case, you need to choose another mirror which worki (pick it from mariadb website), and put the http base url in the attribute `node['mariadb']['apt_repository']['base_url']`.
+
 #### mariadb::galera
 
 When installing the mariadb::galera on debian recipe, You have to take care of one specific attribute:
-`default['mariadb']['debian']['password']` which default to 'please-change-me'
+`node['mariadb']['debian']['password']` which default to 'please-change-me'
 As wee need to have the same password for this user on the whole cluster nodes... We will change the default install one by the content of this attribute.
+
+#### mariadb::client
+
+By default this recipe install the client, and all needed packages to develop client application. If you do not want to install development files when installing client package,
+set the attribute `node['mariadb']['client']['development_files']` to false. 
 
 Contributing
 ------------

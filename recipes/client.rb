@@ -23,23 +23,43 @@ when 'package'
 
   case node['platform_family']
   when 'rhel'
-    node.default['mariadb']['client']['packages'] = \
-      %w(MariaDB-client MariaDB-devel)
-
     # On CentOS at least, there's a conflict between MariaDB and mysql-libs
     package 'mysql-libs' do
       action :remove
     end
+
+    if node['mariadb']['client']['development_files']
+      node.default['mariadb']['client']['packages'] = \
+        %w(MariaDB-client MariaDB-devel)
+    else
+      node.default['mariadb']['client']['packages'] = \
+        %w(MariaDB-client)
+    end
   when 'fedora'
-    node.default['mariadb']['client']['packages'] = \
-      %w(mariadb mariadb-devel)
+    if node['mariadb']['client']['development_files']
+      node.default['mariadb']['client']['packages'] = \
+        %w(mariadb mariadb-devel)
+    else
+      node.default['mariadb']['client']['packages'] = \
+        %w(mariadb)
+    end
   when 'suse'
-    node.default['mariadb']['client']['packages'] = \
-      %w(mariadb-community-server-client libmariadbclient-devel)
+    if node['mariadb']['client']['development_files']
+      node.default['mariadb']['client']['packages'] = \
+        %w(mariadb-community-server-client libmariadbclient-devel)
+    else
+      node.default['mariadb']['client']['packages'] = \
+        %w(mariadb-community-server-client)
+    end
   when 'debian'
-    node.default['mariadb']['client']['packages'] = \
-      %W(mariadb-client-#{node['mariadb']['install']['version']}
-         libmariadbclient-dev)
+    if node['mariadb']['client']['development_files']
+      node.default['mariadb']['client']['packages'] = \
+        %W(mariadb-client-#{node['mariadb']['install']['version']}
+           libmariadbclient-dev)
+    else
+      node.default['mariadb']['client']['packages'] = \
+        %W(mariadb-client-#{node['mariadb']['install']['version']})
+    end
   end
 
   node['mariadb']['client']['packages'].each do |name|
