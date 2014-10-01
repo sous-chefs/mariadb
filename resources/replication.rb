@@ -8,13 +8,13 @@ default_action :add
 
 # name of the extra conf file, used for .cnf filename
 attribute :connection_name, kind_of: String, name_attribute: true
-attribute :host, kind_of: [String,nil], default: nil
-attribute :port, kind_of: [String,nil], default: nil
-attribute :user, kind_of: [String,nil], default: nil
-attribute :password, kind_of: [String,nil], default: nil
-attribute :master_host, kind_of: [String,nil], default: nil
-attribute :master_user, kind_of: [String,nil], default: nil
-attribute :master_password, kind_of: [String,nil], default: nil
+attribute :host, kind_of: [String, nil], default: nil
+attribute :port, kind_of: [String, nil], default: nil
+attribute :user, kind_of: [String, nil], default: nil
+attribute :password, kind_of: [String, nil], default: nil
+attribute :master_host, kind_of: [String, nil], default: nil
+attribute :master_user, kind_of: [String, nil], default: nil
+attribute :master_password, kind_of: [String, nil], default: nil
 attribute :master_connect_retry, kind_of: [String, nil], default: nil
 attribute :master_port, kind_of: [Integer, nil], default: nil
 attribute :master_log_pos, kind_of: [Integer, nil], default: nil
