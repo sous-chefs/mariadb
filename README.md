@@ -108,6 +108,82 @@ As wee need to have the same password for this user on the whole cluster nodes..
 By default this recipe install the client, and all needed packages to develop client application. If you do not want to install development files when installing client package,
 set the attribute `node['mariadb']['client']['development_files']` to false. 
 
+Providers
+----------
+
+This recipe define 2  providers:
+- `Chef::Provider::Mariadb::Configuration` shortcut resource `mariadb_configuration`
+- `Chef::Provider::Mariadb::Replication` shortcut resource `mariadb_replication`
+
+#### mariadb_configuration
+
+Mainly use for internal purpose. You can use it to create a new configuration file into configuration dir. You have to define 2 variables `section` and `option`.
+Where `section` is the configuration section, and `option` is a has of key/value. The name of the resource is used as base for the filename.
+
+Example:
+```ruby
+mariadb_configuration 'fake' do
+  section 'mysqld'
+  option {foo: 'bar'}
+end
+```
+will become the file fake.cnf in the include dir (depend on your platform), which contain:
+```
+[mysqld]
+foo=bar
+```
+
+If the value start with a '#', then it's considered as a comment, and the value is printed as is (without the key)
+
+Example:
+```ruby
+mariadb_configuration 'fake' do
+  section 'mysqld'
+  option {comment1: '# Here i am', foo: bar}
+end
+```
+will become the file fake.cnf in the include dir (depend on your platform), which contain:
+```
+[mysqld]
+# Here i am
+foo=bar
+```
+
+#### mariadb_replication
+
+This LWRP is used to manage replication setup on a host. To use this LWRP, the node need to have the mysql binary installed (via the mariadb::client or mariadb::server or mariadb::galera recipe).
+It have 4 actions:
+- add - to add a new replication setup (become a slave)
+- stop - to stop the slave replication
+- start - to start the slave replication
+- remove - to remove the slave replication configuration
+
+The resource name need to be 'default' if your don't want to use a named connection (multi source replication in MariaDB 10).
+
+So by default the provider try to use the local instance of mysql, with the current user and no password. If you want to change, you have to define `host`, `port`, `user` or `password`
+
+```ruby
+mariadb_replication 'default' do
+  user 'root'
+  password 'fakepass'
+  host 'fakehost'
+  action :stop
+end
+```
+will stop the replication on the host `fakehost` using the user `root` and password `fakepass` to connect to.
+
+When you add a replication configuration, you have to define at least 4 values `master_host`, `master_user`, `master_password` and `master_use_gtid`. And if you don't want the GTID support, you have to define also `master_log_file` and `master_log_pos`
+
+Example:
+```ruby
+mariadb_replication 'usefull_conn_name' do
+  master_host 'server1'
+  master_user 'slave_user'
+  master_password 'slave_password'
+  master_use_gtid 'current_pos'
+end
+```
+
 Contributing
 ------------
 

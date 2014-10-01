@@ -4,10 +4,13 @@ mariadb CHANGELOG
 This file is used to list changes made in each version of the mariadb cookbook.
 0.2.5
 -----
+- [ENH #16] - Add a LWRP to manage replication slave
+- [ENH #17] - Be able to not install development files within client recipe
 - [ENH #11] - Fix the galera root password preseed
 - [BUG #12] - Fix the debian-sys-maint user creation/password change
-- [TEST] - Add new tests for the new features (galera)
-- [DOCS] - Complete Changelog
+- [BUG #6] - Can change the apt repository base_url when the default one fail
+- [TEST] - Add new tests for the new features (galera,development files install,replication LWRP)
+- [DOCS] - Complete Changelog, and add new features explanations into README
 
 0.2.4
 -----
