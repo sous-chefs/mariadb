@@ -4,6 +4,7 @@ mariadb CHANGELOG
 This file is used to list changes made in each version of the mariadb cookbook.
 0.2.6
 -----
+- [BUG #18] - Fix provider mariadb_replication compilation error
 - [DOCS] - Complete Changelog, and correct README
 
 0.2.5
