@@ -22,12 +22,17 @@ package 'debconf-utils' do
   action :install
 end
 
-# Preseed Debian Packages
-directory '/var/cache/local/preseeding' do
-  owner 'root'
-  group 'root'
-  mode '0755'
-  recursive true
+# Preseed Debian Package
+# (but test for resource, as it can be declared by apt recipe)
+begin
+  resources(directory: '/var/cache/local/preseeding')
+rescue Chef::Exceptions::ResourceNotFound
+  directory '/var/cache/local/preseeding' do
+    owner 'root'
+    group 'root'
+    mode '0755'
+    recursive true
+  end
 end
 
 template '/var/cache/local/preseeding/mariadb-galera-server.seed' do
