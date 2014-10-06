@@ -118,7 +118,7 @@ This recipe define 2  providers:
 #### mariadb_configuration
 
 Mainly use for internal purpose. You can use it to create a new configuration file into configuration dir. You have to define 2 variables `section` and `option`.
-Where `section` is the configuration section, and `option` is a has of key/value. The name of the resource is used as base for the filename.
+Where `section` is the configuration section, and `option` is a hash of key/value. The name of the resource is used as base for the filename.
 
 Example:
 ```ruby
@@ -181,6 +181,7 @@ mariadb_replication 'usefull_conn_name' do
   master_user 'slave_user'
   master_password 'slave_password'
   master_use_gtid 'current_pos'
+  action :add
 end
 ```
 

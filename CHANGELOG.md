@@ -2,6 +2,10 @@ mariadb CHANGELOG
 =================
 
 This file is used to list changes made in each version of the mariadb cookbook.
+0.2.6
+-----
+- [DOCS] - Complete Changelog, and correct README
+
 0.2.5
 -----
 - [ENH #16] - Add a LWRP to manage replication slave
