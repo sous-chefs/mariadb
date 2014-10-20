@@ -33,6 +33,25 @@ end
 
 include_recipe "#{cookbook_name}::config"
 
+# move the datadir if needed
+if node['mariadb']['mysqld']['datadir'] \
+    != node['mariadb']['mysqld']['default_datadir'] \
+    && !File.symlink?(node['mariadb']['mysqld']['default_datadir'])
+  template '/etc/mysql/move_datadir' do
+    source 'move_datadir.erb'
+    owner 'root'
+    group 'root'
+    mode '0600'
+    notifies :run, 'execute[move-datadir]', :immediately
+  end
+  execute 'move-datadir' do
+    user 'root'
+    command '/bin/bash /etc/mysql/move_datadir'
+    only_if { File.exist?('/etc/mysql/move_datadir') }
+    action :nothing
+  end
+end
+
 # restart the service if needed
 # workaround idea from https://github.com/stissot
 Chef::Resource::Service.send(:include, MariaDB::Helper)
