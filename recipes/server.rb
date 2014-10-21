@@ -34,21 +34,34 @@ end
 include_recipe "#{cookbook_name}::config"
 
 # move the datadir if needed
-if node['mariadb']['mysqld']['datadir'] \
-    != node['mariadb']['mysqld']['default_datadir'] \
-    && !File.symlink?(node['mariadb']['mysqld']['default_datadir'])
-  template '/etc/mysql/move_datadir' do
-    source 'move_datadir.erb'
-    owner 'root'
-    group 'root'
-    mode '0600'
-    notifies :run, 'execute[move-datadir]', :immediately
-  end
-  execute 'move-datadir' do
-    user 'root'
-    command '/bin/bash /etc/mysql/move_datadir'
-    only_if { File.exist?('/etc/mysql/move_datadir') }
+if node['mariadb']['mysqld']['datadir'] !=
+   node['mariadb']['mysqld']['default_datadir']
+
+  service 'mysql' do
     action :nothing
+  end
+
+  bash 'move-datadir' do
+    user 'root'
+    code <<-EOH
+    /bin/cp -a #{node['mariadb']['mysqld']['default_datadir']}/* \
+               #{node['mariadb']['mysqld']['datadir']} &&
+    /bin/rm -r #{node['mariadb']['mysqld']['default_datadir']} &&
+    /bin/ln -s #{node['mariadb']['mysqld']['datadir']} \
+               #{node['mariadb']['mysqld']['default_datadir']}
+    EOH
+    action :nothing
+  end
+
+  directory node['mariadb']['mysqld']['datadir'] do
+    owner 'mysql'
+    group 'mysql'
+    mode 00750
+    action :create
+    notifies :stop, 'service[mysql]', :immediately
+    notifies :run, 'bash[move-datadir]', :immediately
+    notifies :start, 'service[mysql]', :immediately
+    only_if { !File.symlink?(node['mariadb']['mysqld']['default_datadir']) }
   end
 end
 
