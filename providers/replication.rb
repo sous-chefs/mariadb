@@ -29,7 +29,7 @@ action :add do
     '\' ' if new_resource.name != 'default'
   sql_string += 'TO '
   sql_string += 'MASTER_HOST=\'' + new_resource.master_host + '\', '
-  sql_string += 'MASTER_PORT=' + new_resource.master_port + \
+  sql_string += 'MASTER_PORT=' + new_resource.master_port.to_s + \
     ', ' unless new_resource.master_port.nil?
   sql_string += 'MASTER_USER=\'' + new_resource.master_user + '\', '
   sql_string += 'MASTER_PASSWORD=\'' + new_resource.master_password + '\''
