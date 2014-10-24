@@ -11,6 +11,10 @@ platforms:
       box: chef/debian-7.6
   - name: ubuntu-12.04
   - name: centos-6.4
+  - name: ubuntu-14.04
+    driver:
+        box: ffuenf-ubuntu-14.04-server-amd64
+        box_url: https://vagrantcloud.com/ffuenf/ubuntu-14.04-server-amd64/version/7/provider/virtualbox.box
 
 suites:
   - name: default
@@ -31,6 +35,14 @@ suites:
     attributes:
       mariadb:
         use_default_repository: true
+  - name: datadir_changed
+    run_list:
+      - recipe[mariadb::default]
+    attributes:
+      mariadb:
+        use_default_repository: true
+        mysqld:
+          datadir: /home/mysql
   - name: port_changed
     run_list:
       - recipe[mariadb::default]

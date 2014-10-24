@@ -4,7 +4,7 @@
 # You can copy this file to one of:
 # - "/etc/mysql/my.cnf" to set global options,
 # - "~/.my.cnf" to set user-specific options.
-# 
+#
 # One can use all long options that the program supports.
 # Run program with --help to get a list of available options and with
 # --print-defaults to see which it would actually understand and use.
@@ -39,7 +39,7 @@ pid-file	= <%= node['mariadb']['mysqld']['pid_file']        %>
 socket		= <%= node['mariadb']['mysqld']['socket']          %>
 port		= <%= node['mariadb']['mysqld']['port']            %>
 basedir		= <%= node['mariadb']['mysqld']['basedir']         %>
-datadir		= <%= node['mariadb']['mysqld']['datadir']         %>
+datadir		= <%= node['mariadb']['mysqld']['default_datadir']         %>
 tmpdir		= <%= node['mariadb']['mysqld']['tmpdir']          %>
 lc_messages_dir	= <%= node['mariadb']['mysqld']['lc_messages_dir'] %>
 lc_messages	= <%= node['mariadb']['mysqld']['lc_messages']     %>
@@ -57,10 +57,10 @@ bind-address		= <%= node['mariadb']['mysqld']['bind_address'] %>
 #
 max_connections		= <%= node['mariadb']['mysqld']['max_connections']         %>
 connect_timeout		= <%= node['mariadb']['mysqld']['connect_timeout']         %>
-wait_timeout		= <%= node['mariadb']['mysqld']['wait_timeout']            %> 
+wait_timeout		= <%= node['mariadb']['mysqld']['wait_timeout']            %>
 max_allowed_packet	= <%= node['mariadb']['mysqld']['max_allowed_packet']      %>
 thread_cache_size       = <%= node['mariadb']['mysqld']['thread_cache_size']       %>
-sort_buffer_size	= <%= node['mariadb']['mysqld']['sort_buffer_size']        %> 
+sort_buffer_size	= <%= node['mariadb']['mysqld']['sort_buffer_size']        %>
 bulk_insert_buffer_size	= <%= node['mariadb']['mysqld']['bulk_insert_buffer_size'] %>
 tmp_table_size		= <%= node['mariadb']['mysqld']['tmp_table_size']          %>
 max_heap_table_size	= <%= node['mariadb']['mysqld']['max_heap_table_size']     %>
@@ -135,7 +135,7 @@ log_slow_verbosity	= query_plan
 # If applications support it, this stricter sql_mode prevents some
 # mistakes like inserting invalid dates etc.
 #sql_mode		= NO_ENGINE_SUBSTITUTION,TRADITIONAL
- 
+
 default_storage_engine	= <%= node['mariadb']['mysqld']['default_storage_engine'] %>
 
 #
