@@ -2,6 +2,11 @@ mariadb CHANGELOG
 =================
 
 This file is used to list changes made in each version of the mariadb cookbook.
+0.2.7
+-----
+- [BUG #24] - Fix convert TypeError in the replication provider
+- [BUG #25] - Data are now moved when default datadir is changed
+
 0.2.6
 -----
 - [BUG #18] - Fix provider mariadb_replication compilation error
