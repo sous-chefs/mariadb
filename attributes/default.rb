@@ -135,3 +135,15 @@ default['mariadb']['install']['version'] = '10.0'
 default['mariadb']['use_default_repository'] = false
 default['mariadb']['apt_repository']['base_url'] = \
   'ftp.igh.cnrs.fr/pub/mariadb/repo'
+
+#
+# MariaDB Plugins enabling
+#
+default['mariadb']['plugins']['audit'] = false
+
+# Default Configuration
+default['mariadb']['audit_plugin']['server_audit_events'] = ''
+default['mariadb']['audit_plugin']['server_audit_output_type'] = 'file'
+# Syslog  (require server_audit_output_type = syslog)
+default['mariadb']['audit_plugin']['server_audit_syslog_facility'] = 'LOG_USER'
+default['mariadb']['audit_plugin']['server_audit_syslog_priority'] = 'LOG_INFO'

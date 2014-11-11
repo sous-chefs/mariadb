@@ -112,3 +112,6 @@ if  node['mariadb']['allow_root_pass_change'] ||
     notifies :run, 'execute[install-grants]', :immediately
   end
 end
+
+# MariaDB Plugins
+include_recipe "#{cookbook_name}::plugins"
