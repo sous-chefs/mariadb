@@ -26,11 +26,11 @@ action :add do
   end
   sql_string = 'CHANGE MASTER '
   sql_string += '\'' + new_resource.name + \
-    '\' ' if new_resource.name != 'default'
+                '\' ' if new_resource.name != 'default'
   sql_string += 'TO '
   sql_string += 'MASTER_HOST=\'' + new_resource.master_host + '\', '
   sql_string += 'MASTER_PORT=' + new_resource.master_port.to_s + \
-    ', ' unless new_resource.master_port.nil?
+                ', ' unless new_resource.master_port.nil?
   sql_string += 'MASTER_USER=\'' + new_resource.master_user + '\', '
   sql_string += 'MASTER_PASSWORD=\'' + new_resource.master_password + '\''
   if new_resource.master_use_gtid == 'no'
@@ -41,7 +41,7 @@ action :add do
     end
     unless new_resource.master_log_file.nil?
       sql_string += ', MASTER_LOG_FILE=\'' + \
-        new_resource.master_log_file + '\''
+                    new_resource.master_log_file + '\''
       sql_string += ', MASTER_LOG_POS=' + new_resource.master_log_pos
     end
   else
@@ -74,7 +74,7 @@ end
 
 action :start do
   command_master_connection = ' \'' + new_resource.name + \
-    '\'' unless new_resource.name == 'default'
+                              '\'' unless new_resource.name == 'default'
   execute 'start_replication_from_master_' + new_resource.name do
     command '/bin/echo "START SLAVE' + command_master_connection + ';' \
       '" | ' + get_mysql_command(
@@ -88,7 +88,7 @@ end
 
 action :stop do
   command_master_connection = ' \'' + new_resource.name + \
-    '\'' unless new_resource.name == 'default'
+                              '\'' unless new_resource.name == 'default'
   execute 'start_replication_from_master_' + new_resource.name do
     command '/bin/echo "STOP SLAVE' + command_master_connection + ';' \
       '" | ' + get_mysql_command(

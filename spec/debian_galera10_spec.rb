@@ -115,7 +115,7 @@ describe 'debian::mariadb::galera10-xtrabackup' do
   before do
     allow(Mixlib::ShellOut).to receive(:new).and_return(shellout)
     stub_search(:node, 'mariadb_galera_cluster_name:galera_cluster')
-     .and_return([stub_node('galera1'), stub_node('galera2')])
+      .and_return([stub_node('galera1'), stub_node('galera2')])
   end
 
   it 'Installs Mariadb package' do

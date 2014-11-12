@@ -30,7 +30,7 @@ action :remove do
     Chef::Log.info "Removing #{new_resource.name} repository from " + \
       node['mariadb']['configuration']['includedir']
     file node['mariadb']['configuration']['includedir'] + \
-         '/' + new_resource.name + '.cnf' do
+      '/' + new_resource.name + '.cnf' do
       action :delete
     end
   end
