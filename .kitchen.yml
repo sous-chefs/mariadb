@@ -12,9 +12,8 @@ platforms:
   - name: ubuntu-12.04
   - name: centos-6.4
   - name: ubuntu-14.04
-    driver:
-        box: ffuenf-ubuntu-14.04-server-amd64
-        box_url: https://vagrantcloud.com/ffuenf/ubuntu-14.04-server-amd64/version/7/provider/virtualbox.box
+    driver_config:
+        box: chef/ubuntu-14.04
 
 suites:
   - name: default

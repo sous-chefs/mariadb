@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 package_server_name = 'mariadb-server-10.0'
-case backend.check_os[:family]
-when 'Fedora', 'CentOS', 'RedHat'
+case os[:family]
+when 'fedora', 'centos', 'redhat'
   package_server_name = 'MariaDB-server'
 end
 

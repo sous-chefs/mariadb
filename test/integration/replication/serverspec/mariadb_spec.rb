@@ -12,6 +12,6 @@ end
 %w(1 2 3).each do |i|
   describe command('/usr/bin/mysql -r -B -N -e "SHOW ALL SLAVES STATUS;"' \
                    ' | cut -f 1 | head -n ' + i + ' | tail -n 1') do
-    it { should return_stdout 'server' + i }
+    its(:stdout) { should match 'server' + i }
   end
 end
