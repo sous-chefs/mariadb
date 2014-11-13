@@ -51,3 +51,12 @@ suites:
         use_default_repository: true
         mysqld:
           port: 3307
+  - name: plugins
+    run_list:
+      - recipe[mariadb::default]
+    attributes:
+      mariadb:
+        use_default_repository: true
+        plugins:
+           audit: true
+

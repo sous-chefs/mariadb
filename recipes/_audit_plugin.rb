@@ -26,7 +26,7 @@ end
 # Install the MariaDB Audit Plugin
 execute 'install_mariadb_audit_plugin' do
   command '/usr/bin/mysql -e"INSTALL PLUGIN server_audit ' + \
-  'SONAME \'server_audit\';"'
+    'SONAME \'server_audit\';"'
 end
 
 # Configure (Dynamic)
