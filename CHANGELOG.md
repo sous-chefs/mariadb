@@ -6,6 +6,7 @@ This file is used to list changes made in each version of the mariadb cookbook.
 -----
 - [BUG #24] - Fix convert TypeError in the replication provider
 - [BUG #25] - Data are now moved when default datadir is changed
+- [ENH #21] - Add audit_plugin management
 
 0.2.6
 -----
