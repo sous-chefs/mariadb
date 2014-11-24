@@ -25,8 +25,17 @@ end
 
 # Install the MariaDB Audit Plugin
 execute 'install_mariadb_audit_plugin' do
-  command '/usr/bin/mysql -e"INSTALL PLUGIN server_audit ' + \
+  command '/usr/bin/mysql -e "INSTALL PLUGIN server_audit ' + \
     'SONAME \'server_audit\';"'
+  notifies :run, 'execute[configure_mariadb_audit_plugin]', :immediate
+  not_if do
+    cmd = Mixlib::ShellOut.new('/usr/bin/mysql -u root -B -N -e "SELECT 1 ' + \
+                    'FROM information_schema.plugins ' + \
+                    'WHERE PLUGIN_NAME = \"SERVER_AUDIT\"' + \
+                    'AND PLUGIN_STATUS = \"ACTIVE\";')
+    cmd.run_command
+    cmd.stdout == '1'
+  end
 end
 
 # Configure (Dynamic)
@@ -40,4 +49,5 @@ execute 'configure_mariadb_audit_plugin' do
     'SET GLOBAL server_audit_syslog_priority=\'' + \
     node['mariadb']['audit_plugin']['server_audit_syslog_priority'] + '\';"' \
     '| /usr/bin/mysql'
+  action :nothing
 end
