@@ -139,6 +139,7 @@ default['mariadb']['apt_repository']['base_url'] = \
 #
 # MariaDB Plugins enabling
 #
+default['mariadb']['plugins_options']['auto_install'] = true
 default['mariadb']['plugins']['audit'] = false
 
 # Default Configuration

@@ -113,5 +113,7 @@ if  node['mariadb']['allow_root_pass_change'] ||
   end
 end
 
-# MariaDB Plugins
-include_recipe "#{cookbook_name}::plugins"
+if node['mariadb']['plugins_options']['auto_install']
+  # MariaDB Plugins
+  include_recipe "#{cookbook_name}::plugins"
+end
