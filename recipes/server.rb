@@ -65,18 +65,24 @@ if node['mariadb']['mysqld']['datadir'] !=
   end
 end
 
+service 'mysql' do
+  supports restart: true
+  action :nothing
+end
+
 # restart the service if needed
 # workaround idea from https://github.com/stissot
-Chef::Resource::Service.send(:include, MariaDB::Helper)
-service 'mysql' do
-  action :restart
-  only_if do
+Chef::Resource::Execute.send(:include, MariaDB::Helper)
+execute 'mariadb-service-restart-needed' do
+  command 'true'
+  not_if do
     mariadb_service_restart_required?(
-      '127.0.0.1',
-      node['mariadb']['mysqld']['port'],
-      node['mariadb']['mysqld']['socket']
-    )
+     '127.0.0.1',
+     node['mariadb']['mysqld']['port'],
+     node['mariadb']['mysqld']['socket']
+   )
   end
+  notifies :restart, 'service[mysql]', :immediately
 end
 
 if node['mariadb']['allow_root_pass_change']
