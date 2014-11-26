@@ -77,6 +77,9 @@ describe 'debian::mariadb::default' do
     expect(execute).to do_nothing
   end
 
+  it 'Execute service restart is not needed' do
+    expect(chef_run).to_not run_execute('mariadb-service-restart-needed')
+  end
 end
 
 describe 'debian::mariadb::client' do

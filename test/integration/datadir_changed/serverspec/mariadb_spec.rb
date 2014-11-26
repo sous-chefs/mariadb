@@ -60,7 +60,7 @@ describe 'verify the tuning attributes set in ' \
   }.each do |attribute, value|
     describe command("grep -E \"^#{attribute}\\s+\" " \
                      "#{includedir}/replication.cnf") do
-      itis(:stdout) { should match(/#{value}/) }
+      its(:stdout) { should match(/#{value}/) }
     end
   end
 end
