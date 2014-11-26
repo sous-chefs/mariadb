@@ -11,8 +11,8 @@ end
 
 includedir = '/etc/mysql/conf.d'
 mysql_config_file = '/etc/mysql/my.cnf'
-case backend.check_os[:family]
-when 'Fedora', 'CentOS', 'RedHat'
+case os[:family]
+when 'fedora', 'centos', 'redhat'
   includedir = '/etc/my.cnf.d'
   mysql_config_file = '/etc/my.cnf'
 end
@@ -33,7 +33,7 @@ describe "verify the tuning attributes set in #{mysql_config_file}" do
     myisam_sort_buffer_size: '512M'
   }.each do |attribute, value|
     describe command("grep -E \"^#{attribute}\\s+\" #{mysql_config_file}") do
-      it { should return_stdout(/#{value}/) }
+      its(:stdout) { should match(/#{value}/) }
     end
   end
 end
@@ -47,7 +47,7 @@ describe 'verify the tuning attributes set in ' + includedir + '/innodb.cnf' do
   }.each do |attribute, value|
     describe command("grep -E \"^#{attribute}\\s+\" " \
                      "#{includedir}/innodb.cnf") do
-      it { should return_stdout(/#{value}/) }
+      its(:stdout) { should match(/#{value}/) }
     end
   end
 end
@@ -60,12 +60,12 @@ describe 'verify the tuning attributes set in ' \
   }.each do |attribute, value|
     describe command("grep -E \"^#{attribute}\\s+\" " \
                      "#{includedir}/replication.cnf") do
-      it { should return_stdout(/#{value}/) }
+      its(:stdout) { should match(/#{value}/) }
     end
   end
 end
 
 describe command('/usr/bin/mysql -u root -pgsql' \
                  ' -D mysql -r -B -N -e "SELECT 1"') do
-  it { should return_stdout '1' }
+  its(:stdout) { should match(/1/) }
 end
