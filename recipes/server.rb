@@ -75,7 +75,7 @@ end
 Chef::Resource::Execute.send(:include, MariaDB::Helper)
 execute 'mariadb-service-restart-needed' do
   command 'true'
-  not_if do
+  only_if do
     mariadb_service_restart_required?(
      '127.0.0.1',
      node['mariadb']['mysqld']['port'],
