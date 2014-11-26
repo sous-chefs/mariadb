@@ -46,6 +46,15 @@ describe 'centos::mariadb::default' do
   it 'Don t execute root password change at install' do
     expect(chef_run).to_not run_execute('change first install root password')
   end
+
+  it 'Create Log directory' do
+    directory_log = chef_run.directory('/var/log/mysql')
+    expect(directory_log).to do_nothing
+    resource = chef_run.package('MariaDB-server')
+    expect(resource).to notify('directory[/var/log/mysql]')
+      .to(:create)
+      .immediately
+  end
 end
 
 describe 'centos::mariadb::client' do

@@ -48,6 +48,17 @@ describe 'debian::mariadb::galera10-rsync' do
       .with_content(%r{^log_bin = /var/log/mysql/mariadb-bin$})
   end
 
+  it 'Configure Preseeding' do
+    expect(chef_run).to create_directory('/var/cache/local/preseeding')
+    expect(chef_run).to create_template('/var/cache/local/' \
+                                        'preseeding/mariadb-galera-server.seed')
+  end
+
+  it 'execute preseeding load' do
+    execute = chef_run.execute('preseed mariadb-galera-server')
+    expect(execute).to do_nothing
+  end
+
   it 'Create Galera conf file' do
     expect(chef_run).to add_mariadb_configuration('galera')
     expect(chef_run).to create_template('/etc/mysql/conf.d/galera.cnf')

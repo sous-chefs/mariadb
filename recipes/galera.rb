@@ -58,6 +58,8 @@ else
     :node, \
     "mariadb_galera_cluster_name:#{node['mariadb']['galera']['cluster_name']}"
   )
+  # Sort Nodes by fqdn
+  galera_cluster_nodes.sort! { |x, y| x[:fqdn] <=> y[:fqdn] }
 end
 
 first = true
