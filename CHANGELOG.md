@@ -2,6 +2,15 @@ mariadb CHANGELOG
 =================
 
 This file is used to list changes made in each version of the mariadb cookbook.
+0.2.8
+-----
+- [BUG #30] - When using galera, nodes were not sorted, applying configuration change too often
+- [BUG #31] - ChefSpec coverage was not 100%
+- [BUG #28] - Remove the only_if to mysql service
+- [BUG #29] - Add a switch to not launch audit plugin install, when already installed
+- [ENH] - Add a switch to separate server install and audit install when needed
+- [ENH] - Add a rule to authorize line length to be 120 characters long
+
 0.2.7
 -----
 - [BUG #24] - Fix convert TypeError in the replication provider
