@@ -1,7 +1,7 @@
 case node['platform']
 when 'debian', 'ubuntu'
   install_method = 'apt'
-when 'redhat', 'centos', 'fedora'
+when 'redhat', 'centos', 'fedora', 'scientific', 'amazon'
   install_method = 'yum'
 end
 
