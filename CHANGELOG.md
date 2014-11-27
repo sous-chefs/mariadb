@@ -2,6 +2,11 @@ mariadb CHANGELOG
 =================
 
 This file is used to list changes made in each version of the mariadb cookbook.
+
+0.2.9
+-----
+- [BUG #36] - Audit plugin installation can crash mariadb server
+
 0.2.8
 -----
 - [BUG #30] - When using galera, nodes were not sorted, applying configuration change too often
