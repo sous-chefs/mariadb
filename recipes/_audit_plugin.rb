@@ -20,14 +20,14 @@ audit_plugin_options['enable'] = '#server_audit_logging = ON'
 execute 'install_mariadb_audit_plugin' do
   command '/usr/bin/mysql -e "INSTALL PLUGIN server_audit ' + \
     'SONAME \'server_audit\';"'
-  notifies
+  notifies :run, 'execute[configure_mariadb_audit_plugin]', :immediately
   not_if do
     cmd = Mixlib::ShellOut.new('/usr/bin/mysql -u root -B -N -e "SELECT 1 ' + \
                     'FROM information_schema.plugins ' + \
                     'WHERE PLUGIN_NAME = \'SERVER_AUDIT\'' + \
                     'AND PLUGIN_STATUS = \'ACTIVE\';"')
     cmd.run_command
-    cmd.stdout == '1'
+    cmd.stdout.to_i == 1
   end
 end
 
