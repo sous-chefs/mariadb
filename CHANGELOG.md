@@ -3,6 +3,10 @@ mariadb CHANGELOG
 
 This file is used to list changes made in each version of the mariadb cookbook.
 
+0.2.10
+------
+- [BUG] - Audit Plugin test and installation - Correct bad notifies, and stdout test
+
 0.2.9
 -----
 - [BUG #36] - Audit plugin installation can crash mariadb server
