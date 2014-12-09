@@ -12,3 +12,4 @@ supports 'centos', '>= 6.4'
 
 depends 'apt'
 depends 'yum'
+depends 'yum-epel'
