@@ -101,6 +101,7 @@ end
 #
 if platform?('debian', 'ubuntu')
   template '/etc/mysql/debian.cnf' do
+    sensitive true
     source 'debian.cnf.erb'
     owner 'root'
     group 'root'
@@ -108,6 +109,7 @@ if platform?('debian', 'ubuntu')
   end
 
   execute 'correct-debian-grants' do
+    # Add sensitive true when foodcritic #233 fixed
     command 'mysql -r -B -N -e "GRANT SELECT, INSERT, UPDATE, DELETE, ' + \
       'CREATE, DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, INDEX, ' + \
       'ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY TABLES, ' + \

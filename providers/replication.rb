@@ -49,6 +49,7 @@ action :add do
     sql_string += ', MASTER_USE_GTID=' + new_resource.master_use_gtid + ';'
   end
   execute 'add_replication_from_master_' + new_resource.name do
+    # Add sensitive true when foodcritic #233 fixed
     command '/bin/echo "' + sql_string + '" | ' + get_mysql_command(
         new_resource.host,
         new_resource.port,
@@ -61,6 +62,7 @@ end
 
 action :remove do
   execute 'remove_replication_from_master_' + new_resource.name do
+    # Add sensitive true when foodcritic #233 fixed
     command '/bin/echo "STOP SLAVE \'' + new_resource.name + '\'; ' \
       'RESET SLAVE \'' + new_resource.name + '\' ALL' \
       ';" | ' + get_mysql_command(
@@ -76,6 +78,7 @@ action :start do
   command_master_connection = ' \'' + new_resource.name + \
                               '\'' unless new_resource.name == 'default'
   execute 'start_replication_from_master_' + new_resource.name do
+    # Add sensitive true when foodcritic #233 fixed
     command '/bin/echo "START SLAVE' + command_master_connection + ';' \
       '" | ' + get_mysql_command(
         new_resource.host,
@@ -90,6 +93,7 @@ action :stop do
   command_master_connection = ' \'' + new_resource.name + \
                               '\'' unless new_resource.name == 'default'
   execute 'start_replication_from_master_' + new_resource.name do
+    # Add sensitive true when foodcritic #233 fixed
     command '/bin/echo "STOP SLAVE' + command_master_connection + ';' \
       '" | ' + get_mysql_command(
         new_resource.host,
