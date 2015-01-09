@@ -104,6 +104,7 @@ end
 if  node['mariadb']['allow_root_pass_change'] ||
     node['mariadb']['forbid_remote_root']
   execute 'install-grants' do
+    # Add sensitive true when foodcritic #233 fixed
     command '/bin/bash /etc/mariadb_grants \'' + \
       node['mariadb']['server_root_password'] + '\''
     only_if { File.exist?('/etc/mariadb_grants') }
@@ -111,6 +112,7 @@ if  node['mariadb']['allow_root_pass_change'] ||
   end
 
   template '/etc/mariadb_grants' do
+    sensitive true
     source 'mariadb_grants.erb'
     owner 'root'
     group 'root'

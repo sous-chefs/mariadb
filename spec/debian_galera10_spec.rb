@@ -102,7 +102,6 @@ describe 'debian::mariadb::galera10-rsync' do
       expect(chef_run).to run_execute('correct-debian-grants')
     end
   end
-
 end
 
 describe 'debian::mariadb::galera10-xtrabackup' do
