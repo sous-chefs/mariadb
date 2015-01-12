@@ -3,6 +3,12 @@ mariadb CHANGELOG
 
 This file is used to list changes made in each version of the mariadb cookbook.
 
+0.2.11
+------
+- [ENH #38] - Add CentOS support
+- [ENH #40] - Add sensitive flag to resource that deal with passwords
+- [BUG #43] - Fix convert TypeError in the replication provider
+
 0.2.10
 ------
 - [BUG] - Audit Plugin test and installation - Correct bad notifies, and stdout test
