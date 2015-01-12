@@ -42,7 +42,7 @@ action :add do
     unless new_resource.master_log_file.nil?
       sql_string += ', MASTER_LOG_FILE=\'' + \
                     new_resource.master_log_file + '\''
-      sql_string += ', MASTER_LOG_POS=' + new_resource.master_log_pos
+      sql_string += ', MASTER_LOG_POS=' + new_resource.master_log_pos.to_s
     end
   else
     # Use GTID replication
