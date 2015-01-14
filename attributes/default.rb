@@ -140,7 +140,10 @@ default['mariadb']['apt_repository']['base_url'] = \
 # MariaDB Plugins enabling
 #
 default['mariadb']['plugins_options']['auto_install'] = true
+# Enabling Plugin Installation
 default['mariadb']['plugins']['audit'] = false
+# Load Plugins in .cnf (plugin-loadi variable)
+default['mariadb']['plugins_loading']['audit'] = 'server_audit=server_audit.so'
 
 # Default Configuration
 default['mariadb']['audit_plugin']['server_audit_events'] = ''
