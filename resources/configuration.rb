@@ -10,3 +10,4 @@ default_action :add
 attribute :conf_name, kind_of: String, name_attribute: true
 attribute :section, kind_of: String
 attribute :option,  kind_of: Hash, default: {}
+attribute :cookbook, kind_of: String, default: nil
