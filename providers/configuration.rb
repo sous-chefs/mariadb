@@ -20,6 +20,7 @@ action :add do
     owner 'root'
     group 'mysql'
     mode '0640'
+    cookbook new_resource.cookbook
     variables variables_hash
   end
 end
