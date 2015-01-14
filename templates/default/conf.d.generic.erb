@@ -1,7 +1,7 @@
 # DEPLOYED BY CHEF
 [<%= @section -%>]
 <% @options.each do | option_name, option_value |-%>
- <% if option_value == 'true' -%>
+ <% if option_value.to_s == 'true' -%>
 <%= option_name %>
  <% else -%>
   <% if option_value.kind_of?(String) &&  option_value.start_with?('#') -%>
