@@ -19,6 +19,7 @@
 [client]
 port		= <%= node['mariadb']['client']['port']   %>
 socket		= <%= node['mariadb']['client']['socket'] %>
+host		= <%= node['mariadb']['client']['host'] ||= 'localhost' %>
 
 # Here is entries for some specific programs
 # The following values assume you have at least 32M ram
