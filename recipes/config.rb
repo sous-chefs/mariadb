@@ -30,13 +30,13 @@ innodb_options['comment1'] = '#'
 innodb_options['comment2'] = '# * InnoDB'
 innodb_options['comment3'] = '#'
 innodb_options['comment4'] = '# InnoDB is enabled by default with a 10MB ' + \
-                             'datafile in /var/lib/mysql/.'
+  'datafile in /var/lib/mysql/.'
 innodb_options['comment5'] = '# Read the manual for more InnoDB ' + \
-                             'related options. There are many!'
+  'related options. There are many!'
 
 innodb_options['innodb_log_file_size_comment1'] = '# you can\'t just ' + \
-                                                  'change log file size, ' + \
-                                                  'requires special procedure'
+  'change log file size, ' + \
+  'requires special procedure'
 if node['mariadb']['innodb']['log_file_size'].empty?
   innodb_options['innodb_log_file_size']  = '#innodb_log_file_size   = 50M'
 else
