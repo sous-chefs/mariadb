@@ -54,12 +54,11 @@ galera_cluster_nodes = []
 if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
-  if node['mariadb']['galera']['cluster_search_query'].nil? do
+  if node['mariadb']['galera']['cluster_search_query'].empty?
     galera_cluster_nodes = search(
       :node, \
       "mariadb_galera_cluster_name:#{node['mariadb']['galera']['cluster_name']}"
     )
-  end
   else
     galera_cluster_nodes = search 'node', node['mariadb']['galera']['cluster_search_query']
     log 'Chef search results' do
@@ -76,7 +75,7 @@ gcomm = 'gcomm://'
 galera_cluster_nodes.each do |lnode|
   next unless lnode.name != node.name
   gcomm += ',' unless first
-  gcomm += lnode.name
+  gcomm += lnode['fqdn']
   first = false
 end
 
