@@ -75,6 +75,7 @@ default['mariadb']['innodb']['options']                = {}
 # Galera default configuration
 #
 default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
+default['mariadb']['galera']['cluster_search_query'] = nil
 default['mariadb']['galera']['wsrep_sst_method']   = 'rsync'
 default['mariadb']['galera']['wsrep_provider']     = \
   '/usr/lib/galera/libgalera_smm.so'
