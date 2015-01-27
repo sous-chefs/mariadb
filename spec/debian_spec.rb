@@ -9,7 +9,7 @@ describe 'debian::mariadb::default' do
   end
 
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(
+    runner = ChefSpec::SoloRunner.new(
                                    platform: 'debian', version: '7.4',
                                    step_into: ['mariadb_configuration']
                                  ) do |node|
@@ -84,7 +84,7 @@ end
 
 describe 'debian::mariadb::client' do
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(
+    runner = ChefSpec::SoloRunner.new(
                                    platform: 'debian', version: '7.4',
                                    step_into: ['mariadb_configuration']
                                  ) do |node|
@@ -103,7 +103,7 @@ describe 'debian::mariadb::client' do
   end
   context 'Without development files' do
     let(:chef_run) do
-      runner = ChefSpec::Runner.new(
+      runner = ChefSpec::SoloRunner.new(
                                      platform: 'debian', version: '7.4',
                                      step_into: ['mariadb_configuration']
                                    ) do |node|

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'centos::mariadb::default' do
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(
+    runner = ChefSpec::SoloRunner.new(
                                    platform: 'centos', version: '6.4',
                                    step_into: ['mariadb_configuration']
                                  ) do |node|
@@ -59,7 +59,7 @@ end
 
 describe 'centos::mariadb::client' do
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(
+    runner = ChefSpec::SoloRunner.new(
                                    platform: 'centos', version: '6.4',
                                    step_into: ['mariadb_configuration']
                                  ) do |node|
@@ -82,7 +82,7 @@ describe 'centos::mariadb::client' do
   end
   context 'Without development files' do
     let(:chef_run) do
-      runner = ChefSpec::Runner.new(
+      runner = ChefSpec::SoloRunner.new(
                                      platform: 'centos', version: '6.4',
                                      step_into: ['mariadb_configuration']
                                    ) do |node|

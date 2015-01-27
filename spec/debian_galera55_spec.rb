@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'debian::mariadb::galera55' do
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(
+    runner = ChefSpec::SoloRunner.new(
                                    platform: 'debian', version: '7.4',
                                    step_into: ['mariadb_configuration']
                                  ) do |node|

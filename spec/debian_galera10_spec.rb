@@ -4,7 +4,7 @@ include Chef::Mixin::ShellOut
 
 describe 'debian::mariadb::galera10-rsync' do
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(
+    runner = ChefSpec::SoloRunner.new(
                                    platform: 'debian', version: '7.4',
                                    step_into: ['mariadb_configuration']
                                  ) do |node|
@@ -19,10 +19,22 @@ describe 'debian::mariadb::galera10-rsync' do
            stderr: double(empty?: true), exitstatus: 0,
            :live_stream= => nil)
   end
+  let(:galera_1) do
+    stub_node('galera1') do |node|
+      node.automatic['hostname'] = 'galera1'
+      node.automatic['fqdn'] = 'galera1.domain'
+    end
+  end
+  let(:galera_2) do
+    stub_node('galera2') do |node|
+      node.automatic['hostname'] = 'galera2'
+      node.automatic['fqdn'] = 'galera2.domain'
+    end
+  end
   before do
     allow(Mixlib::ShellOut).to receive(:new).and_return(shellout)
     stub_search(:node, 'mariadb_galera_cluster_name:galera_cluster')
-      .and_return([stub_node('galera1'), stub_node('galera2')])
+      .and_return([galera_1, galera_2])
   end
 
   it 'Installs Mariadb package' do
@@ -68,7 +80,7 @@ describe 'debian::mariadb::galera10-rsync' do
         mode:  '0640'
       )
     expect(chef_run).to render_file('/etc/mysql/conf.d/galera.cnf')
-      .with_content(%r{^wsrep_cluster_address = gcomm://galera1,galera2$})
+      .with_content(%r{^wsrep_cluster_address = gcomm://galera1.domain,galera2.domain$})
   end
 
   it 'Create Debian conf file' do
@@ -106,7 +118,7 @@ end
 
 describe 'debian::mariadb::galera10-xtrabackup' do
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(
+    runner = ChefSpec::SoloRunner.new(
                                    platform: 'debian', version: '7.4',
                                    step_into: ['mariadb_configuration']
                                  ) do |node|
