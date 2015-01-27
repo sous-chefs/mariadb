@@ -5,7 +5,7 @@ gem 'chef', '~>11.16'
 
 group :lint do
   gem 'foodcritic', '~> 4.0'
-  gem 'rubocop', '~> 0.18'
+  gem 'rubocop', '~> 0.27'
   gem 'rainbow', '< 2.0'
   gem 'rspec'
 end
