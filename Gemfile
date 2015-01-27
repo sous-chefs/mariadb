@@ -1,5 +1,8 @@
 source 'https://rubygems.org'
 
+gem 'ohai', '7.4.1'
+gem 'chef', '~>11.16'
+
 group :lint do
   gem 'foodcritic', '~> 4.0'
   gem 'rubocop', '~> 0.18'
@@ -13,7 +16,7 @@ end
 
 group :unit do
   gem 'berkshelf', '~> 3.1'
-  gem 'chefspec', '~> 3.4'
+  gem 'chefspec', '~> 4.2'
 end
 
 group :kitchen_common do
