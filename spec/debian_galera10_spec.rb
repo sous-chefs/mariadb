@@ -4,10 +4,9 @@ include Chef::Mixin::ShellOut
 
 describe 'debian::mariadb::galera10-rsync' do
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(
-                                   platform: 'debian', version: '7.4',
-                                   step_into: ['mariadb_configuration']
-                                 ) do |node|
+    runner = ChefSpec::SoloRunner.new(platform: 'debian', version: '7.4',
+                                      step_into: ['mariadb_configuration']
+                                     ) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
       node.set['mariadb']['rspec'] = true
@@ -94,7 +93,7 @@ describe 'debian::mariadb::galera10-rsync' do
 
   it 'Does not correct Grants for debian-sys-maint user if it s ok' do
     expect(Mixlib::ShellOut).to receive(:new)
-      .with('/usr/bin/mysql --user="debian-sys-maint" ' + \
+      .with('/usr/bin/mysql --user="debian-sys-maint" '\
             '--password="please-change-me" -r -B -N -e "SELECT 1"')
     expect(chef_run).to_not run_execute('correct-debian-grants')
   end
@@ -102,7 +101,7 @@ describe 'debian::mariadb::galera10-rsync' do
   context 'debian-sys-maint is not good' do
     let(:shellout) do
       double(run_command: nil, error!: true, error?: true,
-             stdout: 'ERROR 1045 (28000): Access denied for user ' + \
+             stdout: 'ERROR 1045 (28000): Access denied for user '\
                '\'debian-sys-maint\'@\'localhost\' (using password: YES)',
              stderr: double(empty?: false), exitstatus: 1,
              :live_stream= => nil)
@@ -118,10 +117,9 @@ end
 
 describe 'debian::mariadb::galera10-xtrabackup' do
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(
-                                   platform: 'debian', version: '7.4',
-                                   step_into: ['mariadb_configuration']
-                                 ) do |node|
+    runner = ChefSpec::SoloRunner.new(platform: 'debian', version: '7.4',
+                                      step_into: ['mariadb_configuration']
+                                     ) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
       node.set['mariadb']['galera']['wsrep_sst_method'] = 'xtrabackup'

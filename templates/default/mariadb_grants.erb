@@ -12,7 +12,7 @@
 <% end -%>
 password_flag=""
 if [ "$1" ]; then
-  password_flag="-p'$1'"
+  password_flag="-p$1"
 fi
 
 <% if node['mariadb']['forbid_remote_root'] -%>

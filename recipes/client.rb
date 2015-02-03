@@ -17,24 +17,43 @@
 # limitations under the License.
 #
 
+Chef::Recipe.send(:include, MariaDB::Helper)
 case node['mariadb']['install']['type']
 when 'package'
-  include_recipe "#{cookbook_name}::repository"
+  use_os_package = use_os_native_package?(
+    node['mariadb']['install']['prefer_os_package'],
+    node['platform'],
+    node['platform_version'])
+
+  include_recipe "#{cookbook_name}::repository" unless use_os_package
 
   case node['platform_family']
   when 'rhel'
     # On CentOS at least, there's a conflict between MariaDB and mysql-libs
     package 'mysql-libs' do
       action :remove
+      not_if { use_os_package }
     end
 
-    if node['mariadb']['client']['development_files']
-      node.default['mariadb']['client']['packages'] = \
-        %w(MariaDB-client MariaDB-devel)
+    # rubocop:disable BlockNesting
+    if use_os_package
+      if node['mariadb']['client']['development_files']
+        node.default['mariadb']['client']['packages'] = \
+          %w(mariadb mariadb-devel)
+      else
+        node.default['mariadb']['client']['packages'] = \
+          %w(mariadb)
+      end
     else
-      node.default['mariadb']['client']['packages'] = \
-        %w(MariaDB-client)
+      if node['mariadb']['client']['development_files']
+        node.default['mariadb']['client']['packages'] = \
+          %w(MariaDB-client MariaDB-devel)
+      else
+        node.default['mariadb']['client']['packages'] = \
+          %w(MariaDB-client)
+      end
     end
+    # rubocop:enable BlockNesting
   when 'fedora'
     if node['mariadb']['client']['development_files']
       node.default['mariadb']['client']['packages'] = \
