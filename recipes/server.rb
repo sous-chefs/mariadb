@@ -17,15 +17,24 @@
 # limitations under the License.
 #
 
+Chef::Recipe.send(:include, MariaDB::Helper)
 case node['mariadb']['install']['type']
 when 'package'
-  include_recipe "#{cookbook_name}::repository"
+  if use_os_native_package?(
+      node['mariadb']['install']['prefer_os_package'],
+      node['platform'], node['platform_version'])
+    # currently, no releases with apt (e.g. ubuntu) ship mariadb
+    # only provide one type of server here (with yum support)
+    include_recipe "#{cookbook_name}::_redhat_server_native"
+  else
+    include_recipe "#{cookbook_name}::repository"
 
-  case node['platform']
-  when 'debian', 'ubuntu'
-    include_recipe "#{cookbook_name}::_debian_server"
-  when 'redhat', 'centos', 'fedora', 'scientific', 'amazon'
-    include_recipe "#{cookbook_name}::_redhat_server"
+    case node['platform']
+    when 'debian', 'ubuntu'
+      include_recipe "#{cookbook_name}::_debian_server"
+    when 'redhat', 'centos', 'fedora', 'scientific', 'amazon'
+      include_recipe "#{cookbook_name}::_redhat_server"
+    end
   end
 when 'from_source'
   # To be filled as soon as possible
@@ -38,6 +47,7 @@ if node['mariadb']['mysqld']['datadir'] !=
    node['mariadb']['mysqld']['default_datadir']
 
   service 'mysql' do
+    service_name node['mariadb']['mysqld']['service_name']
     action :nothing
   end
 
@@ -66,6 +76,7 @@ if node['mariadb']['mysqld']['datadir'] !=
 end
 
 service 'mysql' do
+  service_name node['mariadb']['mysqld']['service_name']
   supports restart: true
   action :nothing
 end

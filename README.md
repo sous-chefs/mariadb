@@ -79,6 +79,12 @@ Attributes
     <td>The http base url to use when installing from default repository</td>
     <td><tt>'ftp.igh.cnrs.fr/pub/mariadb/repo'</tt></td>
   </tr>
+  <tr>
+    <td><tt>['mariadb']['install']['prefer_os_package']</tt></td>
+    <td>Boolean</td>
+    <td>Indicator for preferring use packages shipped by running os</td>
+    <td><tt>false</tt></td>
+  </tr>
 </table>
 
 Usage
