@@ -5,7 +5,10 @@ This file is used to list changes made in each version of the mariadb cookbook.
 
 0.2.12
 ------
-- [BUG] - Push gpg key adds through http/80 - Helps with firewalled installs
+- [BUG #39] - Push gpg key adds through http/80 - Helps with firewalled installs
+- [ENH #46] - Add cookbook attribute on configuration lwrp
+- [ENH #47] - Allow to pass true for unary options
+- [BUG #48] - Load the needed plugins at startup
 
 0.2.11
 ------
