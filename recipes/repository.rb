@@ -24,11 +24,14 @@ if node['mariadb']['use_default_repository']
     yum_repository "mariadb-#{node['mariadb']['install']['version']}" do
       description 'MariaDB Official Repository'
       baseurl 'http://yum.mariadb.org/' + \
-        node['mariadb']['install']['version'] + "/centos#{node['platform_version'].to_i}-amd64"
+        node['mariadb']['install']['version'] + "/#{node['platform']}#{node['platform_version'].to_i}-amd64"
       gpgkey 'https://yum.mariadb.org/RPM-GPG-KEY-MariaDB'
       action :create
     end
 
-    include_recipe 'yum-epel::default'
+    case node['platform']
+    when 'redhat', 'centos'
+      include_recipe 'yum-epel::default'
+    end
   end
 end
