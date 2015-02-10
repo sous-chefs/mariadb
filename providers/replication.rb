@@ -51,11 +51,11 @@ action :add do
   execute 'add_replication_from_master_' + new_resource.name do
     # Add sensitive true when foodcritic #233 fixed
     command '/bin/echo "' + sql_string + '" | ' + get_mysql_command(
-        new_resource.host,
-        new_resource.port,
-        new_resource.user,
-        new_resource.password
-      )
+      new_resource.host,
+      new_resource.port,
+      new_resource.user,
+      new_resource.password
+    )
     action :run
   end
 end

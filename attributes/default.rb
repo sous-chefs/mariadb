@@ -19,8 +19,9 @@ end
 # mysqld default configuration
 #
 default['mariadb']['forbid_remote_root']                = true
-default['mariadb']['server_root_password']		= ''
+default['mariadb']['server_root_password']              = ''
 default['mariadb']['allow_root_pass_change']            = false
+default['mariadb']['mysqld']['service_name']            = 'mysql'
 default['mariadb']['mysqld']['user']                    = 'mysql'
 default['mariadb']['mysqld']['port']                    = '3306'
 default['mariadb']['mysqld']['basedir']                 = '/usr'
@@ -129,6 +130,7 @@ default['mariadb']['debian']['host']     = 'localhost'
 #  hope to have 'from_source' in the near future
 default['mariadb']['install']['type'] = 'package'
 default['mariadb']['install']['version'] = '10.0'
+default['mariadb']['install']['prefer_os_package'] = false
 
 #
 # package(apt or yum) default configuration

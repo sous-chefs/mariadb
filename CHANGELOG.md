@@ -3,6 +3,10 @@ mariadb CHANGELOG
 
 This file is used to list changes made in each version of the mariadb cookbook.
 
+0.3.0
+------
+- [ENH] - Add support for using operating system shipped mariadb packages
+
 0.2.12
 ------
 - [BUG #39] - Push gpg key adds through http/80 - Helps with firewalled installs
