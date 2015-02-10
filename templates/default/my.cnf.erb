@@ -19,7 +19,7 @@
 [client]
 port		= <%= node['mariadb']['client']['port']   %>
 socket		= <%= node['mariadb']['client']['socket'] %>
-<% unless node['mariadb']['client']['host'].nil? %>
+<% if node['mariadb']['client'].attribute?('host') && !node['mariadb']['client']['host'].nil? %>
 host		= <%= node['mariadb']['client']['host'] %>
 <% end %>
 
