@@ -15,6 +15,7 @@ platforms:
   - name: ubuntu-14.04
     driver_config:
         box: chef/ubuntu-14.04
+  - name: fedora-19
 
 suites:
   - name: default
@@ -23,6 +24,16 @@ suites:
     attributes:
       mariadb:
         use_default_repository: true
+  - name: native
+    run_list:
+      - recipe[mariadb::default]
+    attributes:
+      mariadb:
+        install:
+          prefer_os_package: true
+    includes:
+      - centos-7.0
+      - fedora-19
   - name: replication
     run_list:
       - recipe[mariadb_test::replication]
