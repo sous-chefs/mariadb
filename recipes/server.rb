@@ -41,14 +41,15 @@ end
 
 include_recipe "#{cookbook_name}::config"
 
+service 'mysql' do
+  service_name node['mariadb']['mysqld']['service_name']
+  supports restart: true
+  action :nothing
+end
+
 # move the datadir if needed
 if node['mariadb']['mysqld']['datadir'] !=
    node['mariadb']['mysqld']['default_datadir']
-
-  service 'mysql' do
-    service_name node['mariadb']['mysqld']['service_name']
-    action :nothing
-  end
 
   bash 'move-datadir' do
     user 'root'
@@ -72,12 +73,6 @@ if node['mariadb']['mysqld']['datadir'] !=
     notifies :start, 'service[mysql]', :immediately
     only_if { !File.symlink?(node['mariadb']['mysqld']['default_datadir']) }
   end
-end
-
-service 'mysql' do
-  service_name node['mariadb']['mysqld']['service_name']
-  supports restart: true
-  action :nothing
 end
 
 # restart the service if needed
