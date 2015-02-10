@@ -31,6 +31,7 @@ end
 
 package 'mariadb-server' do
   action :install
+  notifies :enable, 'service[mysql]'
   notifies :start, 'service[mysql]', :immediately
   notifies :run, 'execute[change first install root password]', :immediately
 end
