@@ -16,6 +16,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+#To force removing of mariadb-libs on CentOS >= 7
+package 'MariaDB-shared' do
+  action:install
+end
+
+
 package 'MariaDB-Galera-server' do
   action :install
   notifies :create, 'directory[/var/log/mysql]', :immediately
