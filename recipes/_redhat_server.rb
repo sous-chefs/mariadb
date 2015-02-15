@@ -17,9 +17,9 @@
 # limitations under the License.
 #
 
-#To force removing of mariadb-libs on CentOS >= 7
+# To force removing of mariadb-libs on CentOS >= 7
 package 'MariaDB-shared' do
-  action:install
+  action :install
 end
 
 package 'MariaDB-server' do
