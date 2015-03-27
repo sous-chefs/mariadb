@@ -3,6 +3,10 @@ mariadb CHANGELOG
 
 This file is used to list changes made in each version of the mariadb cookbook.
 
+0.3.1
+------
+- [BUG] - Fix operating system shipped package installation issue
+
 0.3.0
 ------
 - [ENH] - Add support for using operating system shipped mariadb packages
