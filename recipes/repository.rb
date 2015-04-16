@@ -12,7 +12,7 @@ if node['mariadb']['use_default_repository']
 
     apt_repository "mariadb-#{node['mariadb']['install']['version']}" do
       uri 'http://' + node['mariadb']['apt_repository']['base_url'] + '/' + \
-        node['mariadb']['install']['version'] + '/' +  node['platform']
+        node['mariadb']['install']['version'] + '/' + node['platform']
       distribution node['lsb']['codename']
       components ['main']
       keyserver 'hkp://keyserver.ubuntu.com:80'
