@@ -55,8 +55,7 @@ describe 'verify the tuning attributes set in ' + includedir + '/innodb.cnf' do
   end
 end
 
-describe 'verify the tuning attributes set in ' \
-         + includedir + '/replication.cnf' do
+describe 'verify the tuning attributes set in ' + includedir + '/replication.cnf' do
   {
     max_binlog_size: '100M',
     expire_logs_days: 10

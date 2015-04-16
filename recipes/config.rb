@@ -48,7 +48,7 @@ if node['mariadb']['innodb']['bps_percentage_memory']
     (
       node['mariadb']['innodb']['buffer_pool_size'].to_f *
       (node['memory']['total'][0..-3].to_i / 1024)
-  ).round).to_s + 'M'
+    ).round).to_s + 'M'
 else
   innodb_options['innodb_buffer_pool_size'] = \
     node['mariadb']['innodb']['buffer_pool_size']
