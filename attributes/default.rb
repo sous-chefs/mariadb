@@ -82,6 +82,9 @@ default['mariadb']['galera']['wsrep_provider']     = \
   '/usr/lib/galera/libgalera_smm.so'
 default['mariadb']['galera']['options']            = {}
 
+# Node format: [{ :name => "mariadb_1", fqdn: "33.33.33.11"}]
+default['mariadb']['galera']['cluster_nodes']      = []
+
 #
 # Replication default configuration
 #
