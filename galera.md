@@ -9,9 +9,9 @@ Recipe
 Initial Setup
 -------------
 
-  There's one point very important with Galera Cluster, which is not fully industrialized by this cookbook: the first node. In a Galera Cluster, you have to had a specific configuration for the first start. the ''wsrep_cluster_address'' must contain only ''gcom://'', with no other node inside. The problem will be the same, if you had to stop the whole cluster, and then need to restart it. (If you have an idea on how to automate it, please feel free to create an issue, or make a PR).
+  There's one point very important with Galera Cluster, which is not fully industrialized by this cookbook: the first node. In a Galera Cluster, you have to had a specific configuration for the first start. the `wsrep_cluster_address` must contain only `gcom://`, with no other node inside. The problem will be the same, if you had to stop the whole cluster, and then need to restart it. (If you have an idea on how to automate it, please feel free to create an issue, or make a PR).
 
-  As of today, when i create a new cluster on production, i first provision one node on my Chef Server. So the configuration ''wsrep_cluster_address'' remains empty of other nodes. After a successfull converge step, and after verifying that the node is OK, i add the other nodes into Chef Server.
+  As of today, when i create a new cluster on production, i first provision one node on my Chef Server. So the configuration `wsrep_cluster_address` remains empty of other nodes. After a successfull converge step, and after verifying that the node is OK, i add the other nodes into Chef Server.
 
   
 Load Balancing
