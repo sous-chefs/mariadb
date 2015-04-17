@@ -50,6 +50,12 @@ end
 
 include_recipe "#{cookbook_name}::config"
 
+service 'mysql' do
+  service_name node['mariadb']['mysqld']['service_name']
+  supports restart: true
+  action :nothing
+end
+
 galera_cluster_nodes = []
 if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo]
   if node['mariadb']['galera']['cluster_nodes'].empty?
