@@ -10,12 +10,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
-  [1,2].each do |node_num|
+  [1,2,3].each do |db_node_num|
 
-    config.vm.define "mariadb_galera_cluster_#{node_num}" do |db_config|
+    config.vm.define "galera-cluster-#{db_node_num}" do |db_config|
 
       db_config.ssh.forward_agent = true
-      db_config.vm.hostname = "mariadb-galera-cluster-#{node_num}"
+      db_config.vm.hostname = "galera-cluster-#{db_node_num}"
 
       # Every Vagrant virtual environment requires a box to build off of.
       # If this value is a shorthand to a box in Vagrant Cloud then
@@ -26,7 +26,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # via the IP. Host-only networks can talk to the host machine as well as
       # any other machines on the same network, but cannot be accessed (through this
       # network interface) by any external networks.
-      db_config.vm.network :private_network, ip: "33.33.33.2#{node_num}"
+      db_config.vm.network :private_network, ip: "33.33.33.2#{db_node_num}"
+
+      if Vagrant.has_plugin?("vagrant-cachier")
+        config.cache.scope = :box
+        config.cache.enable :apt
+      end
 
       # Create a public network, which generally matched to bridged network.
       # Bridged networks make the machine appear as another physical device on
@@ -61,7 +66,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # information on available options.
 
       db_config.vm.provider "virtualbox" do |vb|
-        vb.name = "mariadb_galera_cluster_#{node_num}"
+        vb.name = "galera_cluster_#{db_node_num}"
+        vb.customize ["modifyvm", :id, "--memory", "1028"]
+        vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+        vb.customize ["modifyvm", :id, "--cpus", 1]
       end
 
       # The path to the Berksfile to use with Vagrant Berkshelf
@@ -80,28 +89,50 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # to skip installing and copying to Vagrant's shelf.
       # db_config.berkshelf.except = []
 
-      db_config.omnibus.chef_version = :latest
+      db_config.omnibus.chef_version = '12.0.3'
 
-      cluster_nodes = node_num == 1 ? [] : [{ :name => "mariadb-galera-cluster-1", fqdn: "33.33.33.21"}]
+      cluster_nodes = [1,2,3].map { |s| { :name => "galera_cluster_"+s.to_s, fqdn: "33.33.33.2"+s.to_s } }
 
       db_config.vm.provision :chef_solo do |chef|
+        chef.cookbooks_path = ["../../cookbooks", "../../site-cookbooks"]
+        chef.roles_path = "../../roles"
+        chef.data_bags_path = "../../data_bags"
 
         chef.json = {
           :mariadb => {
-            :galera => {
-              :cluster_nodes => cluster_nodes
-            },
             :use_default_repository => true,
             :apt_repository => {
               :base_url => "lon1.mirrors.digitalocean.com/mariadb/repo"
+            },
+            :galera => {
+              :cluster_nodes => cluster_nodes,
+              :options => {
+                :wsrep_node_address => "33.33.33.2#{db_node_num}",
+                :"bind-address"  => '0.0.0.0'
+              }
+            },
+            :innodb => {
+              :options => {
+                :innodb_autoinc_lock_mode => 2
+              }
+            },
+            :replication => {
+              :options => {
+                :binlog_format => "ROW"
+              }
             }
           }
         }
 
-        chef.run_list = [
-          "recipe[mariadb::galera]"
-        ]
+        chef.run_list = ["recipe[mariadb::galera]"]
       end
+      db_config.vm.provision "shell", inline: "mysql -u root -e 'GRANT ALL PRIVILEGES on *.* TO \"galera-test\"@\"%\" IDENTIFIED BY \"galera-test\"'"
+      if db_node_num == 1
+        db_config.vm.provision "shell", inline: "if [ ! -f /etc/mysql/init_galera.lock ]; then touch /etc/mysql/init_galera.lock && /etc/init.d/mysql stop && /etc/init.d/mysql start --wsrep-new-cluster; fi"
+      else
+        db_config.vm.provision "shell", inline: "/etc/init.d/mysql stop && /etc/init.d/mysql start"
+      end
+
     end
   end
 end
