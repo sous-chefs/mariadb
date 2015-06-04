@@ -21,7 +21,11 @@ end
 default['mariadb']['forbid_remote_root']                = true
 default['mariadb']['server_root_password']              = ''
 default['mariadb']['allow_root_pass_change']            = false
-default['mariadb']['mysqld']['service_name']            = 'mysql'
+if node['platform'] == 'centos'
+  default['mariadb']['mysqld']['service_name']          = 'mariadb'
+else
+  default['mariadb']['mysqld']['service_name']            = 'mysql'
+end
 default['mariadb']['mysqld']['user']                    = 'mysql'
 default['mariadb']['mysqld']['port']                    = '3306'
 default['mariadb']['mysqld']['basedir']                 = '/usr'
