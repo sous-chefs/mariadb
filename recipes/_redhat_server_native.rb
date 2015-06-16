@@ -23,7 +23,7 @@ node.set['mariadb']['mysqld']['service_name'] = service_name\
   unless service_name.nil?
 
 directory '/var/log/mysql' do
-  action :create
+  action :nothing
   user 'mysql'
   group 'mysql'
   mode '0755'
@@ -31,6 +31,7 @@ end
 
 package 'mariadb-server' do
   action :install
+  notifies :create, 'directory[/var/log/mysql]', :immediately
   notifies :enable, 'service[mysql]'
   notifies :start, 'service[mysql]', :immediately
   notifies :run, 'execute[change first install root password]', :immediately
