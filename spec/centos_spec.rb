@@ -80,11 +80,14 @@ describe 'centos::mariadb::native' do
 
     it 'Install os shipped package' do
       expect(chef_run).to install_package('mariadb-server')
-      expect(os_package).to notify('service[mysql]').to(:start).immediately
     end
 
     it 'Create Log directory' do
       expect(chef_run).to create_directory('/var/log/mysql')
+    end
+
+    it 'Does not restart mysql service' do
+      expect(chef_run).to_not restart_service('mysql')
     end
 
     it 'Server service with the correct name' do
