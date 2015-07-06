@@ -143,9 +143,9 @@ default['mariadb']['install']['prefer_os_package'] = false
 # package(apt or yum) default configuration
 #
 default['mariadb']['use_default_repository'] = false
-default['mariadb']['apt_repository']['base_url'] = \
-  'ftp.igh.cnrs.fr/pub/mariadb/repo'
-
+default['mariadb']['apt_repository']['base_url'] = 'nyc2.mirrors.digitalocean.com/mariadb/repo/'
+default['mariadb']['apt_repository']['key'] ="0xcbcb082a1bb943db"
+default['mariadb']['apt_repository']['keyserver'] ="hkp://keyserver.ubuntu.com:80"
 #
 # MariaDB Plugins enabling
 #
