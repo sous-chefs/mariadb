@@ -15,7 +15,7 @@ if node['mariadb']['use_default_repository']
         node['mariadb']['install']['version'] + '/' + node['platform']
       distribution node['lsb']['codename']
       components ['main']
-      keyserver 'hkp://keyserver.ubuntu.com:80'
+      keyserver 'keyserver.ubuntu.com'
       key '0xcbcb082a1bb943db'
     end
   when 'yum'
