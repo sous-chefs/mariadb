@@ -82,7 +82,7 @@ execute 'mariadb-service-restart-needed' do
   command 'true'
   only_if do
     mariadb_service_restart_required?(
-      '127.0.0.1',
+      node['mariadb']['mysqld']['bind_address'],
       node['mariadb']['mysqld']['port'],
       node['mariadb']['mysqld']['socket']
     )

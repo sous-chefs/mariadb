@@ -155,3 +155,18 @@ if platform?('debian', 'ubuntu')
     ignore_failure true
   end
 end
+
+# restart the service if needed
+# workaround idea from https://github.com/stissot
+Chef::Resource::Execute.send(:include, MariaDB::Helper)
+execute 'mariadb-service-restart-needed' do
+  command 'true'
+  only_if do
+    mariadb_service_restart_required?(
+      node['mariadb']['mysqld']['bind-address'],
+      node['mariadb']['mysqld']['port'],
+      node['mariadb']['mysqld']['socket']
+    )
+  end
+  notifies :restart, 'service[mysql]', :immediately
+end
