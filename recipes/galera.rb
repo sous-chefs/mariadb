@@ -37,7 +37,7 @@ if node['mariadb']['galera']['wsrep_sst_method'] == 'rsync'
     action :install
   end
 else
-  if node['mariadb']['galera']['wsrep_sst_method'] == 'xtrabackup'
+  if node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
     package 'percona-xtrabackup' do
       action :install
     end
