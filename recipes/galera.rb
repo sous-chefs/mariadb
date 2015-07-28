@@ -155,3 +155,25 @@ if platform?('debian', 'ubuntu')
     ignore_failure true
   end
 end
+
+#
+#  NOTE: You cannot use the following code to restart Mariadb when in Galera mode.
+#        When your SST is longer than a chef run...
+#        ==> chef-client try to restart the service each time it run <==
+#
+
+# restart the service if needed
+# workaround idea from https://github.com/stissot
+#
+# Chef::Resource::Execute.send(:include, MariaDB::Helper)
+# execute 'mariadb-service-restart-needed' do
+#   command 'true'
+#   only_if do
+#     mariadb_service_restart_required?(
+#       node['mariadb']['mysqld']['bind-address'],
+#       node['mariadb']['mysqld']['port'],
+#       node['mariadb']['mysqld']['socket']
+#     )
+#   end
+#   notifies :restart, 'service[mysql]', :immediately
+# end
