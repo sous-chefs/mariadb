@@ -44,5 +44,5 @@ execute 'change first install root password' do
   not_if { node['mariadb']['server_root_password'].empty? }
 end
 
-#Default policy for RH and fedora is to name it mysql
+# Default policy for RH and fedora is to name it mysql
 node.set['mariadb']['mysqld']['service_name'] = 'mysql'
