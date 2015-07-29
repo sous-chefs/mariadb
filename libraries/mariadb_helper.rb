@@ -53,7 +53,7 @@ module MariaDB
     def os_service_name(os_platform, os_version)
       return nil unless os_package_provided?(os_platform, os_version)
       service_name = 'mariadb'
-      if os_platform == 'fedora' && os_version.to_i == 19
+      if os_platform == 'fedora' && os_version.to_i >= 19
         service_name = 'mysqld'
       end
       service_name

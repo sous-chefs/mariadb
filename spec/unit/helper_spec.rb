@@ -86,7 +86,7 @@ describe MariaDB::Helper do
       it 'native os service name' do
         support_platforms.each do |platform, ver_list|
           ver_list.each do |version|
-            if platform == 'fedora' && version == '19'
+            if platform == 'fedora' && version >= '19'
               expect(
                 dummy_helper.os_service_name(
                   platform, version
