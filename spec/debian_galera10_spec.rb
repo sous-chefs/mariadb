@@ -115,14 +115,14 @@ describe 'debian::mariadb::galera10-rsync' do
   end
 end
 
-describe 'debian::mariadb::galera10-xtrabackup' do
+describe 'debian::mariadb::galera10-xtrabackup-v2' do
   let(:chef_run) do
     runner = ChefSpec::SoloRunner.new(platform: 'debian', version: '7.4',
                                       step_into: ['mariadb_configuration']
                                      ) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
-      node.set['mariadb']['galera']['wsrep_sst_method'] = 'xtrabackup'
+      node.set['mariadb']['galera']['wsrep_sst_method'] = 'xtrabackup-v2'
       node.set['mariadb']['rspec'] = true
     end
     runner.converge('mariadb::galera')
