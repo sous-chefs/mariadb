@@ -99,6 +99,7 @@ default['mariadb']['replication']['log_bin_index']    = \
   '/var/log/mysql/mariadb-bin.index'
 default['mariadb']['replication']['expire_logs_days'] = '10'
 default['mariadb']['replication']['max_binlog_size']  = '100M'
+default['mariadb']['replication']['options']          = {}
 
 #
 # mysqldump default configuration

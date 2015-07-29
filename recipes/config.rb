@@ -73,6 +73,7 @@ mariadb_configuration 'innodb' do
 end
 
 replication_opts = {}
+
 replication_opts['log_bin'] = node['mariadb']['replication']['log_bin']
 replication_opts['log_bin_index']    = \
   node['mariadb']['replication']['log_bin_index']
@@ -83,10 +84,8 @@ replication_opts['max_binlog_size']  = \
 unless node['mariadb']['replication']['server_id'].empty?
   replication_opts['server-id'] = node['mariadb']['replication']['server_id']
 end
-if node['mariadb']['replication'].key?('options')
-  node['mariadb']['replication']['options'].each do |key, value|
-    replication_opts[key] = value
-  end
+node['mariadb']['replication']['options'].each do |key, value|
+  replication_opts[key] = value
 end
 
 mariadb_configuration 'replication' do
