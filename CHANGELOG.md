@@ -3,6 +3,18 @@ mariadb CHANGELOG
 
 This file is used to list changes made in each version of the mariadb cookbook.
 
+0.3.1
+-----
+- [BUG #76] - Service is restarted every run if not localhost
+- [BUG #73] - Fix directory permissions regression
+- [BUG #69] - Update repository.rb to be able to manage Scientific Linux
+- [BUG #57] - Add user and password to correct debian-grants
+- [ENH #71] - Add xtrabackup-v2 support for SST Method
+- [ENH #62] - Allow Galera cluster nodes to be configured when using Chef Solo
+- [ENH #64] - Add a vagrant config to test a galera cluster
+- [BUG #66] - mariadb_configuration template uses current cookbook as template source
+- [BUG #68] - Correct service name inconsistency on CentOS 7
+
 0.3.0
 ------
 - [ENH] - Add support for using operating system shipped mariadb packages
