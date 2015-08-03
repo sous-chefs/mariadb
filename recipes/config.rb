@@ -81,15 +81,18 @@ end
 
 replication_opts = {}
 
-replication_opts['log_bin'] = node['mariadb']['replication']['log_bin']
-replication_opts['sync_binlog'] = \
-  node['mariadb']['replication']['sync_binlog']
-replication_opts['log_bin_index'] = \
-  node['mariadb']['replication']['log_bin_index']
-replication_opts['expire_logs_days'] = \
-  node['mariadb']['replication']['expire_logs_days']
-replication_opts['max_binlog_size'] = \
-  node['mariadb']['replication']['max_binlog_size']
+if node['mariadb']['replication']['log_bin']
+  replication_opts['log_bin'] = node['mariadb']['replication']['log_bin']
+  replication_opts['sync_binlog'] = \
+    node['mariadb']['replication']['sync_binlog']
+  replication_opts['log_bin_index']    = \
+    node['mariadb']['replication']['log_bin_index']
+  replication_opts['expire_logs_days'] = \
+    node['mariadb']['replication']['expire_logs_days']
+  replication_opts['max_binlog_size']  = \
+    node['mariadb']['replication']['max_binlog_size']
+end
+
 unless node['mariadb']['replication']['server_id'].empty?
   replication_opts['server-id'] = node['mariadb']['replication']['server_id']
 end
