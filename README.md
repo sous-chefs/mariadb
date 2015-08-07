@@ -130,7 +130,8 @@ Example:
 ```ruby
 mariadb_configuration 'fake' do
   section 'mysqld'
-  option {foo: 'bar'}
+  option :innodb_buffer_pool_size => node['mysql']['innodb_buffer_pool_size'],
+    :innodb_flush_method => node['mysql']['innodb_flush_method']
 end
 ```
 will become the file fake.cnf in the include dir (depend on your platform), which contain:
@@ -145,7 +146,8 @@ Example:
 ```ruby
 mariadb_configuration 'fake' do
   section 'mysqld'
-  option {comment1: '# Here i am', foo: bar}
+  option :comment1 => '# Here i am',
+    :foo => bar
 end
 ```
 will become the file fake.cnf in the include dir (depend on your platform), which contain:
