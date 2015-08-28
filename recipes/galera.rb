@@ -169,6 +169,8 @@ unless node['mariadb']['galera']['wsrep_node_incoming_address_interface'].empty?
   galera_options['wsrep_node_incoming_address'] = \
     ipaddress_inc unless ipaddress_inc.empty?
 end
+
+galera_options['wsrep_slave_threads'] = node['cpu']['total'] * 4
 node['mariadb']['galera']['options'].each do |key, value|
   galera_options[key] = value
 end

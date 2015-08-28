@@ -62,7 +62,7 @@ else
 end
 innodb_options['innodb_log_buffer_size'] = \
   node['mariadb']['innodb']['log_buffer_size']
-innodb_options['innodb_file_per_table']  = \
+innodb_options['innodb_file_per_table'] = \
   node['mariadb']['innodb']['file_per_table']
 innodb_options['innodb_open_files'] = node['mariadb']['innodb']['open_files']
 innodb_options['innodb_io_capacity'] = \
@@ -89,7 +89,7 @@ if node['mariadb']['replication']['log_bin']
     node['mariadb']['replication']['log_bin_index']
   replication_opts['expire_logs_days'] = \
     node['mariadb']['replication']['expire_logs_days']
-  replication_opts['max_binlog_size']  = \
+  replication_opts['max_binlog_size'] = \
     node['mariadb']['replication']['max_binlog_size']
 end
 

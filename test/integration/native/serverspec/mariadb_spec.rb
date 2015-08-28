@@ -4,8 +4,8 @@ service_name = 'mariadb'
 service_name = 'mysqld' if os[:family] == 'fedora' && os[:release].to_i == 19
 
 describe service(service_name) do
-  it { should be_enabled   }
-  it { should be_running   }
+  it { should be_enabled }
+  it { should be_running }
 end
 
 describe port('3306') do
