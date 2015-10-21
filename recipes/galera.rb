@@ -153,6 +153,7 @@ if platform?('debian', 'ubuntu')
       cmd.error?
     end
     ignore_failure true
+	sensitive true
   end
 end
 
