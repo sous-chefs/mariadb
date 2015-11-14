@@ -87,17 +87,17 @@ end
 galera_options = {}
 
 galera_options['wsrep_cluster_address'] = gcomm
-galera_options['wsrep_cluster_name']    = \
+galera_options['wsrep_cluster_name'] = \
   node['mariadb']['galera']['cluster_name']
-galera_options['wsrep_sst_method']      = \
+galera_options['wsrep_sst_method'] = \
   node['mariadb']['galera']['wsrep_sst_method']
 if node['mariadb']['galera'].attribute?('wsrep_sst_auth')
-  galera_options['wsrep_sst_auth']        = \
+  galera_options['wsrep_sst_auth'] = \
     node['mariadb']['galera']['wsrep_sst_auth']
 end
-galera_options['wsrep_provider']        = \
+galera_options['wsrep_provider'] = \
   node['mariadb']['galera']['wsrep_provider']
-galera_options['wsrep_slave_threads']   = node['cpu']['total'] * 4
+galera_options['wsrep_slave_threads'] = node['cpu']['total'] * 4
 node['mariadb']['galera']['options'].each do |key, value|
   galera_options[key] = value
 end

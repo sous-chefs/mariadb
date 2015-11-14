@@ -159,14 +159,16 @@ default_storage_engine	= <%= node['mariadb']['mysqld']['default_storage_engine']
 <%   } -%>
 <% end -%>
 
+<% plugin_load = [] -%>
+<%   node['mariadb']['plugins_loading'].each { |plugin, loading| -%>
+  <% plugin_load.push(loading) if node['mariadb']['plugins'][plugin] -%>
+<%   } -%>
+<% unless plugin_load.empty? -%>
 #
 # * Plugins Options
 #
-<% plugin_load = [] -%>
-<%   node['mariadb']['plugins_loading'].each { |plugin, loading| -%>
-  <% plugin_load.push(loading) if node['mariadb']['plugins'][plugin] %>
-<%   } -%>
 plugin-load = <%= plugin_load.join(';') %>
+<% end -%>
 
 [mysqldump]
 <% if node['mariadb']['mysqldump']['quick'].empty? -%>
