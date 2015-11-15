@@ -203,6 +203,13 @@ max_allowed_packet	= <%= node['mariadb']['mysqldump']['max_allowed_packet'] %>
 [isamchk]
 key_buffer		= <%= node['mariadb']['isamchk']['key_buffer'] %>
 
+<% if node['mariadb']['sst'].key?('options') -%>
+[sst]
+<%   node['mariadb']['sst']['options'].each { |key, value| -%>
+<%= key %> = <%= value %>
+<%   } -%>
+
+<% end -%>
 #
 # * IMPORTANT: Additional settings that can override those from this file!
 #   The files must end with '.cnf', otherwise they'll be ignored.
