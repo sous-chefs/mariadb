@@ -102,7 +102,7 @@ suites:
       mariadb:
         use_default_repository: true
         plugins:
-          audit: true
+           audit: true
   #
   # no_binlog
   #
@@ -114,3 +114,16 @@ suites:
         use_default_repository: true
         replication:
           log_bin: false
+  - name: sst_config
+    run_list:
+      - recipe[mariadb::galera]
+    attributes:
+      mariadb:
+        use_default_repository: true
+        galera:
+          wsrep_sst_method: xtrabackup-v2
+        sst:
+          options:
+            tkey: /etc/mysql/server-key.pem
+            tcert: /etc/mysql/server-cert.pem
+            encrypt: 3 
