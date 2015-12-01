@@ -66,7 +66,7 @@ node['mariadb']['innodb']['options'].each do |key, value|
   innodb_options[key] = value
 end
 
-mariadb_configuration 'innodb' do
+mariadb_configuration '20-innodb' do
   section 'mysqld'
   option innodb_options
   action :add
@@ -88,7 +88,7 @@ node['mariadb']['replication']['options'].each do |key, value|
   replication_opts[key] = value
 end
 
-mariadb_configuration 'replication' do
+mariadb_configuration '30-replication' do
   section 'mysqld'
   option replication_opts
   action :add

@@ -17,6 +17,24 @@
 # limitations under the License.
 #
 
+exist_data_bag_mariadb_root = search(:mariadb, "id:user_root").first
+unless exist_data_bag_mariadb_root.nil?
+  data_bag_mariadb_root = data_bag_item('mariadb', 'user_root')
+  node.override['mariadb']['server_root_password'] = data_bag_mariadb_root['password']
+end
+
+exist_data_bag_mariadb_debian = search(:mariadb, "id:user_debian").first
+unless exist_data_bag_mariadb_debian.nil?
+  data_bag_mariadb_debian = data_bag_item('mariadb', 'user_debian')
+  node.override['mariadb']['debian']['password'] = data_bag_mariadb_debian['password']
+end
+
+exist_data_bag_mariadb_sstuser = search(:mariadb, "id:user_sstuser").first
+unless exist_data_bag_mariadb_sstuser.nil?
+  data_bag_mariadb_sstuser = data_bag_item('mariadb', 'user_sstuser')
+  node.override['mariadb']['galera']['wsrep_sst_auth'] = data_bag_mariadb_sstuser['user_password']
+end
+
 case node['mariadb']['install']['type']
 when 'package'
   # include MariaDB repositories
@@ -51,7 +69,7 @@ end
 include_recipe "#{cookbook_name}::config"
 
 galera_cluster_nodes = []
-if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo]
+if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo] || Chef::Config[:local_mode]
   if node['mariadb']['galera']['cluster_nodes'].empty?
     Chef::Log.warn('By default this recipe uses search (unsupported by Chef Solo).' \
                    ' Nodes may manually be configured as attributes.')
@@ -79,6 +97,7 @@ first = true
 gcomm = 'gcomm://'
 galera_cluster_nodes.each do |lnode|
   next unless lnode.name != node.name
+  log "Adding node #{lnode['fqdn']} to gcomm://.'"
   gcomm += ',' unless first
   gcomm += lnode['fqdn']
   first = false
@@ -86,6 +105,26 @@ end
 
 galera_options = {}
 
+if node['mariadb']['install']['version'].to_f >= 10.1
+  galera_options['wsrep_on'] = 'ON'
+  galera_options['innodb_autoinc_lock_mode'] = '2'
+  galera_options['innodb_doublewrite'] = '1'
+end
+if !node['mariadb']['galera']['wsrep_provider_options'].empty?
+  first = true
+  wsrep_prov_opt = '"'
+  node['mariadb']['galera']['wsrep_provider_options'].each do |opt,val|
+    log 'Adding wsrep_provider_option ' + opt + ' with value ' + val
+    wsrep_prov_opt += ';' unless first
+    wsrep_prov_opt += opt + '=' + val
+    first = false
+  end
+  wsrep_prov_opt += '"'
+  galera_options['wsrep_provider_options'] = wsrep_prov_opt
+end
+galera_options['query_cache_size'] = '0'
+galera_options['binlog_format'] = 'ROW'
+galera_options['default_storage_engine'] = 'InnoDB'
 galera_options['wsrep_cluster_address'] = gcomm
 galera_options['wsrep_cluster_name']    = \
   node['mariadb']['galera']['cluster_name']
@@ -97,15 +136,45 @@ if node['mariadb']['galera'].attribute?('wsrep_sst_auth')
 end
 galera_options['wsrep_provider']        = \
   node['mariadb']['galera']['wsrep_provider']
-galera_options['wsrep_slave_threads']   = node['cpu']['total'] * 4
+if node['mariadb']['galera'].attribute?('wsrep_slave_threads')
+  galera_options['wsrep_slave_threads']   = \
+    node['mariadb']['galera']['wsrep_slave_threads']
+else
+  galera_options['wsrep_slave_threads']   = node['cpu']['total'] * 4
+end
+if !node['mariadb']['galera']['wsrep_node_address_interface'].empty?
+  ipaddress = ''
+  iface = node['mariadb']['galera']['wsrep_node_address_interface']
+  node['network']["interfaces"]["#{iface}"]["addresses"].each do |ip, params|
+    log "#{ip} #{params}"
+    if params['family'] == ('inet')
+      ipaddress = ip
+    end
+  end
+  galera_options['wsrep_node_address'] = ipaddress if !ipaddress.empty?
+  end
+end
+if !node['mariadb']['galera']['wsrep_node_incoming_address_interface'].empty?
+  ipaddress_inc = ''
+  iface = node['mariadb']['galera']['wsrep_node_incoming_address_interface']
+  node['network']["interfaces"]["#{iface}"]["addresses"].each do |ip, params|
+    log "#{ip} #{params}"
+    if params['family'] == ('inet')
+      ipaddress_inc = ip
+    end
+  end
+  galera_options['wsrep_node_incoming_address'] = ipaddress_inc if !ipaddress_inc.empty?
+  end
+end
 node['mariadb']['galera']['options'].each do |key, value|
   galera_options[key] = value
 end
 
-mariadb_configuration 'galera' do
+mariadb_configuration '90-galera' do
   section 'mysqld'
   option galera_options
   action :add
+  sensitive true
 end
 
 #
@@ -148,6 +217,48 @@ if platform?('debian', 'ubuntu')
       cmd = Mixlib::ShellOut.new("/usr/bin/mysql --user=\"" + \
         node['mariadb']['debian']['user'] + \
         "\" --password=\"" + node['mariadb']['debian']['password'] + \
+        "\" -r -B -N -e \"SELECT 1\"")
+      cmd.run_command
+      cmd.error?
+    end
+    ignore_failure true
+    sensitive true
+  end
+end
+
+if node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
+
+  sstuser, sstpassword = node['mariadb']['galera']['wsrep_sst_auth'].split(/:/)
+
+  sstuser_grants_command = 'mysql -r -B -N -u root '
+
+  if node['mariadb']['server_root_password'].is_a?(String)
+    sstuser_grants_command += '--password=\'' + \
+                      node['mariadb']['server_root_password'] + '\' '
+  end
+
+  sstuser_grants_command += '-e "CREATE USER \'' + sstuser + '\'@\'localhost\' ' \
+                    'IDENTIFIED BY \'' + sstpassword + '\';' \
+                    'GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ' \
+                    'DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, ' \
+                    'INDEX, ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY ' \
+                    'TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, ' \
+                    'REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ' \
+                    'ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER ON ' \
+                    ' *.* TO \'' + sstuser + \
+                    '\'@\'localhost\' ' \
+                    'IDENTIFIED BY \'' + \
+                    sstpassword + '\' WITH GRANT ' \
+                    'OPTION"'
+
+  execute 'create-sstuser-grants' do
+    # Add sensitive true when foodcritic #233 fixed
+    command sstuser_grants_command
+    action :run
+    only_if do
+      cmd = Mixlib::ShellOut.new("/usr/bin/mysql --user=\"" + \
+        sstuser + \
+        "\" --password=\"" + sstpassword + \
         "\" -r -B -N -e \"SELECT 1\"")
       cmd.run_command
       cmd.error?

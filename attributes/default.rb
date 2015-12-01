@@ -81,9 +81,14 @@ default['mariadb']['innodb']['options']                = {}
 #
 default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
 default['mariadb']['galera']['cluster_search_query'] = ''
-default['mariadb']['galera']['wsrep_sst_method']   = 'rsync'
+default['mariadb']['galera']['wsrep_sst_method']   = 'xtrabackup-v2'
+default['mariadb']['galera']['wsrep_sst_auth']     = 'sstuser:some_secret_password'
 default['mariadb']['galera']['wsrep_provider']     = \
   '/usr/lib/galera/libgalera_smm.so'
+default['mariadb']['galera']['wsrep_slave_threads'] = '4'
+default['mariadb']['galera']['wsrep_node_address_interface'] = ''    #         node[:network][:interfaces][:eth1][:address][:inet]
+default['mariadb']['galera']['wsrep_node_incoming_address_interface'] = ''
+default['mariadb']['galera']['wsrep_provider_options'] = {}
 default['mariadb']['galera']['options']            = {}
 
 # Node format: [{ :name => "mariadb_1", fqdn: "33.33.33.11"}]
