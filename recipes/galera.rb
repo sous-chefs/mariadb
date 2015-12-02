@@ -59,8 +59,10 @@ else
     package 'percona-xtrabackup' do
       action :install
     end
-
     package 'socat' do
+      action :install
+    end
+    package 'pv' do
       action :install
     end
   end
@@ -97,7 +99,6 @@ first = true
 gcomm = 'gcomm://'
 galera_cluster_nodes.each do |lnode|
   next unless lnode.name != node.name
-  log "Adding node #{lnode['fqdn']} to gcomm://.'"
   gcomm += ',' unless first
   gcomm += lnode['fqdn']
   first = false
@@ -105,16 +106,25 @@ end
 
 galera_options = {}
 
+# Mandatory settings
+galera_options['query_cache_size'] = '0'
+galera_options['binlog_format'] = 'ROW'
+galera_options['default_storage_engine'] = 'InnoDB'
+galera_options['innodb_autoinc_lock_mode'] = '2'
+galera_options['innodb_doublewrite'] = '1'
+galera_options['server_id'] = \
+  node['mariadb']['galera']['server_id']
+# Tuning paramaters
+galera_options['innodb_flush_log_at_trx_commit'] = \
+  node['mariadb']['galera']['innodb_flush_log_at_trx_commit']
+#
 if node['mariadb']['install']['version'].to_f >= 10.1
   galera_options['wsrep_on'] = 'ON'
-  galera_options['innodb_autoinc_lock_mode'] = '2'
-  galera_options['innodb_doublewrite'] = '1'
 end
 if !node['mariadb']['galera']['wsrep_provider_options'].empty?
   first = true
   wsrep_prov_opt = '"'
   node['mariadb']['galera']['wsrep_provider_options'].each do |opt,val|
-    log 'Adding wsrep_provider_option ' + opt + ' with value ' + val
     wsrep_prov_opt += ';' unless first
     wsrep_prov_opt += opt + '=' + val
     first = false
@@ -122,9 +132,6 @@ if !node['mariadb']['galera']['wsrep_provider_options'].empty?
   wsrep_prov_opt += '"'
   galera_options['wsrep_provider_options'] = wsrep_prov_opt
 end
-galera_options['query_cache_size'] = '0'
-galera_options['binlog_format'] = 'ROW'
-galera_options['default_storage_engine'] = 'InnoDB'
 galera_options['wsrep_cluster_address'] = gcomm
 galera_options['wsrep_cluster_name']    = \
   node['mariadb']['galera']['cluster_name']
@@ -146,25 +153,22 @@ if !node['mariadb']['galera']['wsrep_node_address_interface'].empty?
   ipaddress = ''
   iface = node['mariadb']['galera']['wsrep_node_address_interface']
   node['network']["interfaces"]["#{iface}"]["addresses"].each do |ip, params|
-    log "#{ip} #{params}"
     if params['family'] == ('inet')
       ipaddress = ip
     end
   end
   galera_options['wsrep_node_address'] = ipaddress if !ipaddress.empty?
-  end
 end
 if !node['mariadb']['galera']['wsrep_node_incoming_address_interface'].empty?
   ipaddress_inc = ''
   iface = node['mariadb']['galera']['wsrep_node_incoming_address_interface']
   node['network']["interfaces"]["#{iface}"]["addresses"].each do |ip, params|
-    log "#{ip} #{params}"
     if params['family'] == ('inet')
       ipaddress_inc = ip
     end
   end
-  galera_options['wsrep_node_incoming_address'] = ipaddress_inc if !ipaddress_inc.empty?
-  end
+  galera_options['wsrep_node_incoming_address'] = \
+    ipaddress_inc if !ipaddress_inc.empty?
 end
 node['mariadb']['galera']['options'].each do |key, value|
   galera_options[key] = value
@@ -226,6 +230,10 @@ if platform?('debian', 'ubuntu')
   end
 end
 
+#
+# Galera SST method xtrabackup will need a seperated mysql sstuser as root
+# should not be used.
+#
 if node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
 
   sstuser, sstpassword = node['mariadb']['galera']['wsrep_sst_auth'].split(/:/)
@@ -237,22 +245,13 @@ if node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
                       node['mariadb']['server_root_password'] + '\' '
   end
 
-  sstuser_grants_command += '-e "CREATE USER \'' + sstuser + '\'@\'localhost\' ' \
-                    'IDENTIFIED BY \'' + sstpassword + '\';' \
-                    'GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ' \
-                    'DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, ' \
-                    'INDEX, ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY ' \
-                    'TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, ' \
-                    'REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ' \
-                    'ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER ON ' \
-                    ' *.* TO \'' + sstuser + \
+  sstuser_grants_command += \
+                    '-e "GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ' \
+                    ' ON *.* TO \'' + sstuser + \
                     '\'@\'localhost\' ' \
-                    'IDENTIFIED BY \'' + \
-                    sstpassword + '\' WITH GRANT ' \
-                    'OPTION"'
+                    'IDENTIFIED BY \'' + sstpassword + '\'"'
 
-  execute 'create-sstuser-grants' do
-    # Add sensitive true when foodcritic #233 fixed
+  execute 'sstuser-grants' do
     command sstuser_grants_command
     action :run
     only_if do

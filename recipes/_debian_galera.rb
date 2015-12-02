@@ -41,7 +41,8 @@ template '/var/cache/local/preseeding/mariadb-galera-server.seed' do
   group 'root'
   mode '0600'
   variables(:package_name => 'mariadb-server')
-    notifies :run, 'execute[preseed mariadb-galera-server]', :immediately
+  notifies :run, 'execute[preseed mariadb-galera-server]', :immediately
+  sensitive true
 end
 
 execute 'preseed mariadb-galera-server' do
@@ -52,9 +53,6 @@ end
 
 if node['mariadb']['install']['version'].to_f < 10.1
   package "mariadb-galera-server-#{node['mariadb']['install']['version']}" do
-    action :install
-  end
-  package "pv" do
     action :install
   end
 else

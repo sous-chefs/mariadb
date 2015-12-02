@@ -75,6 +75,8 @@ end
 replication_opts = {}
 
 replication_opts['log_bin'] = node['mariadb']['replication']['log_bin']
+replication_opts['sync_binlog'] = \
+  node['mariadb']['replication']['sync_binlog']
 replication_opts['log_bin_index']    = \
   node['mariadb']['replication']['log_bin_index']
 replication_opts['expire_logs_days'] = \

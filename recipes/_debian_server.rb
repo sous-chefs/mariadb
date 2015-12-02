@@ -55,7 +55,8 @@ template '/var/cache/local/preseeding/mariadb-server.seed' do
   group 'root'
   mode '0600'
   variables(:package_name => 'mariadb-server')
-    notifies :run, 'execute[preseed mariadb-server]', :immediately
+  notifies :run, 'execute[preseed mariadb-server]', :immediately
+  sensitive true
 end
 
 execute 'preseed mariadb-server' do

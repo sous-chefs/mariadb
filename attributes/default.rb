@@ -81,14 +81,20 @@ default['mariadb']['innodb']['options']                = {}
 #
 default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
 default['mariadb']['galera']['cluster_search_query'] = ''
+# All Galera nodes should get the same server_id
+default['mariadb']['galera']['server_id']          = '100'
 default['mariadb']['galera']['wsrep_sst_method']   = 'xtrabackup-v2'
 default['mariadb']['galera']['wsrep_sst_auth']     = 'sstuser:some_secret_password'
 default['mariadb']['galera']['wsrep_provider']     = \
   '/usr/lib/galera/libgalera_smm.so'
 default['mariadb']['galera']['wsrep_slave_threads'] = '4'
-default['mariadb']['galera']['wsrep_node_address_interface'] = ''    #         node[:network][:interfaces][:eth1][:address][:inet]
+# Default value is '1' but can be relaxed to '2' or even '0' with Galera
+default['mariadb']['galera']['innodb_flush_log_at_trx_commit'] = '2'
+default['mariadb']['galera']['wsrep_node_address_interface'] = ''
 default['mariadb']['galera']['wsrep_node_incoming_address_interface'] = ''
-default['mariadb']['galera']['wsrep_provider_options'] = {}
+default['mariadb']['galera']['wsrep_provider_options'] = {
+  'gcache.size' => '512M'
+}
 default['mariadb']['galera']['options']            = {}
 
 # Node format: [{ :name => "mariadb_1", fqdn: "33.33.33.11"}]
@@ -102,6 +108,8 @@ default['mariadb']['replication']['log_bin']          = \
   '/var/log/mysql/mariadb-bin'
 default['mariadb']['replication']['log_bin_index']    = \
   '/var/log/mysql/mariadb-bin.index'
+# Setting sync_binlog to 1 will cause a performance impact
+default['mariadb']['replication']['sync_binlog']      = '0'
 default['mariadb']['replication']['expire_logs_days'] = '10'
 default['mariadb']['replication']['max_binlog_size']  = '100M'
 default['mariadb']['replication']['options']          = {}
