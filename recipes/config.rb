@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-if ['mariadb']['root_my_cnf']
+if node['mariadb']['root_my_cnf']
   template '/root/.my.cnf' do
     source 'root.cnf.erb'
     owner 'root'
