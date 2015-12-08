@@ -13,5 +13,5 @@ describe command('/usr/bin/mysql -u root -B -N -e "SELECT 1 '\
                   'FROM information_schema.plugins '\
                   'WHERE PLUGIN_NAME = \"SERVER_AUDIT\"'\
                   'AND PLUGIN_STATUS = \"ACTIVE\""') do
-  its(:stdout)  { should match(/^1$/) }
+  its(:stdout) { should match(/^1$/) }
 end

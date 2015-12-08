@@ -20,17 +20,19 @@ end
 #
 default['mariadb']['forbid_remote_root']                = true
 default['mariadb']['server_root_password']              = ''
+default['mariadb']['root_my_cnf']                       = false
 default['mariadb']['allow_root_pass_change']            = false
 if node['platform'] == 'centos'
   default['mariadb']['mysqld']['service_name']          = 'mariadb'
 else
-  default['mariadb']['mysqld']['service_name']            = 'mysql'
+  default['mariadb']['mysqld']['service_name']          = 'mysql'
 end
 default['mariadb']['mysqld']['user']                    = 'mysql'
 default['mariadb']['mysqld']['port']                    = '3306'
 default['mariadb']['mysqld']['basedir']                 = '/usr'
 default['mariadb']['mysqld']['default_datadir']         = '/var/lib/mysql'
 # if different from previous value, datadir will be moved after install
+# you will have to take care about apparmor/SELinux
 default['mariadb']['mysqld']['datadir']                 = '/var/lib/mysql'
 default['mariadb']['mysqld']['tmpdir']                  = '/var/tmp'
 default['mariadb']['mysqld']['lc_messages_dir']         = '/usr/share/mysql'

@@ -40,7 +40,7 @@ template '/var/cache/local/preseeding/mariadb-galera-server.seed' do
   owner 'root'
   group 'root'
   mode '0600'
-  variables(:package_name => 'mariadb-server')
+  variables(package_name: 'mariadb-server')
   notifies :run, 'execute[preseed mariadb-galera-server]', :immediately
   sensitive true
 end
