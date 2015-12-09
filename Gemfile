@@ -15,7 +15,7 @@ group :packaging do
 end
 
 group :unit do
-  gem 'berkshelf', '~> 3.1'
+  gem 'berkshelf', '~> 4.0'
   gem 'chefspec', '~> 4.2'
 end
 
