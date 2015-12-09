@@ -60,7 +60,7 @@ if node['mariadb']['galera']['wsrep_sst_method'] == 'rsync'
   end
 else
   if node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
-    %w{percona-xtrabackup socat pv}.each do |pkg|
+    %w(percona-xtrabackup socat pv).each do |pkg|
       package pkg do
         action :install
       end
