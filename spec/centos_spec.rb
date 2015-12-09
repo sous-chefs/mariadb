@@ -23,11 +23,11 @@ describe 'centos::mariadb::default' do
 
   it 'Configure replication in /etc/my.cnf.d/30-replication.cnf' do
     expect(chef_run).to create_template('/etc/my.cnf.d/30-replication.cnf')
-    expect(chef_run).to render_file('/etc/my.cnf.d/replication.cnf')
+    expect(chef_run).to render_file('/etc/my.cnf.d/30-replication.cnf')
   end
 
   it 'Configure InnoDB with attributes' do
-    expect(chef_run).to add_mariadb_configuration('innodb')
+    expect(chef_run).to add_mariadb_configuration('20-innodb')
     expect(chef_run).to render_file('/etc/my.cnf.d/20-innodb.cnf')
       .with_content(/innodb_buffer_pool_size = 256M/)
     expect(chef_run).to create_template('/etc/my.cnf.d/20-innodb.cnf')

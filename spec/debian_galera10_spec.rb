@@ -71,7 +71,7 @@ describe 'debian::mariadb::galera10-rsync' do
   end
 
   it 'Create Galera conf file' do
-    expect(chef_run).to add_mariadb_configuration('galera')
+    expect(chef_run).to add_mariadb_configuration('90-galera')
     expect(chef_run).to create_template('/etc/mysql/conf.d/90-galera.cnf')
       .with(
         user:  'root',

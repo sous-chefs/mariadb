@@ -85,7 +85,7 @@ default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
 default['mariadb']['galera']['cluster_search_query'] = ''
 # All Galera nodes should get the same server_id
 default['mariadb']['galera']['server_id']          = '100'
-default['mariadb']['galera']['wsrep_sst_method']   = 'xtrabackup-v2'
+default['mariadb']['galera']['wsrep_sst_method']   = 'rsync'
 default['mariadb']['galera']['wsrep_sst_auth']     = 'sstuser:some_secret_password'
 default['mariadb']['galera']['wsrep_provider']     = \
   '/usr/lib/galera/libgalera_smm.so'
