@@ -40,6 +40,7 @@ template '/var/cache/local/preseeding/mariadb-server.seed' do
   owner 'root'
   group 'root'
   mode '0600'
+  sensitive true
   variables(package_name: 'mariadb-server')
   notifies :run, 'execute[preseed mariadb-server]', :immediately
 end

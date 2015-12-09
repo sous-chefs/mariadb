@@ -141,7 +141,6 @@ if platform?('debian', 'ubuntu')
                     'OPTION"'
 
   execute 'correct-debian-grants' do
-    # Add sensitive true when foodcritic #233 fixed
     command grants_command
     action :run
     only_if do
@@ -152,6 +151,7 @@ if platform?('debian', 'ubuntu')
       cmd.run_command
       cmd.error?
     end
+    sensitive true
     ignore_failure true
     sensitive true
   end
