@@ -22,7 +22,7 @@ template '/root/.my.cnf' do
   owner 'root'
   group 'root'
   mode '0600'
-  only_if node['mariadb']['root_my_cnf']
+  only_if { node['mariadb']['root_my_cnf'] }
 end
 
 template node['mariadb']['configuration']['path'] + '/my.cnf' do
