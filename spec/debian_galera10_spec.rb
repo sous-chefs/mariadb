@@ -50,12 +50,12 @@ describe 'debian::mariadb::galera10-rsync' do
   end
 
   it 'Configure InnoDB' do
-    expect(chef_run).to render_file('/etc/mysql/conf.d/innodb.cnf')
+    expect(chef_run).to render_file('/etc/mysql/conf.d/20-innodb.cnf')
       .with_content(/innodb_buffer_pool_size = 256M/)
   end
 
   it 'Configure Replication' do
-    expect(chef_run).to render_file('/etc/mysql/conf.d/replication.cnf')
+    expect(chef_run).to render_file('/etc/mysql/conf.d/30-replication.cnf')
       .with_content(%r{^log_bin = /var/log/mysql/mariadb-bin$})
   end
 
@@ -72,13 +72,13 @@ describe 'debian::mariadb::galera10-rsync' do
 
   it 'Create Galera conf file' do
     expect(chef_run).to add_mariadb_configuration('galera')
-    expect(chef_run).to create_template('/etc/mysql/conf.d/galera.cnf')
+    expect(chef_run).to create_template('/etc/mysql/conf.d/90-galera.cnf')
       .with(
         user:  'root',
         group: 'mysql',
         mode:  '0640'
       )
-    expect(chef_run).to render_file('/etc/mysql/conf.d/galera.cnf')
+    expect(chef_run).to render_file('/etc/mysql/conf.d/90-galera.cnf')
       .with_content(%r{^wsrep_cluster_address = gcomm://galera1.domain,galera2.domain$})
   end
 
@@ -148,5 +148,9 @@ describe 'debian::mariadb::galera10-xtrabackup-v2' do
 
   it 'Install Socat package' do
     expect(chef_run).to install_package('socat')
+  end
+
+  it 'Install pv package' do
+    expect(chef_run).to install_package('pv')
   end
 end
