@@ -36,7 +36,7 @@ describe 'debian::mariadb::default' do
   end
 
   it 'Configure InnoDB with attributes' do
-    expect(chef_run).to add_mariadb_configuration('innodb')
+    expect(chef_run).to add_mariadb_configuration('20-innodb')
     expect(chef_run).to render_file('/etc/mysql/conf.d/20-innodb.cnf')
       .with_content(/innodb_buffer_pool_size = 256M/)
     expect(chef_run).to create_template('/etc/mysql/conf.d/20-innodb.cnf')
@@ -48,7 +48,7 @@ describe 'debian::mariadb::default' do
   end
 
   it 'Configure Replication' do
-    expect(chef_run).to add_mariadb_configuration('replication')
+    expect(chef_run).to add_mariadb_configuration('30-replication')
     expect(chef_run).to create_template('/etc/mysql/conf.d/30-replication.cnf')
   end
 

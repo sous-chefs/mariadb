@@ -21,16 +21,16 @@ describe 'centos::mariadb::default' do
       .with_content(%r{/etc/my.cnf.d})
   end
 
-  it 'Configure replication in /etc/my.cnf.d/replication.cnf' do
-    expect(chef_run).to create_template('/etc/my.cnf.d/replication.cnf')
+  it 'Configure replication in /etc/my.cnf.d/30-replication.cnf' do
+    expect(chef_run).to create_template('/etc/my.cnf.d/30-replication.cnf')
     expect(chef_run).to render_file('/etc/my.cnf.d/replication.cnf')
   end
 
   it 'Configure InnoDB with attributes' do
     expect(chef_run).to add_mariadb_configuration('innodb')
-    expect(chef_run).to render_file('/etc/my.cnf.d/innodb.cnf')
+    expect(chef_run).to render_file('/etc/my.cnf.d/20-innodb.cnf')
       .with_content(/innodb_buffer_pool_size = 256M/)
-    expect(chef_run).to create_template('/etc/my.cnf.d/innodb.cnf')
+    expect(chef_run).to create_template('/etc/my.cnf.d/20-innodb.cnf')
       .with(
         user:  'root',
         group: 'mysql',
@@ -39,7 +39,7 @@ describe 'centos::mariadb::default' do
   end
 
   it 'Configure Replication' do
-    expect(chef_run).to add_mariadb_configuration('replication')
+    expect(chef_run).to add_mariadb_configuration('30-replication')
   end
 
   it 'Don t execute root password change at install' do
@@ -119,16 +119,16 @@ describe 'centos::mariadb::native' do
       .with_content(%r{/etc/my.cnf.d})
   end
 
-  it 'Configure replication in /etc/my.cnf.d/replication.cnf' do
-    expect(chef_run).to create_template('/etc/my.cnf.d/replication.cnf')
-    expect(chef_run).to render_file('/etc/my.cnf.d/replication.cnf')
+  it 'Configure replication in /etc/my.cnf.d/30-replication.cnf' do
+    expect(chef_run).to create_template('/etc/my.cnf.d/30-replication.cnf')
+    expect(chef_run).to render_file('/etc/my.cnf.d/30-replication.cnf')
   end
 
   it 'Configure InnoDB with attributes' do
-    expect(chef_run).to add_mariadb_configuration('innodb')
-    expect(chef_run).to render_file('/etc/my.cnf.d/innodb.cnf')
+    expect(chef_run).to add_mariadb_configuration('20-innodb')
+    expect(chef_run).to render_file('/etc/my.cnf.d/20-innodb.cnf')
       .with_content(/innodb_buffer_pool_size = 256M/)
-    expect(chef_run).to create_template('/etc/my.cnf.d/innodb.cnf')
+    expect(chef_run).to create_template('/etc/my.cnf.d/20-innodb.cnf')
       .with(
         user:  'root',
         group: 'mysql',
@@ -137,7 +137,7 @@ describe 'centos::mariadb::native' do
   end
 
   it 'Configure Replication' do
-    expect(chef_run).to add_mariadb_configuration('replication')
+    expect(chef_run).to add_mariadb_configuration('30-replication')
   end
 
   it 'Don t execute root password change at install' do
