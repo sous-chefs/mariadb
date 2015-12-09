@@ -60,7 +60,7 @@ if node['mariadb']['galera']['wsrep_sst_method'] == 'rsync'
   end
 else
   if node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
-    %w{percona-xtrabackup socat pv}.each do |pkg|
+    %w{(percona-xtrabackup) (socat) (pv)}.each do |pkg|
       package pkg do
         action :install
       end
@@ -152,7 +152,7 @@ end
 unless node['mariadb']['galera']['wsrep_node_address_interface'].empty?
   ipaddress = ''
   iface = node['mariadb']['galera']['wsrep_node_address_interface']
-  node['network']['interfaces']["#{iface}"]['addresses'].each do |ip, params|
+  node['network']['interfaces'][iface]['addresses'].each do |ip, params|
     params['family'] == ('inet') && ipaddress = ip
   end
   galera_options['wsrep_node_address'] = ipaddress unless ipaddress.empty?
@@ -160,7 +160,7 @@ end
 unless node['mariadb']['galera']['wsrep_node_incoming_address_interface'].empty?
   ipaddress_inc = ''
   iface = node['mariadb']['galera']['wsrep_node_incoming_address_interface']
-  node['network']['interfaces']["#{iface}"]['addresses'].each do |ip, params|
+  node['network']['interfaces'][iface]['addresses'].each do |ip, params|
     params['family'] == ('inet') && ipaddress_inc = ip
   end
   galera_options['wsrep_node_incoming_address'] = \
@@ -210,7 +210,6 @@ if platform?('debian', 'ubuntu')
                     'OPTION"'
 
   execute 'correct-debian-grants' do
-    # Add sensitive true when foodcritic #233 fixed
     command grants_command
     action :run
     only_if do

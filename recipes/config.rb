@@ -17,13 +17,12 @@
 # limitations under the License.
 #
 
-if node['mariadb']['root_my_cnf']
-  template '/root/.my.cnf' do
-    source 'root.cnf.erb'
-    owner 'root'
-    group 'root'
-    mode '0600'
-  end
+template '/root/.my.cnf' do
+  source 'root.cnf.erb'
+  owner 'root'
+  group 'root'
+  mode '0600'
+  only_if node['mariadb']['root_my_cnf']
 end
 
 template node['mariadb']['configuration']['path'] + '/my.cnf' do
@@ -47,7 +46,7 @@ innodb_options['innodb_log_file_size_comment1'] = '# you can\'t just ' \
   'change log file size, ' \
   'requires special procedure'
 if node['mariadb']['innodb']['log_file_size'].empty?
-  innodb_options['innodb_log_file_size']  = '#innodb_log_file_size   = 50M'
+  innodb_options['innodb_log_file_size'] = '#innodb_log_file_size = 50M'
 else
   innodb_options['innodb_log_file_size'] = \
     node['mariadb']['innodb']['log_file_size']
