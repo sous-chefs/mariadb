@@ -22,6 +22,7 @@ action :add do
     mode '0640'
     cookbook 'mariadb'
     variables variables_hash
+    sensitive true
   end
 end
 

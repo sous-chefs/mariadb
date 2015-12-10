@@ -4,7 +4,7 @@ gem 'ohai', '7.4.1'
 gem 'chef', '~>11.16'
 
 group :lint do
-  gem 'foodcritic', '~> 4.0'
+  gem 'foodcritic', '~> 5.0'
   gem 'rubocop', '~> 0.30'
   gem 'rainbow', '< 2.0'
   gem 'rspec'
@@ -15,7 +15,7 @@ group :packaging do
 end
 
 group :unit do
-  gem 'berkshelf', '~> 3.1'
+  gem 'berkshelf', '~> 4.0'
   gem 'chefspec', '~> 4.2'
 end
 

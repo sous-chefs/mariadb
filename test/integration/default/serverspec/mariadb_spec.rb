@@ -33,7 +33,7 @@ describe "verify the tuning attributes set in #{mysql_config_file}" do
     myisam_sort_buffer_size: '512M'
   }.each do |attribute, value|
     describe command("grep -E \"^#{attribute}\\s+\" #{mysql_config_file}") do
-      its(:stdout)  { should match(/#{value}/) }
+      its(:stdout) { should match(/#{value}/) }
     end
   end
 end

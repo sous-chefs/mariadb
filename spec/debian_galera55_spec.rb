@@ -32,18 +32,18 @@ describe 'debian::mariadb::galera55' do
   end
 
   it 'Configure InnoDB' do
-    expect(chef_run).to render_file('/etc/mysql/conf.d/innodb.cnf')
+    expect(chef_run).to render_file('/etc/mysql/conf.d/20-innodb.cnf')
       .with_content(/innodb_buffer_pool_size = 256M/)
   end
 
   it 'Configure Replication' do
-    expect(chef_run).to render_file('/etc/mysql/conf.d/replication.cnf')
+    expect(chef_run).to render_file('/etc/mysql/conf.d/30-replication.cnf')
       .with_content(%r{^log_bin = /var/log/mysql/mariadb-bin$})
   end
 
   it 'Create Galera conf file' do
-    expect(chef_run).to add_mariadb_configuration('galera')
-    expect(chef_run).to create_template('/etc/mysql/conf.d/galera.cnf')
+    expect(chef_run).to add_mariadb_configuration('90-galera')
+    expect(chef_run).to create_template('/etc/mysql/conf.d/90-galera.cnf')
       .with(
         user:  'root',
         group: 'mysql',
