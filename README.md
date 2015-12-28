@@ -46,7 +46,7 @@ Attributes
   <tr>
     <td><tt>['mariadb']['use_default_repository']</tt></td>
     <td>Boolean</td>
-    <td>Wether to install MariaDB default repository or not. If you don't have a local repo containing packages, put it to true</td>
+    <td>Whether to install MariaDB default repository or not. If you don't have a local repo containing packages, put it to true</td>
     <td><tt>false</tt></td>
   </tr>
   <tr>
@@ -58,19 +58,19 @@ Attributes
   <tr>
     <td><tt>['mariadb']['forbid_remote_root']</tt></td>
     <td>Boolean</td>
-    <td>Wether to activate root remote access</td>
+    <td>Whether to activate root remote access</td>
     <td><tt>true</tt></td>
   </tr>
   <tr>
     <td><tt>['mariadb']['allow_root_pass_change']</tt></td>
     <td>Boolean</td>
-    <td>Wether to allow the recipe to change root password after the first install</td>
+    <td>Whether to allow the recipe to change root password after the first install</td>
     <td><tt>false</tt></td>
   </tr>
   <tr>
     <td><tt>['mariadb']['client']['development_files']</tt></td>
     <td>Boolean</td>
-    <td>Wether to install development files in client recipe</td>
+    <td>Whether to install development files in client recipe</td>
     <td><tt>true</tt></td>
   </tr>
   <tr>
