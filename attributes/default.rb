@@ -18,6 +18,8 @@ end
 #
 # mysqld default configuration
 #
+default['mariadb']['remove_anonymous_users']            = true
+default['mariadb']['remove_test_database']              = true
 default['mariadb']['forbid_remote_root']                = true
 default['mariadb']['server_root_password']              = ''
 default['mariadb']['root_my_cnf']                       = false

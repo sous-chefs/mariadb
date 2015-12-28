@@ -15,6 +15,10 @@ if [ "$1" ]; then
   password_flag="-p$1"
 fi
 
+<% if node['mariadb']['remove_anonymous_users'] -%>
+/bin/echo "DELETE FROM mysql.user WHERE User='';" | /usr/bin/mysql -u root ${password_flag}
+<% end -%>
+
 <% if node['mariadb']['forbid_remote_root'] -%>
 user_exist=`/usr/bin/mysql -u root ${password_flag} -D mysql -r -B -N -e "SELECT user from user where user = 'root' and host = '%'"`
 if [ $user_exist == 'root' ]; then
@@ -23,3 +27,9 @@ fi
 <% else -%>
 /bin/echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '<%= node['mariadb']['server_root_password'] %>' WITH GRANT OPTION;" | /usr/bin/mysql -u root ${password_flag}
 <% end -%>
+
+<% if node['mariadb']['remove_test_database'] -%>
+/bin/echo "DROP DATABASE IF EXISTS test; DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';" | /usr/bin/mysql -u root ${password_flag}
+<% end -%>
+
+/bin/echo "FLUSH PRIVILEGES;" | /usr/bin/mysql -u root ${password_flag}
