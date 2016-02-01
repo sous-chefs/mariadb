@@ -19,6 +19,9 @@ describe 'debian::mariadb::default' do
   end
   before do
     allow(TCPSocket).to receive(:new).and_return(tcpsocket_obj)
+    stub_search("mariadb", "id:root").and_return([{'password' => 'encrypted_password'}])
+    allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
+    allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'root_password'})
   end
 
   it 'Configure includedir in /etc/mysql/my.cnf' do

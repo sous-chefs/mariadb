@@ -17,11 +17,18 @@
 # limitations under the License.
 #
 
+Chef::Recipe.send(:include, MariaDB::Helper)
+
+rootpass = get_password('root')
+
 template '/root/.my.cnf' do
   source 'root.cnf.erb'
   owner 'root'
   group 'root'
   mode '0600'
+  variables(
+    rootpass: rootpass
+  )
   only_if { node['mariadb']['root_my_cnf'] }
 end
 

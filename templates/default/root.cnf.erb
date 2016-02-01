@@ -1,5 +1,5 @@
 <% %w{mysql mysqldump mysqlcheck mysqladmin mysqlshow}.each do |section| -%>
 [<%= section %>]
 user=root
-password=<%= node['mariadb']['server_root_password'] %>
+password=<%= @rootpass %>
 <% end -%>

@@ -17,6 +17,10 @@
 # limitations under the License.
 #
 
+Chef::Recipe.send(:include, MariaDB::Helper)
+
+rootpass = get_password('root')
+
 # To be sure that debconf is installed
 package 'debconf-utils' do
   action :install
@@ -40,7 +44,10 @@ template '/var/cache/local/preseeding/mariadb-galera-server.seed' do
   owner 'root'
   group 'root'
   mode '0600'
-  variables(package_name: 'mariadb-server')
+  variables(
+    package_name: 'mariadb-server',
+    rootpass: rootpass
+  )
   notifies :run, 'execute[preseed mariadb-galera-server]', :immediately
   sensitive true
 end

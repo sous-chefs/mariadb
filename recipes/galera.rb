@@ -16,27 +16,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+Chef::Recipe.send(:include, MariaDB::Helper)
 
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
-  exist_data_bag_mariadb_root = search(:mariadb, 'id:user_root').first
-  unless exist_data_bag_mariadb_root.nil?
-    data_bag_mariadb_root = data_bag_item('mariadb', 'user_root')
-    node.override['mariadb']['server_root_password'] = data_bag_mariadb_root['password']
-  end
-
-  exist_data_bag_mariadb_debian = search(:mariadb, 'id:user_debian').first
-  unless exist_data_bag_mariadb_debian.nil?
-    data_bag_mariadb_debian = data_bag_item('mariadb', 'user_debian')
-    node.override['mariadb']['debian']['password'] = data_bag_mariadb_debian['password']
-  end
-
-  exist_data_bag_mariadb_sstuser = search(:mariadb, 'id:user_sstuser').first
-  unless exist_data_bag_mariadb_sstuser.nil?
-    data_bag_mariadb_sstuser = data_bag_item('mariadb', 'user_sstuser')
-    node.override['mariadb']['galera']['wsrep_sst_auth'] = data_bag_mariadb_sstuser['user_password']
-  end
+  rootpass = get_password('root')
+  debianpass = get_password('debian')
+  sstuserpass = get_password('wsrep_sst_user')
+  # exist_data_bag_mariadb_root = search(node['mariadb']['data_bag']['name'], 'id:user_root').first
+  # unless exist_data_bag_mariadb_root.nil?
+  #   secret_file = Chef::EncryptedDataBagItem.load_secret(node['mariadb']['data_bag']['secret_file'])
+  #   rootpass = Chef::EncryptedDataBagItem.load(node['mariadb']['data_bag']['name'], 'user_root', secret_file)['password']
+  # end
+  #
+  # exist_data_bag_mariadb_debian = search(node['mariadb']['data_bag']['name'], 'id:user_debian').first
+  # unless exist_data_bag_mariadb_debian.nil?
+  #   secret_file = Chef::EncryptedDataBagItem.load_secret(node['mariadb']['data_bag']['secret_file'])
+  #   debianpass = Chef::EncryptedDataBagItem.load(node['mariadb']['data_bag']['name'], 'user_debian', secret_file)['password']
+  # end
+  #
+  # exist_data_bag_mariadb_sstuser = search(node['mariadb']['data_bag']['name'], 'id:user_sstuser').first
+  # unless exist_data_bag_mariadb_sstuser.nil?
+  #   secret_file = Chef::EncryptedDataBagItem.load_secret(node['mariadb']['data_bag']['secret_file'])
+  #   sstuserpass = Chef::EncryptedDataBagItem.load(node['mariadb']['data_bag']['name'], 'user_sstuser', secret_file)['password']
+  # else
+  #   sstuserpass = node['mariadb']['galera']['wsrep_sst_password']
+  # end
 end
 
 case node['mariadb']['install']['type']
@@ -137,9 +143,9 @@ galera_options['wsrep_cluster_name'] = \
   node['mariadb']['galera']['cluster_name']
 galera_options['wsrep_sst_method'] = \
   node['mariadb']['galera']['wsrep_sst_method']
-if node['mariadb']['galera'].attribute?('wsrep_sst_auth')
+if node['mariadb']['galera'].attribute?('wsrep_sst_user') && sstuserpass
   galera_options['wsrep_sst_auth'] = \
-    node['mariadb']['galera']['wsrep_sst_auth']
+    node['mariadb']['galera']['wsrep_sst_user'] + ':' + sstuserpass
 end
 galera_options['wsrep_provider'] = \
   node['mariadb']['galera']['wsrep_provider']
@@ -188,13 +194,16 @@ if platform?('debian', 'ubuntu')
     owner 'root'
     group 'root'
     mode '0600'
+    variables(
+      debianpass: debianpass
+    )
   end
 
   grants_command = 'mysql -r -B -N -u root '
 
-  if node['mariadb']['server_root_password'].is_a?(String)
+  if rootpass.is_a?(String)
     grants_command += '--password=\'' + \
-                      node['mariadb']['server_root_password'] + '\' '
+                      rootpass + '\' '
   end
 
   grants_command += '-e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ' \
@@ -206,7 +215,7 @@ if platform?('debian', 'ubuntu')
                     ' *.* TO \'' + node['mariadb']['debian']['user'] + \
                     '\'@\'' + node['mariadb']['debian']['host'] + '\' ' \
                     'IDENTIFIED BY \'' + \
-                    node['mariadb']['debian']['password'] + '\' WITH GRANT ' \
+                    debianpass + '\' WITH GRANT ' \
                     'OPTION"'
 
   execute 'correct-debian-grants' do
@@ -215,7 +224,7 @@ if platform?('debian', 'ubuntu')
     only_if do
       cmd = Mixlib::ShellOut.new("/usr/bin/mysql --user=\"" + \
         node['mariadb']['debian']['user'] + \
-        "\" --password=\"" + node['mariadb']['debian']['password'] + \
+        "\" --password=\"" + debianpass + \
         "\" -r -B -N -e \"SELECT 1\"")
       cmd.run_command
       cmd.error?
@@ -231,19 +240,19 @@ end
 #
 if node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
 
-  sstuser, sstpassword = node['mariadb']['galera']['wsrep_sst_auth'].split(/:/)
+  sstuser = node['mariadb']['galera']['wsrep_sst_user']
 
   sstuser_cmd = 'mysql -r -B -N -u root '
 
-  if node['mariadb']['server_root_password'].is_a?(String)
+  if rootpass.is_a?(String)
     sstuser_cmd += '--password=\'' + \
-                   node['mariadb']['server_root_password'] + '\' '
+                   rootpass + '\' '
   end
 
   sstuser_cmd += '-e "GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ' \
                  ' ON *.* TO \'' + sstuser + \
                  '\'@\'localhost\' ' \
-                 'IDENTIFIED BY \'' + sstpassword + '\'"'
+                 'IDENTIFIED BY \'' + sstuserpass + '\'"'
 
   execute 'sstuser-grants' do
     command sstuser_cmd
@@ -251,7 +260,7 @@ if node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
     only_if do
       cmd = Mixlib::ShellOut.new("/usr/bin/mysql --user=\"" + \
         sstuser + \
-        "\" --password=\"" + sstpassword + \
+        "\" --password=\"" + sstuserpass + \
         "\" -r -B -N -e \"SELECT 1\"")
       cmd.run_command
       cmd.error?

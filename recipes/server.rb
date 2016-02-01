@@ -18,6 +18,10 @@
 #
 
 Chef::Recipe.send(:include, MariaDB::Helper)
+
+rootpass = get_password('root')
+
+
 case node['mariadb']['install']['type']
 when 'package'
   if use_os_native_package?(node['mariadb']['install']['prefer_os_package'],
@@ -93,7 +97,7 @@ end
 if node['mariadb']['allow_root_pass_change']
   # Used to change root password after first install
   # Still experimental
-  if node['mariadb']['server_root_password'].empty?
+  if rootpass.empty?
     md5 = Digest::MD5.hexdigest('empty')
   else
     md5 = Digest::MD5.hexdigest(node['mariadb']['server_root_password'])
@@ -113,7 +117,7 @@ if  node['mariadb']['allow_root_pass_change'] ||
   execute 'install-grants' do
     # Add sensitive true when foodcritic #233 fixed
     command '/bin/bash /etc/mariadb_grants \'' + \
-      node['mariadb']['server_root_password'] + '\''
+      rootpass + '\''
     only_if { File.exist?('/etc/mariadb_grants') }
     action :nothing
   end
