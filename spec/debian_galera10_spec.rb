@@ -34,13 +34,13 @@ describe 'debian::mariadb::galera10-rsync' do
     allow(Mixlib::ShellOut).to receive(:new).and_return(shellout)
     stub_search(:node, 'mariadb_galera_cluster_name:galera_cluster')
       .and_return([galera_1, galera_2])
-      stub_search("mariadb", "id:root").and_return([{'password' => 'encrypted_password'}])
-      stub_search("mariadb", "id:debian").and_return([{'password' => 'encrypted_password'}])
-      stub_search("mariadb", "id:wsrep_sst_user").and_return([{'password' => 'encrypted_password'}])
-      allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
-      allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'root_password'})
-      allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'debian', 'secret_key').and_return({'password' => 'debian_password'})
-      allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'wsrep_sst_user', 'secret_key').and_return({'password' => 'sst_password'})
+    # stub_search("mariadb", "id:root").and_return([{'password' => 'encrypted_password'}])
+    # stub_search("mariadb", "id:debian").and_return([{'password' => 'encrypted_password'}])
+    # stub_search("mariadb", "id:wsrep_sst_user").and_return([{'password' => 'encrypted_password'}])
+    # allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
+    # allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'root_password'})
+    # allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'debian', 'secret_key').and_return({'password' => 'debian_password'})
+    # allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'wsrep_sst_user', 'secret_key').and_return({'password' => 'sst_password'})
   end
 
   it 'Installs Mariadb package' do
@@ -101,7 +101,7 @@ describe 'debian::mariadb::galera10-rsync' do
   it 'Does not correct Grants for debian-sys-maint user if it s ok' do
     expect(Mixlib::ShellOut).to receive(:new)
       .with('/usr/bin/mysql --user="debian-sys-maint" '\
-            '--password="debian_password" -r -B -N -e "SELECT 1"')
+            '--password="please-change-me" -r -B -N -e "SELECT 1"')
     expect(chef_run).to_not run_execute('correct-debian-grants')
   end
 
@@ -115,13 +115,13 @@ describe 'debian::mariadb::galera10-rsync' do
     end
     before do
       allow(Mixlib::ShellOut).to receive(:new).and_return(shellout)
-      stub_search("mariadb", "id:root").and_return([{'password' => 'encrypted_password'}])
-      stub_search("mariadb", "id:debian").and_return([{'password' => 'encrypted_password'}])
-      stub_search("mariadb", "id:wsrep_sst_user").and_return([{'password' => 'encrypted_password'}])
-      allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
-      allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'root_password'})
-      allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'debian', 'secret_key').and_return({'password' => 'debian_password'})
-      allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'wsrep_sst_user', 'secret_key').and_return({'password' => 'sst_password'})
+      # stub_search("mariadb", "id:root").and_return([{'password' => 'encrypted_password'}])
+      # stub_search("mariadb", "id:debian").and_return([{'password' => 'encrypted_password'}])
+      # stub_search("mariadb", "id:wsrep_sst_user").and_return([{'password' => 'encrypted_password'}])
+      # allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
+      # allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'root_password'})
+      # allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'debian', 'secret_key').and_return({'password' => 'debian_password'})
+      # allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'wsrep_sst_user', 'secret_key').and_return({'password' => 'sst_password'})
     end
     it 'it correct debian-sys-maint grants' do
       expect(chef_run).to run_execute('correct-debian-grants')
@@ -150,13 +150,13 @@ describe 'debian::mariadb::galera10-xtrabackup-v2' do
     allow(Mixlib::ShellOut).to receive(:new).and_return(shellout)
     stub_search(:node, 'mariadb_galera_cluster_name:galera_cluster')
       .and_return([stub_node('galera1'), stub_node('galera2')])
-    stub_search("mariadb", "id:root").and_return([{'password' => 'encrypted_password'}])
-    stub_search("mariadb", "id:debian").and_return([{'password' => 'encrypted_password'}])
-    stub_search("mariadb", "id:wsrep_sst_user").and_return([{'password' => 'encrypted_password'}])
-    allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
-    allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'root_password'})
-    allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'debian', 'secret_key').and_return({'password' => 'debian_password'})
-    allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'wsrep_sst_user', 'secret_key').and_return({'password' => 'sst_password'})
+    # stub_search("mariadb", "id:root").and_return([{'password' => 'encrypted_password'}])
+    # stub_search("mariadb", "id:debian").and_return([{'password' => 'encrypted_password'}])
+    # stub_search("mariadb", "id:wsrep_sst_user").and_return([{'password' => 'encrypted_password'}])
+    # allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
+    # allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'root_password'})
+    # allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'debian', 'secret_key').and_return({'password' => 'debian_password'})
+    # allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'wsrep_sst_user', 'secret_key').and_return({'password' => 'sst_password'})
   end
 
   it 'Installs Mariadb package' do

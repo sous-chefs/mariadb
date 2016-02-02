@@ -11,16 +11,6 @@ describe 'centos::mariadb::default' do
     runner.converge('mariadb::default')
   end
 
-  before do
-    stub_search("mariadb", "id:root").and_return([{'password' => 'encrypted_password'}])
-    stub_search("mariadb", "id:debian").and_return([{'password' => 'encrypted_password'}])
-    stub_search("mariadb", "id:wsrep_sst_user").and_return([{'password' => 'encrypted_password'}])
-    allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
-    allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'root_password'})
-    allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'debian', 'secret_key').and_return({'password' => 'debian_password'})
-    allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'wsrep_sst_user', 'secret_key').and_return({'password' => 'sst_password'})
-  end
-
   it 'Installs Mariadb package' do
     expect(chef_run).to install_package('MariaDB-server')
   end
@@ -82,16 +72,6 @@ describe 'centos::mariadb::native' do
     let(:os_package) { chef_run.package('mariadb-server') }
     let(:os_service) { chef_run.service('mysql') }
 
-    before do
-      stub_search("mariadb", "id:root").and_return([{'password' => 'encrypted_password'}])
-      stub_search("mariadb", "id:debian").and_return([{'password' => 'encrypted_password'}])
-      stub_search("mariadb", "id:wsrep_sst_user").and_return([{'password' => 'encrypted_password'}])
-      allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
-      allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'root_password'})
-      allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'debian', 'secret_key').and_return({'password' => 'debian_password'})
-      allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'wsrep_sst_user', 'secret_key').and_return({'password' => 'sst_password'})
-    end
-
     it 'Include native recipe' do
       expect(chef_run).to include_recipe('mariadb::_redhat_server_native')
       expect(chef_run).not_to include_recipe('mariadb::repository')
@@ -133,16 +113,6 @@ describe 'centos::mariadb::native' do
   end
 
   context ''
-
-  before do
-    stub_search("mariadb", "id:root").and_return([{'password' => 'encrypted_password'}])
-    stub_search("mariadb", "id:debian").and_return([{'password' => 'encrypted_password'}])
-    stub_search("mariadb", "id:wsrep_sst_user").and_return([{'password' => 'encrypted_password'}])
-    allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
-    allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'root_password'})
-    allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'debian', 'secret_key').and_return({'password' => 'debian_password'})
-    allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'wsrep_sst_user', 'secret_key').and_return({'password' => 'sst_password'})
-  end
 
   it 'Configure includedir in /etc/my.cnf' do
     expect(chef_run).to create_template('/etc/my.cnf')

@@ -76,7 +76,7 @@ module MariaDB
     end
 
     def get_password(user, key='password')
-      if password_data_bag_exists?(user)
+      if !Chef::Config[:solo] && password_data_bag_exists?(user)
         password_from_data_bag(user, key)
       else
         password_from_attribute(user)
@@ -100,7 +100,7 @@ module MariaDB
       when 'debian'
         return node['mariadb']['debian']['password']
       when 'wsrep_sst_user'
-        return ['mariadb']['galera']['wsrep_sst_password']
+        return node['mariadb']['galera']['wsrep_sst_password']
       end
     end
 
