@@ -17,6 +17,9 @@
 # limitations under the License.
 #
 
+Chef::Recipe.send(:include, MariaDB::Helper)
+rootpass = get_password('root')
+
 # To force removing of mariadb-libs on CentOS >= 7
 package 'MariaDB-shared' do
   action :install
@@ -43,7 +46,7 @@ end
 execute 'change first install root password' do
   # Add sensitive true when foodcritic #233 fixed
   command '/usr/bin/mysqladmin -u root password \'' + \
-    node['mariadb']['server_root_password'] + '\''
+    rootpass + '\''
   action :nothing
-  not_if { node['mariadb']['server_root_password'].empty? }
+  not_if { rootpass.empty? }
 end

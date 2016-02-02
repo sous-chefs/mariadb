@@ -18,32 +18,9 @@
 #
 Chef::Recipe.send(:include, MariaDB::Helper)
 
-if Chef::Config[:solo]
-  Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
-else
-  rootpass = get_password('root')
-  debianpass = get_password('debian')
-  sstuserpass = get_password('wsrep_sst_user')
-  # exist_data_bag_mariadb_root = search(node['mariadb']['data_bag']['name'], 'id:user_root').first
-  # unless exist_data_bag_mariadb_root.nil?
-  #   secret_file = Chef::EncryptedDataBagItem.load_secret(node['mariadb']['data_bag']['secret_file'])
-  #   rootpass = Chef::EncryptedDataBagItem.load(node['mariadb']['data_bag']['name'], 'user_root', secret_file)['password']
-  # end
-  #
-  # exist_data_bag_mariadb_debian = search(node['mariadb']['data_bag']['name'], 'id:user_debian').first
-  # unless exist_data_bag_mariadb_debian.nil?
-  #   secret_file = Chef::EncryptedDataBagItem.load_secret(node['mariadb']['data_bag']['secret_file'])
-  #   debianpass = Chef::EncryptedDataBagItem.load(node['mariadb']['data_bag']['name'], 'user_debian', secret_file)['password']
-  # end
-  #
-  # exist_data_bag_mariadb_sstuser = search(node['mariadb']['data_bag']['name'], 'id:user_sstuser').first
-  # unless exist_data_bag_mariadb_sstuser.nil?
-  #   secret_file = Chef::EncryptedDataBagItem.load_secret(node['mariadb']['data_bag']['secret_file'])
-  #   sstuserpass = Chef::EncryptedDataBagItem.load(node['mariadb']['data_bag']['name'], 'user_sstuser', secret_file)['password']
-  # else
-  #   sstuserpass = node['mariadb']['galera']['wsrep_sst_password']
-  # end
-end
+rootpass = get_password('root')
+debianpass = get_password('debian')
+sstuserpass = get_password('wsrep_sst_user')
 
 case node['mariadb']['install']['type']
 when 'package'

@@ -28,7 +28,7 @@ default['mariadb']['data_bag']['secret_file'] = '/etc/chef/encrypted_data_bag_se
 default['mariadb']['remove_anonymous_users']            = true
 default['mariadb']['remove_test_database']              = true
 default['mariadb']['forbid_remote_root']                = true
-default['mariadb']['server_root_password']              = 'somerandompassword'
+default['mariadb']['server_root_password']              = ''
 default['mariadb']['root_my_cnf']                       = false
 default['mariadb']['allow_root_pass_change']            = false
 if node['platform'] == 'centos'
@@ -96,7 +96,7 @@ default['mariadb']['galera']['cluster_search_query'] = ''
 default['mariadb']['galera']['server_id']          = '100'
 default['mariadb']['galera']['wsrep_sst_method']   = 'rsync'
 default['mariadb']['galera']['wsrep_sst_user']           = 'sstuser'
-default['mariadb']['galera']['wsrep_sst_password']       = 'somerandompassword'
+default['mariadb']['galera']['wsrep_sst_password']       = ''
 default['mariadb']['galera']['wsrep_provider']     = \
   '/usr/lib/galera/libgalera_smm.so'
 default['mariadb']['galera']['wsrep_slave_threads'] = '4'
