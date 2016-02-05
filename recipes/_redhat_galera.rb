@@ -18,7 +18,7 @@
 #
 
 Chef::Recipe.send(:include, MariaDB::Helper)
-rootpass = get_password('root')
+rootpass = dbuser_pass('root')
 
 # To force removing of mariadb-libs on CentOS >= 7
 package 'MariaDB-shared' do

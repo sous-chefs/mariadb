@@ -18,28 +18,8 @@
 #
 Chef::Recipe.send(:include, MariaDB::Helper)
 
-
-if Chef::Config[:solo]
-  Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
-else
-  rootpass = get_password('root')
-  debianpass = get_password('debian')
-  # exist_data_bag_mariadb_root = search(node['mariadb']['data_bag']['name'], 'id:user_root').first
-  # unless exist_data_bag_mariadb_root.nil?
-  #   secret_file = Chef::EncryptedDataBagItem.load_secret(node['mariadb']['data_bag']['secret_file'])
-  #   rootpass = Chef::EncryptedDataBagItem.load(node['mariadb']['data_bag']['name'], 'user_root', secret_file)['password']
-  # else
-  #   rootpass = node['mariadb']['server_root_password']
-  # end
-  #
-  # exist_data_bag_mariadb_debian = search(node['mariadb']['data_bag']['name'], 'id:user_debian').first
-  # unless exist_data_bag_mariadb_debian.nil?
-  #   secret_file = Chef::EncryptedDataBagItem.load_secret(node['mariadb']['data_bag']['secret_file'])
-  #   debianpass = Chef::EncryptedDataBagItem.load(node['mariadb']['data_bag']['name'], 'user_debian', secret_file)['password']
-  # else
-  #   debianpass = node['mariadb']['debian']['password']
-  # end
-end
+rootpass = dbuser_pass('root')
+debianpass = dbuser_pass('debian')
 
 # To be sure that debconf is installed
 package 'debconf-utils' do

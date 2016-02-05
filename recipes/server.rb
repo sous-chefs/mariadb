@@ -19,8 +19,7 @@
 
 Chef::Recipe.send(:include, MariaDB::Helper)
 
-rootpass = get_password('root')
-
+rootpass = dbuser_pass('root')
 
 case node['mariadb']['install']['type']
 when 'package'

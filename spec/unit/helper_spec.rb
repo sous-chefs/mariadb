@@ -163,7 +163,7 @@ describe MariaDB::Helper do
       end
     end
   end
-  describe '#get_password' do
+  describe '#dbuser_pass' do
     let(:dummy_class) { Class.new { include MariaDB::Helper } }
     context 'password is attribute' do
       let(:dummy_helper) { dummy_class.new }
@@ -176,10 +176,10 @@ describe MariaDB::Helper do
       }
       before do
         allow(dummy_helper).to receive(:node).and_return(node)
-        allow(dummy_helper).to receive(:password_data_bag_exists?).with('root').and_return false
+        allow(dummy_helper).to receive(:pass_data_bag_exists?).with('root').and_return false
       end
       it 'returns node attributes for password' do
-        expect(dummy_helper.get_password('root')).to eql('change_me')
+        expect(dummy_helper.dbuser_pass('root')).to eql('change_me')
       end
     end
     context 'password is in databag' do
@@ -197,16 +197,16 @@ describe MariaDB::Helper do
       }
       before do
         allow(dummy_helper).to receive(:node).and_return(node)
-        allow(dummy_helper).to receive(:password_data_bag_exists?).with('root').and_return true
+        allow(dummy_helper).to receive(:pass_data_bag_exists?).with('root').and_return true
         allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
       end
       it 'returns password from data bag' do
         allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'secret_password'})
-        expect(dummy_helper.password_from_data_bag('root')).to eql('secret_password')
+        expect(dummy_helper.pass_from_data_bag('root')).to eql('secret_password')
       end
     end
   end
-  describe '#password_data_bag_exists?' do
+  describe '#pass_data_bag_exists?' do
     let(:dummy_class) { Class.new { include MariaDB::Helper } }
     let(:dummy_helper) { dummy_class.new }
     let(:node) {
@@ -224,14 +224,14 @@ describe MariaDB::Helper do
     end
     it 'finds requested data bag' do
       allow(dummy_helper).to receive(:search).with('mariadb', 'id:root').and_return([{'password' => 'encrypted_value'},{'password' => 'someotherpass'}])
-      expect(dummy_helper.password_data_bag_exists?('root')).to be true
+      expect(dummy_helper.pass_data_bag_exists?('root')).to be true
     end
     it 'does not find requested data bag' do
       allow(dummy_helper).to receive(:search).with('mariadb', 'id:root').and_return([{'dummy' => 'dumdum'}])
-      expect(dummy_helper.password_data_bag_exists?('root')).to be false
+      expect(dummy_helper.pass_data_bag_exists?('root')).to be false
     end
   end
-  describe '#password_from_attribute' do
+  describe '#pass_from_attribute' do
     let(:dummy_class) { Class.new { include MariaDB::Helper } }
     let(:dummy_helper) { dummy_class.new }
     let(:node) {
@@ -245,10 +245,10 @@ describe MariaDB::Helper do
       allow(dummy_helper).to receive(:node).and_return(node)
     end
     it 'returns node attributes for password' do
-      expect(dummy_helper.password_from_attribute('root')).to eql('change_me')
+      expect(dummy_helper.pass_from_attribute('root')).to eql('change_me')
     end
   end
-  describe '#password_from_data_bag' do
+  describe '#pass_from_data_bag' do
     let(:dummy_class) { Class.new { include MariaDB::Helper } }
     let(:dummy_helper) { dummy_class.new }
     let(:node) {
@@ -267,7 +267,7 @@ describe MariaDB::Helper do
     end
     it 'returns password from data bag' do
       allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'secret_password'})
-      expect(dummy_helper.password_from_data_bag('root')).to eql('secret_password')
+      expect(dummy_helper.pass_from_data_bag('root')).to eql('secret_password')
     end
   end
 end

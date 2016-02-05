@@ -19,9 +19,6 @@ describe 'debian::mariadb::default' do
   end
   before do
     allow(TCPSocket).to receive(:new).and_return(tcpsocket_obj)
-    stub_search("mariadb", "id:root").and_return([{'password' => 'encrypted_password'}])
-    allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
-    allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'root_password'})
   end
 
   it 'Configure includedir in /etc/mysql/my.cnf' do
@@ -81,6 +78,32 @@ describe 'debian::mariadb::default' do
 
   it 'Execute service restart is not needed' do
     expect(chef_run).to_not run_execute('mariadb-service-restart-needed')
+  end
+  context 'use data bags' do
+    let(:chef_run) do
+      runner = ChefSpec::SoloRunner.new(platform: 'debian', version: '7.4',
+        step_into: ['mariadb_configuration']) do |node|
+        node.automatic['memory']['total'] = '2048kB'
+        node.automatic['ipaddress'] = '1.1.1.1'
+      end
+      runner.converge('mariadb::default')
+    end
+
+    before do
+      stub_search('mariadb', 'id:root').and_return([{'id' => 'root', 'password' => 'root_password'}])
+      allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
+      allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'root_password'})
+    end
+
+    it 'Configure Preseeding' do
+      expect(chef_run).to create_directory('/var/cache/local/preseeding')
+      expect(chef_run).to create_template('/var/cache/local/preseeding/mariadb-server.seed').with(
+        variables: {
+          package_name: 'mariadb-server',
+          rootpass: 'root_password'
+        }
+      )
+    end
   end
 end
 

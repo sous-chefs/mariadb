@@ -93,6 +93,27 @@ describe 'centos::mariadb::native' do
     it 'Server service with the correct name' do
       expect(os_service.service_name).to eq 'mariadb'
     end
+    context 'use data bags for passwords' do
+      let(:chef_run) do
+        runner = ChefSpec::SoloRunner.new(platform: 'centos', version: '7.0') do |node|
+          node.automatic['memory']['total'] = '2048kB'
+          node.automatic['ipaddress'] = '1.1.1.1'
+          node.set['mariadb']['install']['prefer_os_package'] = true
+        end
+        runner.converge('mariadb::default')
+      end
+
+      before do
+        allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
+        allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'root_password'})
+      end
+
+      it 'Don t execute root password change at install' do
+        expect(chef_run).to_not run_execute('change first install root password').with(
+          command: '/usr/bin/mysqladmin -u root password root_password'
+        )
+      end
+    end
     context 'fedora 19 with different service name' do
       let(:chef_run) do
         runner = ChefSpec::SoloRunner.new(platform: 'fedora', version: '19',

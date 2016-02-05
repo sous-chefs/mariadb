@@ -19,7 +19,7 @@
 
 Chef::Recipe.send(:include, MariaDB::Helper)
 
-rootpass = get_password('root')
+rootpass = dbuser_pass('root')
 
 template '/root/.my.cnf' do
   source 'root.cnf.erb'
