@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-if Chef::Config[:solo]
+if Chef::Config[:solo] || !node['mariadb']['debian']['password'].nil?
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
   exist_data_bag_mariadb_root = search(:mariadb, 'id:user_root').first
