@@ -18,8 +18,8 @@
 #
 Chef::Recipe.send(:include, MariaDB::Helper)
 
-rootpass = dbuser_pass('root')
-debianpass = dbuser_pass('debian')
+rootpass = db_user_password('root')
+debianpass = db_user_password('debian')
 
 # To be sure that debconf is installed
 package 'debconf-utils' do

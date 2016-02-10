@@ -91,8 +91,8 @@ describe 'debian::mariadb::default' do
 
     before do
       stub_search('mariadb', 'id:root').and_return([{'id' => 'root', 'password' => 'root_password'}])
-      allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
-      allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'root_password'})
+      allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret key')
+      allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret key').and_return({'password' => 'root_password'})
     end
 
     it 'Configure Preseeding' do

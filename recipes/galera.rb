@@ -18,9 +18,9 @@
 #
 Chef::Recipe.send(:include, MariaDB::Helper)
 
-rootpass = dbuser_pass('root')
-debianpass = dbuser_pass('debian')
-sstuserpass = dbuser_pass('wsrep_sst_user')
+rootpass = db_user_password('root')
+debianpass = db_user_password('debian')
+sstuserpass = db_user_password('wsrep_sst_user')
 
 case node['mariadb']['install']['type']
 when 'package'

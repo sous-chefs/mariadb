@@ -17,7 +17,7 @@
 # This recipe is for install and configure os shipped mariadb package
 
 Chef::Recipe.send(:include, MariaDB::Helper)
-rootpass = dbuser_pass('root')
+rootpass = db_user_password('root')
 
 service_name = os_service_name(node['platform'], node['platform_version'])
 node.set['mariadb']['mysqld']['service_name'] = service_name\
