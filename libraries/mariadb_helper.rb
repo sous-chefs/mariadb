@@ -75,26 +75,26 @@ module MariaDB
       end
     end
 
-    def db_user_password(user, key='password')
+    def db_user_password(user)
       if password_data_bag_exists?(user)
-        password_from_data_bag(user, key)
+        password_from_data_bag(user)
       else
         password_from_attribute(user)
       end
     end
 
-    def password_data_bag_exists?(user, key='password')
+    def password_data_bag_exists?(user)
       begin
-        search(node['mariadb']['data_bag']['name'], 'id:' + user).first.has_key?(key)
+        search(node['mariadb']['data_bag']['name'], 'id:' + user).first.has_key?(user)
       rescue
         Chef::Log.info("Password for #{user} not found in data bag #{node['mariadb']['data_bag']['name']}. Using value in node attribute")
         false
       end
     end
 
-    def password_from_data_bag(user, key='password')
+    def password_from_data_bag(user)
       secret_file = Chef::EncryptedDataBagItem.load_secret(node['mariadb']['data_bag']['secret_file'])
-      Chef::EncryptedDataBagItem.load(node['mariadb']['data_bag']['name'], user, secret_file)[key]
+      Chef::EncryptedDataBagItem.load(node['mariadb']['data_bag']['name'], user, secret_file)[user]
     end
 
     def password_from_attribute(user)
