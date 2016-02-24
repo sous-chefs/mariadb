@@ -19,7 +19,6 @@
 Chef::Recipe.send(:include, MariaDB::Helper)
 
 rootpass = db_user_password('root')
-debianpass = db_user_password('debian')
 
 # To be sure that debconf is installed
 package 'debconf-utils' do

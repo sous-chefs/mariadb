@@ -75,38 +75,30 @@ module MariaDB
       end
     end
 
-    def db_user_password(user)
-      if password_data_bag_exists?(user)
-        password_from_data_bag(user)
+    def data_bag_exists?(bag, item)
+      if Chef::Config[:solo]
+        Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
       else
-        password_from_attribute(user)
+        search(bag, "id:#{item}") || false
       end
     end
 
-    def password_data_bag_exists?(user)
-      begin
-        search(node['mariadb']['data_bag']['name'], 'id:' + user).first.has_key?(user)
-      rescue
-        Chef::Log.info("Password for #{user} not found in data bag #{node['mariadb']['data_bag']['name']}. Using value in node attribute")
-        false
+    def db_user_password(bag, user, secret, attribute = nil)
+      if data_bag_exists?(bag, user)
+        password_from_data_bag(bag, user, secret)
+      else
+        Chef::Log.info("Data bag #{bag} with #{user} not found")
+        password_from_attribute(attribute)
       end
     end
 
-    def password_from_data_bag(user)
-      secret_file = Chef::EncryptedDataBagItem.load_secret(node['mariadb']['data_bag']['secret_file'])
-      Chef::EncryptedDataBagItem.load(node['mariadb']['data_bag']['name'], user, secret_file)[user]
+    def password_from_data_bag(bag, user, secret)
+      secret_file = Chef::EncryptedDataBagItem.load_secret(secret)
+      Chef::EncryptedDataBagItem.load(bag, user, secret_file)[user] || ''
     end
 
-    def password_from_attribute(user)
-      case user
-      when 'root'
-        return node['mariadb']['server_root_password']
-      when 'debian'
-        return node['mariadb']['debian']['password']
-      when 'wsrep_sst_user'
-        return node['mariadb']['galera']['wsrep_sst_password']
-      end
+    def password_from_attribute(attribute)
+      attribute
     end
-
   end
 end

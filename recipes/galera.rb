@@ -62,16 +62,20 @@ if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo] || Chef::Config[:
     galera_cluster_nodes = node['mariadb']['galera']['cluster_nodes']
   end
 else
-  if node['mariadb']['galera']['cluster_search_query'].empty?
-    galera_cluster_nodes = search(
-      :node, \
-      "mariadb_galera_cluster_name:#{node['mariadb']['galera']['cluster_name']}"
-    )
+  if Chef::Config[:solo]
+    Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
   else
-    galera_cluster_nodes = search 'node', node['mariadb']['galera']['cluster_search_query']
-    log 'Chef search results' do
-      message "Searching for \"#{node['mariadb']['galera']['cluster_search_query']}\" \
-        resulted in \"#{galera_cluster_nodes}\" ..."
+    if node['mariadb']['galera']['cluster_search_query'].empty?
+      galera_cluster_nodes = search(
+        :node, \
+        "mariadb_galera_cluster_name:#{node['mariadb']['galera']['cluster_name']}"
+      )
+    else
+      galera_cluster_nodes = search 'node', node['mariadb']['galera']['cluster_search_query']
+      log 'Chef search results' do
+        message "Searching for \"#{node['mariadb']['galera']['cluster_search_query']}\" \
+          resulted in \"#{galera_cluster_nodes}\" ..."
+      end
     end
   end
   # Sort Nodes by fqdn

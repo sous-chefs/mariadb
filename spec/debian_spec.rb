@@ -81,18 +81,26 @@ describe 'debian::mariadb::default' do
   end
   context 'use data bags' do
     let(:chef_run) do
-      runner = ChefSpec::SoloRunner.new(platform: 'debian', version: '7.4',
-        step_into: ['mariadb_configuration']) do |node|
-        node.automatic['memory']['total'] = '2048kB'
-        node.automatic['ipaddress'] = '1.1.1.1'
-      end
+      runner = ChefSpec::SoloRunner.new(
+        platform: 'debian', version: '7.4', step_into: ['mariadb_configuration']) do |node|
+          node.automatic['memory']['total'] = '2048kB'
+          node.automatic['ipaddress'] = '1.1.1.1'
+        end
       runner.converge('mariadb::default')
     end
 
     before do
-      stub_search('mariadb', 'id:root').and_return([{'id' => 'root', 'root' => 'root_password'}])
-      allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret key')
-      allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret key').and_return({'root' => 'root_password'})
+      stub_search('mariadb', 'id:root').and_return([{ 'id' => 'root', 'root' => 'root_password' }])
+      allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with(
+        '/etc/chef/encrypted_data_bag_secret'
+      ).and_return(
+        'secret key'
+      )
+      allow(Chef::EncryptedDataBagItem).to receive(:load).with(
+        'mariadb', 'root', 'secret key'
+      ).and_return(
+        'root' => 'root_password'
+      )
     end
 
     it 'Configure Preseeding' do

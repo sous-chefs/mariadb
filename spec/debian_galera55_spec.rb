@@ -20,13 +20,29 @@ describe 'debian::mariadb::galera55' do
     allow(Mixlib::ShellOut).to receive(:new).and_return(shellout)
     stub_search(:node, 'mariadb_galera_cluster_name:galera_cluster')
       .and_return([stub_node('galera1'), stub_node('galera2')])
-    stub_search("mariadb", "id:root").and_return([{'password' => 'encrypted_password'}])
-    stub_search("mariadb", "id:debian").and_return([{'password' => 'encrypted_password'}])
-    stub_search("mariadb", "id:wsrep_sst_user").and_return([{'password' => 'encrypted_password'}])
-    allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with('/etc/chef/encrypted_data_bag_secret').and_return('secret_key')
-    allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'root', 'secret_key').and_return({'password' => 'root_password'})
-    allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'debian', 'secret_key').and_return({'password' => 'debian_password'})
-    allow(Chef::EncryptedDataBagItem).to receive(:load).with('mariadb', 'wsrep_sst_user', 'secret_key').and_return({'password' => 'sst_password'})
+    stub_search('mariadb', 'id:root').and_return(['password' => 'encrypted_password'])
+    stub_search('mariadb', 'id:debian').and_return(['password' => 'encrypted_password'])
+    stub_search('mariadb', 'id:wsrep_sst_user').and_return(['password' => 'encrypted_password'])
+    allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with(
+      '/etc/chef/encrypted_data_bag_secret'
+    ).and_return(
+      'secret_key'
+    )
+    allow(Chef::EncryptedDataBagItem).to receive(:load).with(
+      'mariadb', 'root', 'secret_key'
+    ).and_return(
+      'password' => 'root_password'
+    )
+    allow(Chef::EncryptedDataBagItem).to receive(:load).with(
+      'mariadb', 'debian', 'secret_key'
+    ).and_return(
+      'password' => 'debian_password'
+    )
+    allow(Chef::EncryptedDataBagItem).to receive(:load).with(
+      'mariadb', 'wsrep_sst_user', 'secret_key'
+    ).and_return(
+      'password' => 'sst_password'
+    )
   end
 
   it 'Installs Mariadb package' do
