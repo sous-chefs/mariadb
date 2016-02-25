@@ -18,9 +18,33 @@
 #
 Chef::Recipe.send(:include, MariaDB::Helper)
 
-rootpass = db_user_password('root')
-debianpass = db_user_password('debian')
-sstuserpass = db_user_password('wsrep_sst_user')
+rootpass = db_user_password(
+  node['mariadb']['data_bag']['name'],
+  node['mariadb']['root_user'],
+  node['mariadb']['data_bag']['secret_file'],
+  node['mariadb']['server_root_password'])
+
+debianpass = db_user_password(
+  node['mariadb']['data_bag']['name'],
+  node['mariadb']['debian']['user'],
+  node['mariadb']['data_bag']['secret_file'],
+  node['mariadb']['debian']['password'])
+
+sstuserpass = db_user_password(
+  node['mariadb']['data_bag']['name'],
+  node['mariadb']['galera']['wsrep_sst_user'],
+  node['mariadb']['data_bag']['secret_file'],
+  node['mariadb']['galera']['wsrep_sst_password'])
+
+
+p "------------------TEST--------------"
+p rootpass
+p debianpass
+p sstuserpass
+p node['mariadb']['data_bag']['name']
+p node['mariadb']['debian']['user']
+p node['mariadb']['data_bag']['secret_file']
+p node['mariadb']['debian']['password']
 
 case node['mariadb']['install']['type']
 when 'package'
