@@ -106,7 +106,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               cluster_nodes: cluster_nodes,
               options: {
                 :wsrep_node_address => "33.33.33.2#{db_node_num}",
-                :"bind-address"  => '0.0.0.0'
+                :"bind-address" => '0.0.0.0'
               }
             },
             innodb: {

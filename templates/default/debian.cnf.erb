@@ -2,11 +2,11 @@
 [client]
 host     = <%= node['mariadb']['debian']['host'] %>
 user     = <%= node['mariadb']['debian']['user'] %>
-password = <%= node['mariadb']['debian']['password'] %>
+password = <%= @debianpass %>
 socket   = <%= node['mariadb']['client']['socket'] %>
 [mysql_upgrade]
 host     = <%= node['mariadb']['debian']['host'] %>
 user     = <%= node['mariadb']['debian']['user'] %>
-password = <%= node['mariadb']['debian']['password'] %>
+password = <%= @debianpass %>
 socket   = <%= node['mariadb']['mysqld_safe']['socket'] %>
 basedir  = <%= node['mariadb']['mysqld']['basedir'] %>

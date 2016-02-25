@@ -74,5 +74,31 @@ module MariaDB
         false
       end
     end
+
+    def data_bag_exists?(bag, item)
+      if Chef::Config[:solo]
+        Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+      else
+        search(bag, "id:#{item}") || false
+      end
+    end
+
+    def db_user_password(bag, user, secret, attribute = nil)
+      if data_bag_exists?(bag, user)
+        password_from_data_bag(bag, user, secret)
+      else
+        Chef::Log.info("Data bag #{bag} with #{user} not found")
+        password_from_attribute(attribute)
+      end
+    end
+
+    def password_from_data_bag(bag, user, secret)
+      secret_file = Chef::EncryptedDataBagItem.load_secret(secret)
+      Chef::EncryptedDataBagItem.load(bag, user, secret_file)[user] || ''
+    end
+
+    def password_from_attribute(attribute)
+      attribute
+    end
   end
 end

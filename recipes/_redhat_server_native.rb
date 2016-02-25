@@ -17,6 +17,11 @@
 # This recipe is for install and configure os shipped mariadb package
 
 Chef::Recipe.send(:include, MariaDB::Helper)
+rootpass = db_user_password(
+  node['mariadb']['data_bag']['name'],
+  node['mariadb']['root_user'],
+  node['mariadb']['data_bag']['secret_file'],
+  node['mariadb']['server_root_password'])
 
 service_name = os_service_name(node['platform'], node['platform_version'])
 node.set['mariadb']['mysqld']['service_name'] = service_name\
@@ -39,7 +44,7 @@ end
 execute 'change first install root password' do
   # Add sensitive true when foodcritic #233 fixed
   command '/usr/bin/mysqladmin -u root password \'' + \
-    node['mariadb']['server_root_password'] + '\''
+    rootpass + '\''
   action :nothing
-  not_if { node['mariadb']['server_root_password'].empty? }
+  not_if { rootpass.empty? }
 end

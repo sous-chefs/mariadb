@@ -16,22 +16,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+Chef::Recipe.send(:include, MariaDB::Helper)
 
-if Chef::Config[:solo]
-  Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
-else
-  exist_data_bag_mariadb_root = search(:mariadb, 'id:user_root').first
-  unless exist_data_bag_mariadb_root.nil?
-    data_bag_mariadb_root = data_bag_item('mariadb', 'user_root')
-    node.override['mariadb']['server_root_password'] = data_bag_mariadb_root['password']
-  end
-
-  exist_data_bag_mariadb_debian = search(:mariadb, 'id:user_debian').first
-  unless exist_data_bag_mariadb_debian.nil?
-    data_bag_mariadb_debian = data_bag_item('mariadb', 'user_debian')
-    node.override['mariadb']['debian']['password'] = data_bag_mariadb_debian['password']
-  end
-end
+rootpass = db_user_password(
+  node['mariadb']['data_bag']['name'],
+  node['mariadb']['root_user'],
+  node['mariadb']['data_bag']['secret_file'],
+  node['mariadb']['server_root_password'])
 
 # To be sure that debconf is installed
 package 'debconf-utils' do
@@ -56,7 +47,10 @@ template '/var/cache/local/preseeding/mariadb-server.seed' do
   owner 'root'
   group 'root'
   mode '0600'
-  variables(package_name: 'mariadb-server')
+  variables(
+    package_name: 'mariadb-server',
+    rootpass: rootpass
+  )
   notifies :run, 'execute[preseed mariadb-server]', :immediately
   sensitive true
 end

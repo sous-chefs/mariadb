@@ -163,4 +163,90 @@ describe MariaDB::Helper do
       end
     end
   end
+  describe '#db_user_password' do
+    let(:dummy_class) { Class.new { include MariaDB::Helper } }
+    context 'password is attribute' do
+      let(:dummy_helper) { dummy_class.new }
+
+      before do
+        allow(dummy_helper).to receive(:data_bag_exists?).with('mariadb', 'root').and_return false
+      end
+
+      it 'returns node attributes for password' do
+        expect(dummy_helper.db_user_password('mariadb', 'root', 'secret', 'change_me')).to eql('change_me')
+      end
+    end
+
+    context 'password is in databag' do
+      let(:dummy_class) { Class.new { include MariaDB::Helper } }
+      let(:dummy_helper) { dummy_class.new }
+
+      before do
+        allow(dummy_helper).to receive(:data_bag_exists?).with('mariadb', 'root').and_return true
+      end
+
+      it 'returns password from data bag' do
+        allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with(
+          'secret'
+        ).and_return(
+          'secret key'
+        )
+        allow(Chef::EncryptedDataBagItem).to receive(:load).with(
+          'mariadb', 'root', 'secret key'
+        ).and_return(
+          'root' => 'secret_password'
+        )
+        expect(dummy_helper.db_user_password('mariadb', 'root', 'secret', 'change_me')).to eql('secret_password')
+      end
+    end
+  end
+
+  describe '#data_bag_exists?' do
+    let(:dummy_class) { Class.new { include MariaDB::Helper } }
+    let(:dummy_helper) { dummy_class.new }
+
+    it 'finds requested data bag' do
+      allow(dummy_helper).to receive(:search).with(
+        'mariadb', 'id:root'
+      ).and_return(
+        [{ 'root' => 'encrypted_value' }, { 'foo' => 'someotherpass' }]
+      )
+      expect(dummy_helper.data_bag_exists?('mariadb', 'root')).to eql(
+        [{ 'root' => 'encrypted_value' }, { 'foo' => 'someotherpass' }]
+      )
+    end
+
+    it 'does not find requested data bag' do
+      allow(dummy_helper).to receive(:search).with('mariadb', 'id:root').and_return(false)
+      expect(dummy_helper.data_bag_exists?('mariadb', 'root')).to be false
+    end
+  end
+
+  describe '#password_from_attribute' do
+    let(:dummy_class) { Class.new { include MariaDB::Helper } }
+    let(:dummy_helper) { dummy_class.new }
+
+    it 'returns node attributes for password' do
+      expect(dummy_helper.password_from_attribute('change_me')).to eql('change_me')
+    end
+  end
+
+  describe '#password_from_data_bag' do
+    let(:dummy_class) { Class.new { include MariaDB::Helper } }
+    let(:dummy_helper) { dummy_class.new }
+
+    it 'returns password from data bag' do
+      allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with(
+        'secret'
+      ).and_return(
+        'secret key'
+      )
+      allow(Chef::EncryptedDataBagItem).to receive(:load).with(
+        'mariadb', 'root', 'secret key'
+      ).and_return(
+        'root' => 'secret_password'
+      )
+      expect(dummy_helper.password_from_data_bag('mariadb', 'root', 'secret')).to eql('secret_password')
+    end
+  end
 end
