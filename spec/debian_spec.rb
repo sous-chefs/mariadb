@@ -17,8 +17,19 @@ describe 'debian::mariadb::default' do
     end
     runner.converge('mariadb::default')
   end
+
   before do
     allow(TCPSocket).to receive(:new).and_return(tcpsocket_obj)
+    allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with(
+      '/etc/chef/encrypted_data_bag_secret'
+    ).and_return(
+      'secret key'
+    )
+    allow(Chef::EncryptedDataBagItem).to receive(:load).with(
+      'mariadb', 'root', 'secret key'
+    ).and_return(
+      'root' => 'secret_password'
+    )
   end
 
   it 'Configure includedir in /etc/mysql/my.cnf' do
@@ -112,6 +123,46 @@ describe 'debian::mariadb::default' do
         }
       )
     end
+  end
+end
+
+describe 'debian::mariadb::default' do
+  let(:chef_run) do
+    runner = ChefSpec::ServerRunner.new(platform: 'debian', version: '7.4',
+                                      step_into: ['mariadb_configuration']
+                                     ) do |node, server|
+      node.automatic['memory']['total'] = '2048kB'
+      node.automatic['ipaddress'] = '1.1.1.1'
+
+      server.create_data_bag('mariadb', {
+        'root' => {
+          'root' => 'secret_password'
+        },
+        'dumdum' => {
+          'dumdum' => 'foobar'
+        }
+      })
+    end
+    runner.converge('mariadb::default')
+  end
+
+  before do
+    allow(Chef::EncryptedDataBagItem).to receive(:load_secret).with(
+      '/etc/chef/encrypted_data_bag_secret'
+    ).and_return(
+      'secret key'
+    )
+    allow(Chef::EncryptedDataBagItem).to receive(:load).with(
+      'mariadb', 'root', 'secret key'
+    ).and_return(
+      'root' => 'secret_password'
+    )
+  end
+
+  it 'Creates preseed template' do
+    expect(chef_run).to create_template('/var/cache/local/preseeding/mariadb-server.seed').with(
+      variables: { :package_name => 'mariadb-server', :rootpass => 'secret_password' }
+    )
   end
 end
 

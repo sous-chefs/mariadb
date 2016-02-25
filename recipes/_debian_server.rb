@@ -18,7 +18,11 @@
 #
 Chef::Recipe.send(:include, MariaDB::Helper)
 
-rootpass = db_user_password('root')
+rootpass = db_user_password(
+  node['mariadb']['data_bag']['name'],
+  node['mariadb']['root_user'],
+  node['mariadb']['data_bag']['secret_file'],
+  node['mariadb']['server_root_password'])
 
 # To be sure that debconf is installed
 package 'debconf-utils' do
