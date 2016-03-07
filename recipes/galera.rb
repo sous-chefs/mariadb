@@ -99,7 +99,7 @@ gcomm = 'gcomm://'
 galera_cluster_nodes.each do |lnode|
   next unless lnode.name != node.name
   gcomm += ',' unless first
-  gcomm += lnode['fqdn']
+  gcomm += lnode['ipaddress']
   first = false
 end
 
