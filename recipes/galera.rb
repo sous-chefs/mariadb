@@ -86,12 +86,14 @@ elsif node['mariadb']['galera']['cluster_search_query'].empty?
     "mariadb_galera_cluster_name:#{node['mariadb']['galera']['cluster_name']}"
   )
 # Search by cluster_search_query
-else
+elsif node['mariadb']['galera']['cluster_nodes'].empty?
   galera_cluster_nodes = search 'node', node['mariadb']['galera']['cluster_search_query']
   log 'Chef search results' do
     message "Searching for \"#{node['mariadb']['galera']['cluster_search_query']}\" \
       resulted in \"#{galera_cluster_nodes}\" ..."
   end
+else
+  galera_cluster_nodes = node['mariadb']['galera']['cluster_nodes']
 end
 
 first = true
