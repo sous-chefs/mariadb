@@ -3,6 +3,16 @@ source 'https://rubygems.org'
 gem 'ohai', '7.4.1'
 gem 'chef', '~>11.16'
 
+# For bumping versions
+gem 'thor'
+gem 'thor-scmversion'
+
+# Simple tasks
+gem 'rake'
+#
+# # Give me simple cli colors
+gem 'colored'
+
 group :lint do
   gem 'foodcritic', '~> 5.0'
   gem 'rubocop', '~> 0.30'
