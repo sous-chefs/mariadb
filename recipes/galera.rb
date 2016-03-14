@@ -149,6 +149,16 @@ if node['mariadb']['galera'].attribute?('wsrep_slave_threads')
 else
   galera_options['wsrep_slave_threads'] = node['cpu']['total'] * 4
 end
+
+galera_options['wsrep_causal_reads'] = \
+  node['mariadb']['galera']["wsrep_causal_reads"]
+if node['mariadb']['galera'].attribute?('wsrep_causal_reads')
+  galera_options['wsrep_causal_reads'] = \
+    node['mariadb']['galera']['wsrep_causal_reads']
+else
+  galera_options['wsrep_causal_reads'] = 0
+end
+
 unless node['mariadb']['galera']['wsrep_node_address_interface'].empty?
   ipaddress = ''
   iface = node['mariadb']['galera']['wsrep_node_address_interface']
