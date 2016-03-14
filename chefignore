@@ -1,0 +1,7 @@
+.git/*
+.git
+*/.git
+.gitignore
+assets/*
+Berksfile.lock
+vendor/*
