@@ -1,5 +1,4 @@
 source 'https://supermarket.getchef.com'
-source 'https://chef.wiw-servers.com:8080/'
 metadata
 
 group :integration do
