@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-if Chef::Config[:solo]
+if Chef::Config[:solo] || !node['mariadb']['debian']['password'].nil?
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
   exist_data_bag_mariadb_root = search(:mariadb, 'id:user_root').first
@@ -71,6 +71,7 @@ end
 include_recipe "#{cookbook_name}::config"
 
 galera_cluster_nodes = []
+# Local mode
 if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo] || Chef::Config[:local_mode]
   if node['mariadb']['galera']['cluster_nodes'].empty?
     Chef::Log.warn('By default this recipe uses search (unsupported by Chef Solo).' \
@@ -78,21 +79,21 @@ if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo] || Chef::Config[:
   else
     galera_cluster_nodes = node['mariadb']['galera']['cluster_nodes']
   end
-else
-  if node['mariadb']['galera']['cluster_search_query'].empty?
-    galera_cluster_nodes = search(
-      :node, \
-      "mariadb_galera_cluster_name:#{node['mariadb']['galera']['cluster_name']}"
-    )
-  else
-    galera_cluster_nodes = search 'node', node['mariadb']['galera']['cluster_search_query']
-    log 'Chef search results' do
-      message "Searching for \"#{node['mariadb']['galera']['cluster_search_query']}\" \
-        resulted in \"#{galera_cluster_nodes}\" ..."
-    end
+# Search by Cluster Name if no search query is defined
+elsif node['mariadb']['galera']['cluster_search_query'].empty?
+  galera_cluster_nodes = search(
+    :node, \
+    "mariadb_galera_cluster_name:#{node['mariadb']['galera']['cluster_name']}"
+  )
+# Search by cluster_search_query
+elsif node['mariadb']['galera']['cluster_nodes'].empty?
+  galera_cluster_nodes = search 'node', node['mariadb']['galera']['cluster_search_query']
+  log 'Chef search results' do
+    message "Searching for \"#{node['mariadb']['galera']['cluster_search_query']}\" \
+      resulted in \"#{galera_cluster_nodes}\" ..."
   end
-  # Sort Nodes by fqdn
-  galera_cluster_nodes.sort! { |x, y| x[:fqdn] <=> y[:fqdn] }
+else
+  galera_cluster_nodes = node['mariadb']['galera']['cluster_nodes']
 end
 
 first = true
@@ -100,10 +101,9 @@ gcomm = 'gcomm://'
 galera_cluster_nodes.each do |lnode|
   next unless lnode.name != node.name
   gcomm += ',' unless first
-  gcomm += lnode['fqdn']
+  gcomm += lnode['ipaddress']?lnode['ipaddress']:lnode['fqdn']
   first = false
 end
-
 galera_options = {}
 
 # Mandatory settings
@@ -149,6 +149,16 @@ if node['mariadb']['galera'].attribute?('wsrep_slave_threads')
 else
   galera_options['wsrep_slave_threads'] = node['cpu']['total'] * 4
 end
+
+galera_options['wsrep_causal_reads'] = \
+  node['mariadb']['galera']["wsrep_causal_reads"]
+if node['mariadb']['galera'].attribute?('wsrep_causal_reads')
+  galera_options['wsrep_causal_reads'] = \
+    node['mariadb']['galera']['wsrep_causal_reads']
+else
+  galera_options['wsrep_causal_reads'] = 0
+end
+
 unless node['mariadb']['galera']['wsrep_node_address_interface'].empty?
   ipaddress = ''
   iface = node['mariadb']['galera']['wsrep_node_address_interface']

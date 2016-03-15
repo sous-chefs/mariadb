@@ -74,9 +74,7 @@ max_heap_table_size	= <%= node['mariadb']['mysqld']['max_heap_table_size']     %
 # the first time they are touched. On error, make copy and try a repair.
 myisam_recover          = <%= node['mariadb']['mysqld']['myisam_recover']  %>
 key_buffer_size		= <%= node['mariadb']['mysqld']['key_buffer_size'] %>
-<% if node['mariadb']['mysqld']['open_files_limit'].empty? -%>
-#open-files-limit	= 2000
-<% else -%>
+<% unless node['mariadb']['mysqld']['open_files_limit'].nil? -%>
 open-files-limit	= <%= node['mariadb']['mysqld']['open_files_limit'] %>
 <% end -%>
 table_open_cache	= <%= node['mariadb']['mysqld']['table_open_cache']        %>
@@ -112,10 +110,10 @@ log_warnings		= 2
 #
 # Enable the slow query log to see queries with especially long duration
 #slow_query_log[={0|1}]
-slow_query_log_file	= /var/log/mysql/mariadb-slow.log
-long_query_time = 10
+# slow_query_log_file	= /var/log/mysql/mariadb-slow.log
+# long_query_time = 10
 #log_slow_rate_limit	= 1000
-log_slow_verbosity	= query_plan
+# log_slow_verbosity	= query_plan
 
 #log-queries-not-using-indexes
 #log_slow_admin_statements
