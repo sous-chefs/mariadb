@@ -12,7 +12,7 @@ if node['mariadb']['use_default_repository']
 
     apt_repository "mariadb-#{node['mariadb']['install']['version']}" do
       uri 'http://' + node['mariadb']['apt_repository']['base_url'] + '/' + \
-        node['mariadb']['install']['version'] + '/' + node['platform']
+          node['mariadb']['install']['version'] + '/' + node['platform']
       distribution node['lsb']['codename']
       components ['main']
       keyserver 'keyserver.ubuntu.com'
@@ -21,15 +21,15 @@ if node['mariadb']['use_default_repository']
   when 'yum'
     include_recipe 'yum::default'
 
-    if node['platform'] == 'redhat' || node['platform'] == 'scientific'
-      target_platform = "rhel#{node['platform_version'].to_i}"
-    else
-      target_platform = "#{node['platform']}#{node['platform_version'].to_i}"
-    end
+    target_platform = if node['platform'] == 'redhat' || node['platform'] == 'scientific'
+                        "rhel#{node['platform_version'].to_i}"
+                      else
+                        "#{node['platform']}#{node['platform_version'].to_i}"
+                      end
     yum_repository "mariadb-#{node['mariadb']['install']['version']}" do
       description 'MariaDB Official Repository'
       baseurl 'http://yum.mariadb.org/' + \
-        node['mariadb']['install']['version'] + "/#{target_platform}-amd64"
+              node['mariadb']['install']['version'] + "/#{target_platform}-amd64"
       gpgkey 'https://yum.mariadb.org/RPM-GPG-KEY-MariaDB'
       action :create
     end

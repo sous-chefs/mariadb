@@ -93,11 +93,11 @@ end
 if node['mariadb']['allow_root_pass_change']
   # Used to change root password after first install
   # Still experimental
-  if node['mariadb']['server_root_password'].empty?
-    md5 = Digest::MD5.hexdigest('empty')
-  else
-    md5 = Digest::MD5.hexdigest(node['mariadb']['server_root_password'])
-  end
+  md5 = if node['mariadb']['server_root_password'].empty?
+          Digest::MD5.hexdigest('empty')
+        else
+          Digest::MD5.hexdigest(node['mariadb']['server_root_password'])
+        end
 
   file '/etc/mysql_root_change' do
     content md5
@@ -113,7 +113,7 @@ if  node['mariadb']['allow_root_pass_change'] ||
   execute 'install-grants' do
     # Add sensitive true when foodcritic #233 fixed
     command '/bin/bash /etc/mariadb_grants \'' + \
-      node['mariadb']['server_root_password'] + '\''
+            node['mariadb']['server_root_password'] + '\''
     only_if { File.exist?('/etc/mariadb_grants') }
     action :nothing
   end
