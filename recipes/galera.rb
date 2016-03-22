@@ -58,12 +58,10 @@ if node['mariadb']['galera']['wsrep_sst_method'] == 'rsync'
   package 'rsync' do
     action :install
   end
-else
-  if node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
-    %w(percona-xtrabackup socat pv).each do |pkg|
-      package pkg do
-        action :install
-      end
+elsif node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
+  %w(percona-xtrabackup socat pv).each do |pkg|
+    package pkg do
+      action :install
     end
   end
 end
@@ -143,17 +141,16 @@ if node['mariadb']['galera'].attribute?('wsrep_sst_auth')
 end
 galera_options['wsrep_provider'] = \
   node['mariadb']['galera']['wsrep_provider']
-if node['mariadb']['galera'].attribute?('wsrep_slave_threads')
-  galera_options['wsrep_slave_threads'] = \
-    node['mariadb']['galera']['wsrep_slave_threads']
-else
-  galera_options['wsrep_slave_threads'] = node['cpu']['total'] * 4
-end
+galera_options['wsrep_slave_threads'] = if node['mariadb']['galera'].attribute?('wsrep_slave_threads')
+                                          node['mariadb']['galera']['wsrep_slave_threads']
+                                        else
+                                          node['cpu']['total'] * 4
+                                        end
 unless node['mariadb']['galera']['wsrep_node_address_interface'].empty?
   ipaddress = ''
   iface = node['mariadb']['galera']['wsrep_node_address_interface']
   node['network']['interfaces'][iface]['addresses'].each do |ip, params|
-    params['family'] == ('inet') && ipaddress = ip
+    params['family'] == 'inet' && ipaddress = ip
   end
   galera_options['wsrep_node_address'] = ipaddress unless ipaddress.empty?
 end
@@ -161,7 +158,7 @@ unless node['mariadb']['galera']['wsrep_node_incoming_address_interface'].empty?
   ipaddress_inc = ''
   iface = node['mariadb']['galera']['wsrep_node_incoming_address_interface']
   node['network']['interfaces'][iface]['addresses'].each do |ip, params|
-    params['family'] == ('inet') && ipaddress_inc = ip
+    params['family'] == 'inet' && ipaddress_inc = ip
   end
   galera_options['wsrep_node_incoming_address'] = \
     ipaddress_inc unless ipaddress_inc.empty?
@@ -213,10 +210,10 @@ if platform?('debian', 'ubuntu')
     command grants_command
     action :run
     only_if do
-      cmd = Mixlib::ShellOut.new("/usr/bin/mysql --user=\"" + \
+      cmd = Mixlib::ShellOut.new('/usr/bin/mysql --user="' + \
         node['mariadb']['debian']['user'] + \
-        "\" --password=\"" + node['mariadb']['debian']['password'] + \
-        "\" -r -B -N -e \"SELECT 1\"")
+        '" --password="' + node['mariadb']['debian']['password'] + \
+        '" -r -B -N -e "SELECT 1"')
       cmd.run_command
       cmd.error?
     end
@@ -249,10 +246,10 @@ if node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
     command sstuser_cmd
     action :run
     only_if do
-      cmd = Mixlib::ShellOut.new("/usr/bin/mysql --user=\"" + \
+      cmd = Mixlib::ShellOut.new('/usr/bin/mysql --user="' + \
         sstuser + \
-        "\" --password=\"" + sstpassword + \
-        "\" -r -B -N -e \"SELECT 1\"")
+        '" --password="' + sstpassword + \
+        '" -r -B -N -e "SELECT 1"')
       cmd.run_command
       cmd.error?
     end

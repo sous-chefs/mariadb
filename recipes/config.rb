@@ -45,18 +45,17 @@ innodb_options['comment5'] = '# Read the manual for more InnoDB ' \
 innodb_options['innodb_log_file_size_comment1'] = '# you can\'t just ' \
   'change log file size, ' \
   'requires special procedure'
-if node['mariadb']['innodb']['log_file_size'].empty?
-  innodb_options['innodb_log_file_size'] = '#innodb_log_file_size = 50M'
-else
-  innodb_options['innodb_log_file_size'] = \
-    node['mariadb']['innodb']['log_file_size']
-end
+innodb_options['innodb_log_file_size'] = if node['mariadb']['innodb']['log_file_size'].empty?
+                                           '#innodb_log_file_size = 50M'
+                                         else
+                                           node['mariadb']['innodb']['log_file_size']
+                                         end
 if node['mariadb']['innodb']['bps_percentage_memory']
-  innodb_options['innodb_buffer_pool_size'] = (
+  innodb_options['innodb_buffer_pool_size'] =
     (
       node['mariadb']['innodb']['buffer_pool_size'].to_f *
       (node['memory']['total'][0..-3].to_i / 1024)
-    ).round).to_s + 'M'
+    ).round.to_s + 'M'
 else
   innodb_options['innodb_buffer_pool_size'] = \
     node['mariadb']['innodb']['buffer_pool_size']

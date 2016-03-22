@@ -15,7 +15,7 @@ action :add do
     options: new_resource.option
   }
   template node['mariadb']['configuration']['includedir'] + \
-    '/' + new_resource.name + '.cnf' do
+           '/' + new_resource.name + '.cnf' do
     source 'conf.d.generic.erb'
     owner 'root'
     group 'mysql'
@@ -30,9 +30,9 @@ action :remove do
   if ::File.exist?(node['mariadb']['configuration']['includedir'] + \
                    '/' + new_resource.name + '.cnf')
     Chef::Log.info "Removing #{new_resource.name} repository from " + \
-      node['mariadb']['configuration']['includedir']
+                   node['mariadb']['configuration']['includedir']
     file node['mariadb']['configuration']['includedir'] + \
-      '/' + new_resource.name + '.cnf' do
+         '/' + new_resource.name + '.cnf' do
       action :delete
     end
   end

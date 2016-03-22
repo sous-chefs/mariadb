@@ -43,7 +43,7 @@ end
 execute 'change first install root password' do
   # Add sensitive true when foodcritic #233 fixed
   command '/usr/bin/mysqladmin -u root password \'' + \
-    node['mariadb']['server_root_password'] + '\''
+          node['mariadb']['server_root_password'] + '\''
   action :nothing
   not_if { node['mariadb']['server_root_password'].empty? }
 end
