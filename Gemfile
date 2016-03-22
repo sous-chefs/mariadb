@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'ohai', '7.4.1'
-gem 'chef', '~>11.16'
+gem 'ohai', '~> 8.4'
+gem 'chef', '~> 12.5'
 
 group :lint do
-  gem 'foodcritic', '~> 5.0'
-  gem 'rubocop', '~> 0.30'
+  gem 'foodcritic', '~> 6.0'
+  gem 'rubocop', '~> 0.38'
   gem 'rainbow', '< 2.0'
   gem 'rspec'
 end
@@ -15,7 +15,7 @@ group :packaging do
 end
 
 group :unit do
-  gem 'berkshelf', '~> 4.0'
+  gem 'berkshelf', '~> 4.2'
   gem 'chefspec', '~> 4.2'
 end
 
@@ -37,7 +37,7 @@ group :development do
   gem 'rb-fsevent'
   gem 'guard', '~> 2.4'
   gem 'guard-kitchen'
-  gem 'guard-foodcritic'
+  # gem 'guard-foodcritic'
   gem 'guard-rspec'
   gem 'guard-rubocop'
   gem 'rake'
