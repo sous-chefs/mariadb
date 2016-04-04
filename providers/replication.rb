@@ -21,7 +21,7 @@ end
 action :add do
   if new_resource.master_host.nil? || new_resource.master_user.nil? ||
      new_resource.master_password.nil?
-    fail '[ERROR] When adding a slave, you have to define master_host' \
+    raise '[ERROR] When adding a slave, you have to define master_host' \
          ' master_user and master_password !'
   end
   sql_string = 'CHANGE MASTER '
@@ -36,7 +36,7 @@ action :add do
   if new_resource.master_use_gtid == 'no'
     # Use non GTID replication setup
     if new_resource.master_log_file.nil? || new_resource.master_log_pos.nil?
-      fail '[ERROR] When adding a slave without GTID, you have to' \
+      raise '[ERROR] When adding a slave without GTID, you have to' \
            'define master_log_file and master_log_pos !'
     end
     unless new_resource.master_log_file.nil?

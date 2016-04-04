@@ -37,39 +37,31 @@ when 'package'
 
     # rubocop:disable BlockNesting
     if use_os_package
-      if node['mariadb']['client']['development_files']
-        node.default['mariadb']['client']['packages'] = \
-          %w(mariadb mariadb-devel)
-      else
-        node.default['mariadb']['client']['packages'] = \
-          %w(mariadb)
-      end
+      node.default['mariadb']['client']['packages'] = if node['mariadb']['client']['development_files']
+                                                        %w(mariadb mariadb-devel)
+                                                      else
+                                                        %w(mariadb)
+                                                      end
     else
-      if node['mariadb']['client']['development_files']
-        node.default['mariadb']['client']['packages'] = \
-          %w(MariaDB-client MariaDB-devel)
-      else
-        node.default['mariadb']['client']['packages'] = \
-          %w(MariaDB-client)
-      end
+      node.default['mariadb']['client']['packages'] = if node['mariadb']['client']['development_files']
+                                                        %w(MariaDB-client MariaDB-devel)
+                                                      else
+                                                        %w(MariaDB-client)
+                                                      end
     end
     # rubocop:enable BlockNesting
   when 'fedora'
-    if node['mariadb']['client']['development_files']
-      node.default['mariadb']['client']['packages'] = \
-        %w(mariadb mariadb-devel)
-    else
-      node.default['mariadb']['client']['packages'] = \
-        %w(mariadb)
-    end
+    node.default['mariadb']['client']['packages'] = if node['mariadb']['client']['development_files']
+                                                      %w(mariadb mariadb-devel)
+                                                    else
+                                                      %w(mariadb)
+                                                    end
   when 'suse'
-    if node['mariadb']['client']['development_files']
-      node.default['mariadb']['client']['packages'] = \
-        %w(mariadb-community-server-client libmariadbclient-devel)
-    else
-      node.default['mariadb']['client']['packages'] = \
-        %w(mariadb-community-server-client)
-    end
+    node.default['mariadb']['client']['packages'] = if node['mariadb']['client']['development_files']
+                                                      %w(mariadb-community-server-client libmariadbclient-devel)
+                                                    else
+                                                      %w(mariadb-community-server-client)
+                                                    end
   when 'debian'
     if node['mariadb']['client']['development_files']
       node.default['mariadb']['client']['packages'] = \
