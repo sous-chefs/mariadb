@@ -12,13 +12,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
+- Add attribute containing `my.cnf` sections to configure to allow users to override what cookbook manages
 - Add Docker tests to Travis for smoke tests
 - Add docker CI tests (add new APT key to fix [#107](https://github.com/sinfomicien/mariadb/issues/107), add Supermarket version badge and change Travis badge to show master build status to README)
-
-### Added
-
-- Add Docker tests to Travis for smoke tests
-- Add docker CI tests (add new APT key to fix #107, add Supermarket version badge and change Travis badge to show master build status to README)
 
 ### Changed
 
