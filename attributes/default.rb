@@ -15,6 +15,14 @@ else
   default['mariadb']['mysqld_safe']['socket'] = '/var/run/mysqld/mysqld.sock'
 end
 
+default['mariadb']['sections'] = %w(
+  client
+  mysql
+  mysqldump
+  mysqlcheck
+  mysqladmin
+  mysqlshow)
+
 #
 # mysqld default configuration
 #
