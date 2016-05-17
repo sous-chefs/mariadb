@@ -6,7 +6,7 @@ description 'Installs/Configures MariaDB'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 source_url 'https://github.com/sinfomicien/mariadb'
 issues_url 'https://github.com/sinfomicien/mariadb/issues'
-version '0.3.1'
+version '0.3.2'
 
 supports 'ubuntu'
 supports 'debian', '>= 7.0'

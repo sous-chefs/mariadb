@@ -59,6 +59,9 @@ bind-address		= <%= node['mariadb']['mysqld']['bind_address'] %>
 # * Fine Tuning
 #
 max_connections		= <%= node['mariadb']['mysqld']['max_connections']         %>
+<% if node['mariadb']['mysqld']['max_statement_time'] %>
+max_statement_time = <%= node['mariadb']['mysqld']['max_statement_time'] %>
+<% end %>
 connect_timeout		= <%= node['mariadb']['mysqld']['connect_timeout']         %>
 wait_timeout		= <%= node['mariadb']['mysqld']['wait_timeout']            %>
 max_allowed_packet	= <%= node['mariadb']['mysqld']['max_allowed_packet']      %>
