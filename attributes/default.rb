@@ -42,6 +42,7 @@ default['mariadb']['mysqld']['lc_messages']             = 'en_US'
 default['mariadb']['mysqld']['skip_external_locking']   = 'true'
 default['mariadb']['mysqld']['bind_address']            = '127.0.0.1'
 default['mariadb']['mysqld']['max_connections']         = '100'
+default['mariadb']['mysqld']['max_statement_time']      = nil
 default['mariadb']['mysqld']['connect_timeout']         = '5'
 default['mariadb']['mysqld']['wait_timeout']            = '600'
 default['mariadb']['mysqld']['max_allowed_packet']      = '16M'
