@@ -20,13 +20,23 @@
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
-  exist_data_bag_mariadb_root = search(:mariadb, 'id:user_root').first
+  exist_data_bag_mariadb_root = begin
+    search(:mariadb, 'id:user_root').first
+  rescue Net::HTTPServerException, Chef::Exceptions::InvalidDataBagPath
+    nil
+  end
+
   unless exist_data_bag_mariadb_root.nil?
     data_bag_mariadb_root = data_bag_item('mariadb', 'user_root')
     node.override['mariadb']['server_root_password'] = data_bag_mariadb_root['password']
   end
 
-  exist_data_bag_mariadb_debian = search(:mariadb, 'id:user_debian').first
+  exist_data_bag_mariadb_debian = begin
+    search(:mariadb, 'id:user_debian').first
+  rescue Net::HTTPServerException, Chef::Exceptions::InvalidDataBagPath
+    nil
+  end
+
   unless exist_data_bag_mariadb_debian.nil?
     data_bag_mariadb_debian = data_bag_item('mariadb', 'user_debian')
     node.override['mariadb']['debian']['password'] = data_bag_mariadb_debian['password']
