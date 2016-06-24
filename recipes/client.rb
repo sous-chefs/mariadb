@@ -23,7 +23,8 @@ when 'package'
   use_os_package = use_os_native_package?(
     node['mariadb']['install']['prefer_os_package'],
     node['platform'],
-    node['platform_version'])
+    node['platform_version']
+  )
 
   include_recipe "#{cookbook_name}::repository" unless use_os_package
 

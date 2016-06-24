@@ -70,5 +70,12 @@ suites:
       mariadb:
         use_default_repository: true
         plugins:
-           audit: true
-
+          audit: true
+  - name: no_binlog 
+    run_list:
+      - recipe[mariadb::default]
+    attributes:
+      mariadb:
+        use_default_repository: true
+        replication:
+          log_bin: false

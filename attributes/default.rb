@@ -48,37 +48,37 @@ default['mariadb']['mysqld']['max_allowed_packet']      = '16M'
 default['mariadb']['mysqld']['thread_cache_size']       = '128'
 default['mariadb']['mysqld']['sort_buffer_size']        = '4M'
 default['mariadb']['mysqld']['bulk_insert_buffer_size'] = '16M'
-default['mariadb']['mysqld']['tmp_table_size']          = '32M'
-default['mariadb']['mysqld']['max_heap_table_size']     = '32M'
-default['mariadb']['mysqld']['myisam_recover']          = 'BACKUP'
-default['mariadb']['mysqld']['key_buffer_size']         = '128M'
+default['mariadb']['mysqld']['tmp_table_size'] = '32M'
+default['mariadb']['mysqld']['max_heap_table_size'] = '32M'
+default['mariadb']['mysqld']['myisam_recover'] = 'BACKUP'
+default['mariadb']['mysqld']['key_buffer_size'] = '128M'
 # if not defined default is 2000
-default['mariadb']['mysqld']['open_files_limit']        = ''
-default['mariadb']['mysqld']['table_open_cache']        = '400'
+default['mariadb']['mysqld']['open_files_limit'] = ''
+default['mariadb']['mysqld']['table_open_cache'] = '400'
 default['mariadb']['mysqld']['myisam_sort_buffer_size'] = '512M'
-default['mariadb']['mysqld']['concurrent_insert']       = '2'
-default['mariadb']['mysqld']['read_buffer_size']        = '2M'
-default['mariadb']['mysqld']['read_rnd_buffer_size']    = '1M'
-default['mariadb']['mysqld']['query_cache_limit']       = '128K'
-default['mariadb']['mysqld']['query_cache_size']        = '64M'
+default['mariadb']['mysqld']['concurrent_insert'] = '2'
+default['mariadb']['mysqld']['read_buffer_size'] = '2M'
+default['mariadb']['mysqld']['read_rnd_buffer_size'] = '1M'
+default['mariadb']['mysqld']['query_cache_limit'] = '128K'
+default['mariadb']['mysqld']['query_cache_size'] = '64M'
 # if not defined default is ON
-default['mariadb']['mysqld']['query_cache_type']        = ''
-default['mariadb']['mysqld']['default_storage_engine']  = 'InnoDB'
-default['mariadb']['mysqld']['options']                 = {}
+default['mariadb']['mysqld']['query_cache_type'] = ''
+default['mariadb']['mysqld']['default_storage_engine'] = 'InnoDB'
+default['mariadb']['mysqld']['options'] = {}
 
 #
 # InnoDB default configuration
 #
 # if not defined default is 50M
-default['mariadb']['innodb']['log_file_size']          = ''
-default['mariadb']['innodb']['bps_percentage_memory']  = false
-default['mariadb']['innodb']['buffer_pool_size']       = '256M'
-default['mariadb']['innodb']['log_buffer_size']        = '8M'
-default['mariadb']['innodb']['file_per_table']         = '1'
-default['mariadb']['innodb']['open_files']             = '400'
-default['mariadb']['innodb']['io_capacity']            = '400'
-default['mariadb']['innodb']['flush_method']           = 'O_DIRECT'
-default['mariadb']['innodb']['options']                = {}
+default['mariadb']['innodb']['log_file_size'] = ''
+default['mariadb']['innodb']['bps_percentage_memory'] = false
+default['mariadb']['innodb']['buffer_pool_size'] = '256M'
+default['mariadb']['innodb']['log_buffer_size'] = '8M'
+default['mariadb']['innodb']['file_per_table'] = '1'
+default['mariadb']['innodb']['open_files'] = '400'
+default['mariadb']['innodb']['io_capacity'] = '400'
+default['mariadb']['innodb']['flush_method'] = 'O_DIRECT'
+default['mariadb']['innodb']['options'] = {}
 
 #
 # Galera default configuration
@@ -99,24 +99,24 @@ default['mariadb']['galera']['wsrep_node_incoming_address_interface'] = ''
 default['mariadb']['galera']['wsrep_provider_options'] = {
   'gcache.size' => '512M'
 }
-default['mariadb']['galera']['options']            = {}
+default['mariadb']['galera']['options'] = {}
 
 # Node format: [{ :name => "mariadb_1", fqdn: "33.33.33.11"}]
-default['mariadb']['galera']['cluster_nodes']      = []
+default['mariadb']['galera']['cluster_nodes'] = []
 
 #
 # Replication default configuration
 #
-default['mariadb']['replication']['server_id']        = ''
-default['mariadb']['replication']['log_bin']          = \
+default['mariadb']['replication']['server_id'] = ''
+default['mariadb']['replication']['log_bin'] = \
   '/var/log/mysql/mariadb-bin'
-default['mariadb']['replication']['log_bin_index']    = \
+default['mariadb']['replication']['log_bin_index'] = \
   '/var/log/mysql/mariadb-bin.index'
 # Setting sync_binlog to 1 will cause a performance impact
 default['mariadb']['replication']['sync_binlog']      = '0'
 default['mariadb']['replication']['expire_logs_days'] = '10'
-default['mariadb']['replication']['max_binlog_size']  = '100M'
-default['mariadb']['replication']['options']          = {}
+default['mariadb']['replication']['max_binlog_size'] = '100M'
+default['mariadb']['replication']['options'] = {}
 
 #
 # mysqldump default configuration
@@ -137,22 +137,22 @@ default['mariadb']['mysqld_safe']['options'] = {}
 #
 # client default configuration
 #
-default['mariadb']['client']['port']    = 3306
+default['mariadb']['client']['port'] = 3306
 default['mariadb']['client']['options'] = {}
 default['mariadb']['client']['development_files'] = true
 
 #
 # debian specific configuration
 #
-default['mariadb']['debian']['user']     = 'debian-sys-maint'
+default['mariadb']['debian']['user'] = 'debian-sys-maint'
 default['mariadb']['debian']['password'] = 'please-change-me'
-default['mariadb']['debian']['host']     = 'localhost'
+default['mariadb']['debian']['host'] = 'localhost'
 
 #
 # mariadb default install configuration
 #
 # install valid value is 'package',
-#  hope to have 'from_source' in the near future
+# hope to have 'from_source' in the near future
 default['mariadb']['install']['type'] = 'package'
 default['mariadb']['install']['version'] = '10.0'
 default['mariadb']['install']['prefer_os_package'] = false
@@ -176,6 +176,6 @@ default['mariadb']['plugins_loading']['audit'] = 'server_audit=server_audit.so'
 # Default Configuration
 default['mariadb']['audit_plugin']['server_audit_events'] = ''
 default['mariadb']['audit_plugin']['server_audit_output_type'] = 'file'
-# Syslog  (require server_audit_output_type = syslog)
+# Syslog(require server_audit_output_type = syslog)
 default['mariadb']['audit_plugin']['server_audit_syslog_facility'] = 'LOG_USER'
 default['mariadb']['audit_plugin']['server_audit_syslog_priority'] = 'LOG_INFO'
