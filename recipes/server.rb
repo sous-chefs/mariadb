@@ -49,7 +49,7 @@ end
 
 # move the datadir if needed
 if node['mariadb']['mysqld']['datadir'] !=
-   node['mariadb']['mysqld']['default_datadir']
+    node['mariadb']['mysqld']['default_datadir']
 
   bash 'move-datadir' do
     user 'root'
@@ -113,7 +113,7 @@ if  node['mariadb']['allow_root_pass_change'] ||
   execute 'install-grants' do
     # Add sensitive true when foodcritic #233 fixed
     command '/bin/bash /etc/mariadb_grants \'' + \
-            node['mariadb']['server_root_password'] + '\''
+      node['mariadb']['server_root_password'] + '\''
     only_if { File.exist?('/etc/mariadb_grants') }
     action :nothing
   end

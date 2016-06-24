@@ -99,7 +99,7 @@ default['mariadb']['galera']['wsrep_node_incoming_address_interface'] = ''
 default['mariadb']['galera']['wsrep_provider_options'] = {
   'gcache.size' => '512M'
 }
-default['mariadb']['galera']['options']            = {}
+default['mariadb']['galera']['options'] = {}
 
 # Node format: [{ :name => "mariadb_1", fqdn: "33.33.33.11"}]
 default['mariadb']['galera']['cluster_nodes'] = []

@@ -34,13 +34,13 @@ end
 # Configure (Dynamic)
 execute 'configure_mariadb_audit_plugin' do
   command 'echo "SET GLOBAL server_audit_events=\'' + \
-          node['mariadb']['audit_plugin']['server_audit_events'] + '\';' \
+    node['mariadb']['audit_plugin']['server_audit_events'] + '\';' \
     'SET GLOBAL server_audit_output_type=\'' + \
-          node['mariadb']['audit_plugin']['server_audit_output_type'] + '\';' \
+    node['mariadb']['audit_plugin']['server_audit_output_type'] + '\';' \
     'SET GLOBAL server_audit_syslog_facility=\'' + \
-          node['mariadb']['audit_plugin']['server_audit_syslog_facility'] + '\';' \
+    node['mariadb']['audit_plugin']['server_audit_syslog_facility'] + '\';' \
     'SET GLOBAL server_audit_syslog_priority=\'' + \
-          node['mariadb']['audit_plugin']['server_audit_syslog_priority'] + '\';"' \
+    node['mariadb']['audit_plugin']['server_audit_syslog_priority'] + '\';"' \
     '| /usr/bin/mysql'
   action :nothing
 end

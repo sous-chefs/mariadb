@@ -2,9 +2,10 @@ require 'spec_helper'
 
 describe 'centos::mariadb::default' do
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(platform: 'centos', version: '6.4',
-                                      step_into: ['mariadb_configuration']
-                                     ) do |node|
+    runner = ChefSpec::SoloRunner.new(
+      platform: 'centos', version: '6.4',
+      step_into: ['mariadb_configuration']
+    ) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
     end
@@ -58,9 +59,10 @@ end
 
 describe 'centos::mariadb::native' do
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(platform: 'centos', version: '7.0',
-                                      step_into: ['mariadb_configuration']
-                                     ) do |node|
+    runner = ChefSpec::SoloRunner.new(
+      platform: 'centos', version: '7.0',
+      step_into: ['mariadb_configuration']
+    ) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
       node.set['mariadb']['install']['prefer_os_package'] = true
@@ -95,9 +97,10 @@ describe 'centos::mariadb::native' do
     end
     context 'fedora 19 with different service name' do
       let(:chef_run) do
-        runner = ChefSpec::SoloRunner.new(platform: 'fedora', version: '19',
-                                          step_into: ['mariadb_configuration']
-                                         ) do |node|
+        runner = ChefSpec::SoloRunner.new(
+          platform: 'fedora', version: '19',
+          step_into: ['mariadb_configuration']
+        ) do |node|
           node.automatic['memory']['total'] = '2048kB'
           node.automatic['ipaddress'] = '1.1.1.1'
           node.set['mariadb']['install']['prefer_os_package'] = true
@@ -147,9 +150,10 @@ end
 
 describe 'centos::mariadb::client' do
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(platform: 'centos', version: '6.4',
-                                      step_into: ['mariadb_configuration']
-                                     ) do |node|
+    runner = ChefSpec::SoloRunner.new(
+      platform: 'centos', version: '6.4',
+      step_into: ['mariadb_configuration']
+    ) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
     end
@@ -169,9 +173,10 @@ describe 'centos::mariadb::client' do
   end
   context 'Without development files' do
     let(:chef_run) do
-      runner = ChefSpec::SoloRunner.new(platform: 'centos', version: '6.4',
-                                        step_into: ['mariadb_configuration']
-                                       ) do |node|
+      runner = ChefSpec::SoloRunner.new(
+        platform: 'centos', version: '6.4',
+        step_into: ['mariadb_configuration']
+      ) do |node|
         node.automatic['memory']['total'] = '2048kB'
         node.automatic['ipaddress'] = '1.1.1.1'
         node.set['mariadb']['client']['development_files'] = false
@@ -191,9 +196,10 @@ end
 
 describe 'centos::mariadb::client::native' do
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(platform: 'centos', version: '7.0',
-                                      step_into: ['mariadb_configuration']
-                                     ) do |node|
+    runner = ChefSpec::SoloRunner.new(
+      platform: 'centos', version: '7.0',
+      step_into: ['mariadb_configuration']
+    ) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
       node.set['mariadb']['install']['prefer_os_package'] = true
@@ -213,9 +219,10 @@ describe 'centos::mariadb::client::native' do
 
   context 'Without development files' do
     let(:chef_run) do
-      runner = ChefSpec::SoloRunner.new(platform: 'centos', version: '7.0',
-                                        step_into: ['mariadb_configuration']
-                                       ) do |node|
+      runner = ChefSpec::SoloRunner.new(
+        platform: 'centos', version: '7.0',
+        step_into: ['mariadb_configuration']
+      ) do |node|
         node.automatic['memory']['total'] = '2048kB'
         node.automatic['ipaddress'] = '1.1.1.1'
         node.set['mariadb']['install']['prefer_os_package'] = true
