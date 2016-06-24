@@ -16,7 +16,7 @@ if node['mariadb']['use_default_repository']
       distribution node['lsb']['codename']
       components ['main']
       keyserver 'keyserver.ubuntu.com'
-      key '0xcbcb082a1bb943db'
+      key 'CBCB082A1BB943DB'
     end
   when 'yum'
     include_recipe 'yum::default'
