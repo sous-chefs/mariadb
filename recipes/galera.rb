@@ -199,20 +199,20 @@ if platform?('debian', 'ubuntu')
 
   if node['mariadb']['server_root_password'].is_a?(String)
     grants_command += '--password=\'' + \
-                      node['mariadb']['server_root_password'] + '\' '
+      node['mariadb']['server_root_password'] + '\' '
   end
 
   grants_command += '-e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ' \
-                    'DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, ' \
-                    'INDEX, ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY ' \
-                    'TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, ' \
-                    'REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ' \
-                    'ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER ON ' \
-                    ' *.* TO \'' + node['mariadb']['debian']['user'] + \
-                    '\'@\'' + node['mariadb']['debian']['host'] + '\' ' \
-                    'IDENTIFIED BY \'' + \
-                    node['mariadb']['debian']['password'] + '\' WITH GRANT ' \
-                    'OPTION"'
+    'DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, ' \
+    'INDEX, ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY ' \
+    'TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, ' \
+    'REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ' \
+    'ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER ON ' \
+    ' *.* TO \'' + node['mariadb']['debian']['user'] + \
+    '\'@\'' + node['mariadb']['debian']['host'] + '\' ' \
+    'IDENTIFIED BY \'' + \
+    node['mariadb']['debian']['password'] + '\' WITH GRANT ' \
+    'OPTION"'
 
   execute 'correct-debian-grants' do
     command grants_command
@@ -242,13 +242,13 @@ if node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
 
   if node['mariadb']['server_root_password'].is_a?(String)
     sstuser_cmd += '--password=\'' + \
-                   node['mariadb']['server_root_password'] + '\' '
+      node['mariadb']['server_root_password'] + '\' '
   end
 
   sstuser_cmd += '-e "GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ' \
-                 ' ON *.* TO \'' + sstuser + \
-                 '\'@\'localhost\' ' \
-                 'IDENTIFIED BY \'' + sstpassword + '\'"'
+    ' ON *.* TO \'' + sstuser + \
+    '\'@\'localhost\' ' \
+    'IDENTIFIED BY \'' + sstpassword + '\'"'
 
   execute 'sstuser-grants' do
     command sstuser_cmd
