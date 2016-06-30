@@ -54,6 +54,9 @@ lc_messages	= <%= node['mariadb']['mysqld']['lc_messages']     %>
 <% if node['mariadb']['mysqld']['skip_external_locking'] == 'true' -%>
 skip-external-locking
 <% end -%>
+<% if node['mariadb']['mysqld']['skip_log_bin'] == 'true' -%>
+skip-log-bin
+<% end -%>
 <% if node['mariadb']['mysqld']['skip_name_resolve'] == 'true' -%>
 skip-name-resolve
 <% end -%>
