@@ -22,7 +22,13 @@ package 'MariaDB-shared' do
   action :install
 end
 
-package 'MariaDB-Galera-server' do
+package_name = if node['mariadb']['install']['version'].to_f < 10.1
+                 'MariaDB-Galera-server'
+               else
+                 'MariaDB-server'
+               end
+
+package package_name do
   action :install
   notifies :create, 'directory[/var/log/mysql]', :immediately
   notifies :start, 'service[mysql]', :immediately
