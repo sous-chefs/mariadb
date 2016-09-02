@@ -66,7 +66,7 @@ if node['mariadb']['mysqld']['datadir'] !=
   directory node['mariadb']['mysqld']['datadir'] do
     owner 'mysql'
     group 'mysql'
-    mode 00750
+    mode '0750'
     action :create
     notifies :stop, 'service[mysql]', :immediately
     notifies :run, 'bash[move-datadir]', :immediately
