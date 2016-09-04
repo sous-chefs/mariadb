@@ -75,8 +75,11 @@ action :remove do
 end
 
 action :start do
-  command_master_connection = ' \'' + new_resource.name + \
-    '\'' unless new_resource.name == 'default'
+  if new_resource.name == 'default'
+    command_master_connection = ''
+  else
+    command_master_connection = ' \'' + new_resource.name + '\''
+  end
   execute 'start_replication_from_master_' + new_resource.name do
     # Add sensitive true when foodcritic #233 fixed
     command '/bin/echo "START SLAVE' + command_master_connection + ';' \
