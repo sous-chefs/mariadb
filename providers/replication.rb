@@ -18,12 +18,22 @@ def get_mysql_command(host, port, user, password)
   mysql_command
 end
 
+def is_slave_running?(mysql_command)
+  command = <<-EOS
+    slave_running=$(#{mysql_command} -s -e "select variable_value from information_schema.global_status where variable_name = 'Slave_running';");
+    if [[ "$slave_running" =~ "ON" ]]; then exit 0; else exit 1; fi
+  EOS
+
+  return system(command)
+end
+
 action :add do
   if new_resource.master_host.nil? || new_resource.master_user.nil? ||
       new_resource.master_password.nil?
     raise '[ERROR] When adding a slave, you have to define master_host' \
          ' master_user and master_password !'
   end
+
   sql_string = 'CHANGE MASTER '
   sql_string += '\'' + new_resource.name + \
     '\' ' if new_resource.name != 'default'
@@ -48,14 +58,23 @@ action :add do
     # Use GTID replication
     sql_string += ', MASTER_USE_GTID=' + new_resource.master_use_gtid + ';'
   end
+
+  mysql_command = get_mysql_command(
+    new_resource.host,
+    new_resource.port,
+    new_resource.user,
+    new_resource.password
+  )
+
+  if is_slave_running?(mysql_command)
+    Chef::Log.warn('You cannot change master servers while a slave is running.')
+    Chef::Log.warn('To change master servers you must manually stop the slave first.')
+  end
+
   execute 'add_replication_from_master_' + new_resource.name do
     # Add sensitive true when foodcritic #233 fixed
-    command '/bin/echo "' + sql_string + '" | ' + get_mysql_command(
-      new_resource.host,
-      new_resource.port,
-      new_resource.user,
-      new_resource.password
-    )
+    command '/bin/echo "' + sql_string + '" | ' + mysql_command
+    not_if { is_slave_running?(mysql_command) }
     action :run
   end
 end
@@ -80,29 +99,41 @@ action :start do
   else
     command_master_connection = ' \'' + new_resource.name + '\''
   end
+
+  mysql_command = get_mysql_command(
+    new_resource.host,
+    new_resource.port,
+    new_resource.user,
+    new_resource.password
+  )
+
   execute 'start_replication_from_master_' + new_resource.name do
     # Add sensitive true when foodcritic #233 fixed
     command '/bin/echo "START SLAVE' + command_master_connection + ';' \
-      '" | ' + get_mysql_command(
-        new_resource.host,
-        new_resource.port,
-        new_resource.user,
-        new_resource.password
-      )
+      '" | ' + mysql_command
+    not_if { is_slave_running?(mysql_command) }
   end
 end
 
 action :stop do
-  command_master_connection = ' \'' + new_resource.name + \
-    '\'' unless new_resource.name == 'default'
+  if new_resource_name == 'default'
+    command_master_connection = ''
+  else
+    command_master_connection = ' \'' + new_resource.name + '\''
+  end
+
+  mysql_command = get_mysql_command(
+    new_resource.host,
+    new_resource.port,
+    new_resource.user,
+    new_resource.password
+  )
+
   execute 'start_replication_from_master_' + new_resource.name do
     # Add sensitive true when foodcritic #233 fixed
     command '/bin/echo "STOP SLAVE' + command_master_connection + ';' \
-      '" | ' + get_mysql_command(
-        new_resource.host,
-        new_resource.port,
-        new_resource.user,
-        new_resource.password
-      )
+      '" | ' + mysql_command
+    only_if { is_slave_running?(mysql_command) }
+    action :run
   end
 end
