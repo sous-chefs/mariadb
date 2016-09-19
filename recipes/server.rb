@@ -66,7 +66,7 @@ if node['mariadb']['mysqld']['datadir'] !=
   directory node['mariadb']['mysqld']['datadir'] do
     owner 'mysql'
     group 'mysql'
-    mode 00750
+    mode '0750'
     action :create
     notifies :stop, 'service[mysql]', :immediately
     notifies :run, 'bash[move-datadir]', :immediately
@@ -112,7 +112,7 @@ if  node['mariadb']['allow_root_pass_change'] ||
     node['mariadb']['remove_test_database']
   execute 'install-grants' do
     # Add sensitive true when foodcritic #233 fixed
-    command '/bin/bash /etc/mariadb_grants \'' + \
+    command '/bin/bash -e /etc/mariadb_grants \'' + \
       node['mariadb']['server_root_password'] + '\''
     only_if { File.exist?('/etc/mariadb_grants') }
     action :nothing
