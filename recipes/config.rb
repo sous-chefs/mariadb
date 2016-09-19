@@ -45,25 +45,24 @@ innodb_options['comment5'] = '# Read the manual for more InnoDB ' \
 innodb_options['innodb_log_file_size_comment1'] = '# you can\'t just ' \
   'change log file size, ' \
   'requires special procedure'
-if node['mariadb']['innodb']['log_file_size'].empty?
-  innodb_options['innodb_log_file_size'] = '#innodb_log_file_size = 50M'
-else
-  innodb_options['innodb_log_file_size'] = \
-    node['mariadb']['innodb']['log_file_size']
-end
+innodb_options['innodb_log_file_size'] = if node['mariadb']['innodb']['log_file_size'].empty?
+                                           '#innodb_log_file_size = 50M'
+                                         else
+                                           node['mariadb']['innodb']['log_file_size']
+                                         end
 if node['mariadb']['innodb']['bps_percentage_memory']
-  innodb_options['innodb_buffer_pool_size'] = (
+  innodb_options['innodb_buffer_pool_size'] =
     (
       node['mariadb']['innodb']['buffer_pool_size'].to_f *
       (node['memory']['total'][0..-3].to_i / 1024)
-    ).round).to_s + 'M'
+    ).round.to_s + 'M'
 else
   innodb_options['innodb_buffer_pool_size'] = \
     node['mariadb']['innodb']['buffer_pool_size']
 end
 innodb_options['innodb_log_buffer_size'] = \
   node['mariadb']['innodb']['log_buffer_size']
-innodb_options['innodb_file_per_table']  = \
+innodb_options['innodb_file_per_table'] = \
   node['mariadb']['innodb']['file_per_table']
 innodb_options['innodb_open_files'] = node['mariadb']['innodb']['open_files']
 innodb_options['innodb_io_capacity'] = \
@@ -82,15 +81,18 @@ end
 
 replication_opts = {}
 
-replication_opts['log_bin'] = node['mariadb']['replication']['log_bin']
-replication_opts['sync_binlog'] = \
-  node['mariadb']['replication']['sync_binlog']
-replication_opts['log_bin_index'] = \
-  node['mariadb']['replication']['log_bin_index']
-replication_opts['expire_logs_days'] = \
-  node['mariadb']['replication']['expire_logs_days']
-replication_opts['max_binlog_size'] = \
-  node['mariadb']['replication']['max_binlog_size']
+if node['mariadb']['replication']['log_bin']
+  replication_opts['log_bin'] = node['mariadb']['replication']['log_bin']
+  replication_opts['sync_binlog'] = \
+    node['mariadb']['replication']['sync_binlog']
+  replication_opts['log_bin_index']    = \
+    node['mariadb']['replication']['log_bin_index']
+  replication_opts['expire_logs_days'] = \
+    node['mariadb']['replication']['expire_logs_days']
+  replication_opts['max_binlog_size'] = \
+    node['mariadb']['replication']['max_binlog_size']
+end
+
 unless node['mariadb']['replication']['server_id'].empty?
   replication_opts['server-id'] = node['mariadb']['replication']['server_id']
 end

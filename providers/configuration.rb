@@ -28,7 +28,7 @@ end
 
 action :remove do
   if ::File.exist?(node['mariadb']['configuration']['includedir'] + \
-                   '/' + new_resource.name + '.cnf')
+    '/' + new_resource.name + '.cnf')
     Chef::Log.info "Removing #{new_resource.name} repository from " + \
       node['mariadb']['configuration']['includedir']
     file node['mariadb']['configuration']['includedir'] + \

@@ -20,22 +20,28 @@
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
-  exist_data_bag_mariadb_root = search(:mariadb, 'id:user_root').first
-  unless exist_data_bag_mariadb_root.nil?
-    data_bag_mariadb_root = data_bag_item('mariadb', 'user_root')
-    node.override['mariadb']['server_root_password'] = data_bag_mariadb_root['password']
+  if node['mariadb']['server_root_password'].nil?
+    exist_data_bag_mariadb_root = search(:mariadb, 'id:user_root').first
+    unless exist_data_bag_mariadb_root.nil?
+      data_bag_mariadb_root = data_bag_item('mariadb', 'user_root')
+      node.override['mariadb']['server_root_password'] = data_bag_mariadb_root['password']
+    end
   end
 
-  exist_data_bag_mariadb_debian = search(:mariadb, 'id:user_debian').first
-  unless exist_data_bag_mariadb_debian.nil?
-    data_bag_mariadb_debian = data_bag_item('mariadb', 'user_debian')
-    node.override['mariadb']['debian']['password'] = data_bag_mariadb_debian['password']
+  if node['mariadb']['debian']['password'].nil?
+    exist_data_bag_mariadb_debian = search(:mariadb, 'id:user_debian').first
+    unless exist_data_bag_mariadb_debian.nil?
+      data_bag_mariadb_debian = data_bag_item('mariadb', 'user_debian')
+      node.override['mariadb']['debian']['password'] = data_bag_mariadb_debian['password']
+    end
   end
 
-  exist_data_bag_mariadb_sstuser = search(:mariadb, 'id:user_sstuser').first
-  unless exist_data_bag_mariadb_sstuser.nil?
-    data_bag_mariadb_sstuser = data_bag_item('mariadb', 'user_sstuser')
-    node.override['mariadb']['galera']['wsrep_sst_auth'] = data_bag_mariadb_sstuser['user_password']
+  if node['mariadb']['galera']['wsrep_sst_auth'].nil?
+    exist_data_bag_mariadb_sstuser = search(:mariadb, 'id:user_sstuser').first
+    unless exist_data_bag_mariadb_sstuser.nil?
+      data_bag_mariadb_sstuser = data_bag_item('mariadb', 'user_sstuser')
+      node.override['mariadb']['galera']['wsrep_sst_auth'] = data_bag_mariadb_sstuser['user_password']
+    end
   end
 end
 
@@ -58,12 +64,10 @@ if node['mariadb']['galera']['wsrep_sst_method'] == 'rsync'
   package 'rsync' do
     action :install
   end
-else
-  if node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
-    %w(percona-xtrabackup socat pv).each do |pkg|
-      package pkg do
-        action :install
-      end
+elsif node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
+  %w(percona-xtrabackup socat pv).each do |pkg|
+    package pkg do
+      action :install
     end
   end
 end
@@ -143,17 +147,16 @@ if node['mariadb']['galera'].attribute?('wsrep_sst_auth')
 end
 galera_options['wsrep_provider'] = \
   node['mariadb']['galera']['wsrep_provider']
-if node['mariadb']['galera'].attribute?('wsrep_slave_threads')
-  galera_options['wsrep_slave_threads'] = \
-    node['mariadb']['galera']['wsrep_slave_threads']
-else
-  galera_options['wsrep_slave_threads'] = node['cpu']['total'] * 4
-end
+galera_options['wsrep_slave_threads'] = if node['mariadb']['galera'].attribute?('wsrep_slave_threads')
+                                          node['mariadb']['galera']['wsrep_slave_threads']
+                                        else
+                                          node['cpu']['total'] * 4
+                                        end
 unless node['mariadb']['galera']['wsrep_node_address_interface'].empty?
   ipaddress = ''
   iface = node['mariadb']['galera']['wsrep_node_address_interface']
   node['network']['interfaces'][iface]['addresses'].each do |ip, params|
-    params['family'] == ('inet') && ipaddress = ip
+    params['family'] == 'inet' && ipaddress = ip
   end
   galera_options['wsrep_node_address'] = ipaddress unless ipaddress.empty?
 end
@@ -161,11 +164,13 @@ unless node['mariadb']['galera']['wsrep_node_incoming_address_interface'].empty?
   ipaddress_inc = ''
   iface = node['mariadb']['galera']['wsrep_node_incoming_address_interface']
   node['network']['interfaces'][iface]['addresses'].each do |ip, params|
-    params['family'] == ('inet') && ipaddress_inc = ip
+    params['family'] == 'inet' && ipaddress_inc = ip
   end
   galera_options['wsrep_node_incoming_address'] = \
     ipaddress_inc unless ipaddress_inc.empty?
 end
+
+galera_options['wsrep_slave_threads'] = node['cpu']['total'] * 4
 node['mariadb']['galera']['options'].each do |key, value|
   galera_options[key] = value
 end
@@ -194,29 +199,29 @@ if platform?('debian', 'ubuntu')
 
   if node['mariadb']['server_root_password'].is_a?(String)
     grants_command += '--password=\'' + \
-                      node['mariadb']['server_root_password'] + '\' '
+      node['mariadb']['server_root_password'] + '\' '
   end
 
   grants_command += '-e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ' \
-                    'DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, ' \
-                    'INDEX, ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY ' \
-                    'TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, ' \
-                    'REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ' \
-                    'ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER ON ' \
-                    ' *.* TO \'' + node['mariadb']['debian']['user'] + \
-                    '\'@\'' + node['mariadb']['debian']['host'] + '\' ' \
-                    'IDENTIFIED BY \'' + \
-                    node['mariadb']['debian']['password'] + '\' WITH GRANT ' \
-                    'OPTION"'
+    'DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, ' \
+    'INDEX, ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY ' \
+    'TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, ' \
+    'REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ' \
+    'ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER ON ' \
+    ' *.* TO \'' + node['mariadb']['debian']['user'] + \
+    '\'@\'' + node['mariadb']['debian']['host'] + '\' ' \
+    'IDENTIFIED BY \'' + \
+    node['mariadb']['debian']['password'] + '\' WITH GRANT ' \
+    'OPTION"'
 
   execute 'correct-debian-grants' do
     command grants_command
     action :run
     only_if do
-      cmd = Mixlib::ShellOut.new("/usr/bin/mysql --user=\"" + \
+      cmd = Mixlib::ShellOut.new('/usr/bin/mysql --user="' + \
         node['mariadb']['debian']['user'] + \
-        "\" --password=\"" + node['mariadb']['debian']['password'] + \
-        "\" -r -B -N -e \"SELECT 1\"")
+        '" --password="' + node['mariadb']['debian']['password'] + \
+        '" -r -B -N -e "SELECT 1"')
       cmd.run_command
       cmd.error?
     end
@@ -237,22 +242,22 @@ if node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
 
   if node['mariadb']['server_root_password'].is_a?(String)
     sstuser_cmd += '--password=\'' + \
-                   node['mariadb']['server_root_password'] + '\' '
+      node['mariadb']['server_root_password'] + '\' '
   end
 
   sstuser_cmd += '-e "GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ' \
-                 ' ON *.* TO \'' + sstuser + \
-                 '\'@\'localhost\' ' \
-                 'IDENTIFIED BY \'' + sstpassword + '\'"'
+    ' ON *.* TO \'' + sstuser + \
+    '\'@\'localhost\' ' \
+    'IDENTIFIED BY \'' + sstpassword + '\'"'
 
   execute 'sstuser-grants' do
     command sstuser_cmd
     action :run
     only_if do
-      cmd = Mixlib::ShellOut.new("/usr/bin/mysql --user=\"" + \
+      cmd = Mixlib::ShellOut.new('/usr/bin/mysql --user="' + \
         sstuser + \
-        "\" --password=\"" + sstpassword + \
-        "\" -r -B -N -e \"SELECT 1\"")
+        '" --password="' + sstpassword + \
+        '" -r -B -N -e "SELECT 1"')
       cmd.run_command
       cmd.error?
     end
