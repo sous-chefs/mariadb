@@ -22,6 +22,9 @@ socket		= <%= node['mariadb']['client']['socket'] %>
 <% if node['mariadb']['client'].attribute?('host') && !node['mariadb']['client']['host'].nil? %>
 host		= <%= node['mariadb']['client']['host'] %>
 <% end %>
+<%   node['mariadb']['client']['options'].each { |key, value| -%>
+<%= key %> = <%= value %>
+<%   } -%>
 
 # Here is entries for some specific programs
 # The following values assume you have at least 32M ram
