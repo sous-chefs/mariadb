@@ -45,3 +45,11 @@ when 'package'
 when 'from_source'
   # To be filled as soon as possible
 end
+
+template node['mariadb']['configuration']['path'] + '/my.cnf' do
+  source 'my.cnf-client.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end
+
