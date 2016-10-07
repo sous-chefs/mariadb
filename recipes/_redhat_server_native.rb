@@ -19,7 +19,7 @@
 Chef::Recipe.send(:include, MariaDB::Helper)
 
 service_name = os_service_name(node['platform'], node['platform_version'])
-node.set['mariadb']['mysqld']['service_name'] = service_name\
+node.default['mariadb']['mysqld']['service_name'] = service_name\
   unless service_name.nil?
 
 package 'mariadb-server' do
