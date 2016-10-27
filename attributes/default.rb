@@ -145,6 +145,7 @@ default['mariadb']['client']['development_files'] = true
 #
 # debian specific configuration
 #
+default['mariadb']['debian']['manage_maint_user'] = false
 default['mariadb']['debian']['user'] = 'debian-sys-maint'
 default['mariadb']['debian']['password'] = 'please-change-me'
 default['mariadb']['debian']['host'] = 'localhost'
