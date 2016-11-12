@@ -27,6 +27,11 @@ socket		= <%= node['mariadb']['client']['socket'] %>
 [mysqld_safe]
 socket		= <%= node['mariadb']['mysqld_safe']['socket'] %>
 nice		= 0
+<% if node['mariadb']['mysqld_safe'].key?('options') -%>
+<%   node['mariadb']['mysqld_safe']['options'].each { |key, value| -%>
+<%= key %> = <%= value %>
+<%   } -%>
+<% end -%>
 
 [mysqld]
 #
