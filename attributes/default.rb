@@ -13,6 +13,7 @@ else
   default['mariadb']['mysqld']['pid_file'] = '/var/run/mysqld/mysqld.pid'
   default['mariadb']['client']['socket'] = '/var/run/mysqld/mysqld.sock'
   default['mariadb']['mysqld_safe']['socket'] = '/var/run/mysqld/mysqld.sock'
+  default['mariadb']['install']['keyserver'] = 'keyserver.ubuntu.com'
 end
 
 default['mariadb']['sections'] = %w(mysql mysqldump mysqlcheck mysqladmin mysqlshow)
