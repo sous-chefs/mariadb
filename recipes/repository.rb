@@ -18,6 +18,8 @@ if node['mariadb']['use_default_repository']
         node['mariadb']['install']['version'] + '/' + node['platform']
       distribution node['lsb']['codename']
       components ['main']
+      keyserver node['mariadb']['install']['keyserver']
+      key '0xcbcb082a1bb943db'
       keyserver 'keyserver.ubuntu.com'
       key apt_key
     end
@@ -26,9 +28,9 @@ if node['mariadb']['use_default_repository']
 
     target_platform = if node['platform'] == 'redhat' || node['platform'] == 'scientific'
                         "rhel#{node['platform_version'].to_i}"
-                      else
+    else
                         "#{node['platform']}#{node['platform_version'].to_i}"
-                      end
+    end
     yum_repository "mariadb-#{node['mariadb']['install']['version']}" do
       description 'MariaDB Official Repository'
       baseurl 'http://yum.mariadb.org/' + \
