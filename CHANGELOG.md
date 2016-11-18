@@ -3,6 +3,11 @@ mariadb CHANGELOG
 
 This file is used to list changes made in each version of the mariadb cookbook.
 
+0.3.2
+-----
+- [BUG #125] - Add missing code to my.cnf template to deploy mysqld_safe options
+- [ENH #126] - Add support for configuring skip-name-resolve
+
 0.3.1
 -----
 - [BUG #76] - Service is restarted every run if not localhost
