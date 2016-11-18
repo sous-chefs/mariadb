@@ -57,6 +57,9 @@ skip-external-locking
 <% if node['mariadb']['mysqld']['skip_log_bin'] == 'true' -%>
 skip-log-bin
 <% end -%>
+<% if node['mariadb']['mysqld']['skip_name_resolve'] == 'true' -%>
+skip-name-resolve
+<% end -%>
 #
 # Instead of skip-networking the default is now to listen only on
 # localhost which is more compatible and is not less secure.
