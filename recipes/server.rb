@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+# rubocop:disable Lint/EmptyWhen
+
 Chef::Recipe.send(:include, MariaDB::Helper)
 case node['mariadb']['install']['type']
 when 'package'

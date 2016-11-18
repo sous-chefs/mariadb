@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+# rubocop:disable Lint/EmptyWhen
+
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
@@ -166,8 +168,7 @@ unless node['mariadb']['galera']['wsrep_node_incoming_address_interface'].empty?
   node['network']['interfaces'][iface]['addresses'].each do |ip, params|
     params['family'] == 'inet' && ipaddress_inc = ip
   end
-  galera_options['wsrep_node_incoming_address'] = \
-    ipaddress_inc unless ipaddress_inc.empty?
+  galera_options['wsrep_node_incoming_address'] = ipaddress_inc unless ipaddress_inc.empty?
 end
 
 galera_options['wsrep_slave_threads'] = node['cpu']['total'] * 4
