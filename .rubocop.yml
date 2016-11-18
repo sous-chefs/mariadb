@@ -1,6 +1,10 @@
+AllCops:
+  Exclude:
+    - '**/Vagrantfile'
+    - 'vendor/**/*'
 LineLength:
- Max: 120
+  Max: 120
 Style/MultilineOperationIndentation:
- EnforcedStyle: indented
+  EnforcedStyle: indented
 Style/SignalException:
- EnforcedStyle: only_raise
+  EnforcedStyle: only_raise
