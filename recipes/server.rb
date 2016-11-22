@@ -128,6 +128,9 @@ if  node['mariadb']['allow_root_pass_change'] ||
   end
 end
 
+# Change debian-sys-maint password if desired
+include_recipe "#{cookbook_name}::_debian_user" if node['mariadb']['debian']['manage_maint_user']
+
 # MariaDB Plugins
 include_recipe "#{cookbook_name}::plugins" if \
   node['mariadb']['plugins_options']['auto_install']
