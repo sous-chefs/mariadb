@@ -3,6 +3,48 @@ mariadb CHANGELOG
 
 This file is used to list changes made in each version of the mariadb cookbook.
 
+1.0.0
+-----
+
+- Resolve lint issues in Gemfile
+- Misc lint fixes
+- Apply a more standard .gitignore
+- Disable rubocop inspection of Vagrantfiles + vendor dir
+- Misc CI fixes
+- Add support for configuring skip-name-resolve
+- Add missing code to my.cnf template to deploy mysqld_safe options
+- fix for foodcritic
+- fix unary operator; ensure script exits on any error
+- feat: adds the ability to config skip-log-bin to be present
+- Prevent this cookbook from crashing Chef < 12
+- Correct Issue #91
+- Correct Rubocop Offenses
+- Fix rubocop offences
+- add test for bin_log unset
+- Support binlog disabling (by setting log_bin to false)
+- make databags optional
+- add exception handling, when searching for data bag
+- Rubocop fixes
+- Foodcritic fixes
+- Update chef components to more recent versions
+- Fix unfortunate typo
+- fix only_if
+- fix non-interpolated array
+- fix final specs
+- fix centos specs
+- fix specs
+- use Berkshelf 4.x and rvm 2.1.7
+- fixing FC002 FC009 and FC023
+- fixing attribute typo
+- fixing tests, adding /root/.my.cnf support
+- Add some mandatory attributes and minor fixes
+- Add MariaDB 10.1 and data_bag support
+- Fixed tab to spaces
+- Added sensitive tag to execute statement
+- Remove anonymous users and test database by default
+- update documentation for 'options' hash
+- Fix use of keyserver
+
 0.3.3
 -----
 - [ENH #110] - adds the ability to config skip-log-bin to be present
