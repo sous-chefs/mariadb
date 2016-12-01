@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-- 2.1.7
+- 2.2.5
 bundler_args: --without development
 gemfile:
 - Gemfile

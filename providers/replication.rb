@@ -3,6 +3,8 @@
 # Provider:: replication
 #
 
+# rubocop:disable Metrics/BlockLength
+
 use_inline_resources if defined?(use_inline_resources)
 
 def whyrun_supported?
@@ -25,12 +27,10 @@ action :add do
          ' master_user and master_password !'
   end
   sql_string = 'CHANGE MASTER '
-  sql_string += '\'' + new_resource.name + \
-    '\' ' if new_resource.name != 'default'
+  sql_string += '\'' + new_resource.name + '\' ' if new_resource.name != 'default'
   sql_string += 'TO '
   sql_string += 'MASTER_HOST=\'' + new_resource.master_host + '\', '
-  sql_string += 'MASTER_PORT=' + new_resource.master_port.to_s + \
-    ', ' unless new_resource.master_port.nil?
+  sql_string += 'MASTER_PORT=' + new_resource.master_port.to_s + ', ' unless new_resource.master_port.nil?
   sql_string += 'MASTER_USER=\'' + new_resource.master_user + '\', '
   sql_string += 'MASTER_PASSWORD=\'' + new_resource.master_password + '\''
   if new_resource.master_use_gtid == 'no'
@@ -75,8 +75,7 @@ action :remove do
 end
 
 action :start do
-  command_master_connection = ' \'' + new_resource.name + \
-    '\'' unless new_resource.name == 'default'
+  command_master_connection = ' \'' + new_resource.name + '\'' unless new_resource.name == 'default'
   execute 'start_replication_from_master_' + new_resource.name do
     # Add sensitive true when foodcritic #233 fixed
     command '/bin/echo "START SLAVE' + command_master_connection + ';' \
@@ -90,8 +89,7 @@ action :start do
 end
 
 action :stop do
-  command_master_connection = ' \'' + new_resource.name + \
-    '\'' unless new_resource.name == 'default'
+  command_master_connection = ' \'' + new_resource.name + '\'' unless new_resource.name == 'default'
   execute 'start_replication_from_master_' + new_resource.name do
     # Add sensitive true when foodcritic #233 fixed
     command '/bin/echo "STOP SLAVE' + command_master_connection + ';' \
