@@ -1,13 +1,13 @@
 source 'https://rubygems.org'
 
-gem 'ohai', '~> 8.4'
 gem 'chef', '~> 12.5'
+gem 'ohai', '~> 8.4'
 
 group :lint do
   gem 'foodcritic', '~> 6.0'
-  gem 'rubocop', '~> 0.38'
   gem 'rainbow', '< 2.0'
   gem 'rspec'
+  gem 'rubocop', '~> 0.38'
 end
 
 group :packaging do
@@ -32,15 +32,15 @@ group :kitchen_cloud do
 end
 
 group :development do
-  gem 'ruby_gntp'
+  gem 'fauxhai'
   gem 'growl'
-  gem 'rb-fsevent'
   gem 'guard', '~> 2.4'
   gem 'guard-kitchen'
   # gem 'guard-foodcritic'
   gem 'guard-rspec'
   gem 'guard-rubocop'
-  gem 'rake'
-  gem 'fauxhai'
   gem 'pry-nav'
+  gem 'rake'
+  gem 'rb-fsevent'
+  gem 'ruby_gntp'
 end
