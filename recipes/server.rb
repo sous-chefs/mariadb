@@ -113,10 +113,10 @@ if  node['mariadb']['allow_root_pass_change'] ||
     node['mariadb']['forbid_remote_root'] ||
     node['mariadb']['remove_test_database']
   execute 'install-grants' do
-    # Add sensitive true when foodcritic #233 fixed
     command '/bin/bash -e /etc/mariadb_grants \'' + \
       node['mariadb']['server_root_password'] + '\''
     only_if { File.exist?('/etc/mariadb_grants') }
+    sensitive true
     action :nothing
   end
 
