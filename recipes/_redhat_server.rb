@@ -45,4 +45,4 @@ execute 'change first install root password' do
 end
 
 # Default policy for RH and fedora is to name it mysql
-node.set['mariadb']['mysqld']['service_name'] = 'mysql'
+node.default['mariadb']['mysqld']['service_name'] = 'mysql'

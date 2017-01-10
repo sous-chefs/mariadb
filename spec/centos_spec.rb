@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'centos::mariadb::default' do
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(
+    runner = ChefSpec::ServerRunner.new(
       platform: 'centos', version: '6.4',
       step_into: ['mariadb_configuration']
     ) do |node|
@@ -59,13 +59,13 @@ end
 
 describe 'centos::mariadb::native' do
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(
+    runner = ChefSpec::ServerRunner.new(
       platform: 'centos', version: '7.0',
       step_into: ['mariadb_configuration']
     ) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
-      node.set['mariadb']['install']['prefer_os_package'] = true
+      node.override['mariadb']['install']['prefer_os_package'] = true
     end
     runner.converge('mariadb::default')
   end
@@ -97,13 +97,13 @@ describe 'centos::mariadb::native' do
     end
     context 'fedora 19 with different service name' do
       let(:chef_run) do
-        runner = ChefSpec::SoloRunner.new(
+        runner = ChefSpec::ServerRunner.new(
           platform: 'fedora', version: '19',
           step_into: ['mariadb_configuration']
         ) do |node|
           node.automatic['memory']['total'] = '2048kB'
           node.automatic['ipaddress'] = '1.1.1.1'
-          node.set['mariadb']['install']['prefer_os_package'] = true
+          node.override['mariadb']['install']['prefer_os_package'] = true
         end
         runner.converge('mariadb::default')
       end
@@ -150,7 +150,7 @@ end
 
 describe 'centos::mariadb::client' do
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(
+    runner = ChefSpec::ServerRunner.new(
       platform: 'centos', version: '6.4',
       step_into: ['mariadb_configuration']
     ) do |node|
@@ -173,13 +173,13 @@ describe 'centos::mariadb::client' do
   end
   context 'Without development files' do
     let(:chef_run) do
-      runner = ChefSpec::SoloRunner.new(
+      runner = ChefSpec::ServerRunner.new(
         platform: 'centos', version: '6.4',
         step_into: ['mariadb_configuration']
       ) do |node|
         node.automatic['memory']['total'] = '2048kB'
         node.automatic['ipaddress'] = '1.1.1.1'
-        node.set['mariadb']['client']['development_files'] = false
+        node.override['mariadb']['client']['development_files'] = false
       end
       runner.converge('mariadb::client')
     end
@@ -196,13 +196,13 @@ end
 
 describe 'centos::mariadb::client::native' do
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(
+    runner = ChefSpec::ServerRunner.new(
       platform: 'centos', version: '7.0',
       step_into: ['mariadb_configuration']
     ) do |node|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
-      node.set['mariadb']['install']['prefer_os_package'] = true
+      node.override['mariadb']['install']['prefer_os_package'] = true
     end
     runner.converge('mariadb::client')
   end
@@ -219,14 +219,14 @@ describe 'centos::mariadb::client::native' do
 
   context 'Without development files' do
     let(:chef_run) do
-      runner = ChefSpec::SoloRunner.new(
+      runner = ChefSpec::ServerRunner.new(
         platform: 'centos', version: '7.0',
         step_into: ['mariadb_configuration']
       ) do |node|
         node.automatic['memory']['total'] = '2048kB'
         node.automatic['ipaddress'] = '1.1.1.1'
-        node.set['mariadb']['install']['prefer_os_package'] = true
-        node.set['mariadb']['client']['development_files'] = false
+        node.override['mariadb']['install']['prefer_os_package'] = true
+        node.override['mariadb']['client']['development_files'] = false
       end
       runner.converge('mariadb::client')
     end
