@@ -3,14 +3,31 @@ require 'spec_helper'
 include Chef::Mixin::ShellOut
 
 describe 'debian::mariadb::galera10-rsync' do
+  let(:galera_1) do
+    stub_node('galera1') do |node|
+      node.automatic['hostname'] = 'galera1'
+      node.automatic['fqdn'] = 'galera1.domain'
+      node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
+    end
+  end
+  let(:galera_2) do
+    stub_node('galera2') do |node|
+      node.automatic['hostname'] = 'galera2'
+      node.automatic['fqdn'] = 'galera2.domain'
+      node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
+    end
+  end
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(
+    runner = ChefSpec::ServerRunner.new(
       platform: 'debian', version: '7.4',
       step_into: ['mariadb_configuration']
-    ) do |node|
+    ) do |node, server|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
-      node.set['mariadb']['rspec'] = true
+      node.override['mariadb']['rspec'] = true
+      server.update_node(node)
+      server.create_node(galera_1)
+      server.create_node(galera_2)
     end
     runner.converge('mariadb::galera')
   end
@@ -19,22 +36,8 @@ describe 'debian::mariadb::galera10-rsync' do
            stderr: double(empty?: true), exitstatus: 0,
            :live_stream= => nil)
   end
-  let(:galera_1) do
-    stub_node('galera1') do |node|
-      node.automatic['hostname'] = 'galera1'
-      node.automatic['fqdn'] = 'galera1.domain'
-    end
-  end
-  let(:galera_2) do
-    stub_node('galera2') do |node|
-      node.automatic['hostname'] = 'galera2'
-      node.automatic['fqdn'] = 'galera2.domain'
-    end
-  end
   before do
     allow(Mixlib::ShellOut).to receive(:new).and_return(shellout)
-    stub_search(:node, 'mariadb_galera_cluster_name:galera_cluster')
-      .and_return([galera_1, galera_2])
   end
 
   it 'Installs Mariadb package' do
@@ -117,15 +120,32 @@ describe 'debian::mariadb::galera10-rsync' do
 end
 
 describe 'debian::mariadb::galera10-xtrabackup-v2' do
+  let(:galera_1) do
+    stub_node('galera1') do |node|
+      node.automatic['hostname'] = 'galera1'
+      node.automatic['fqdn'] = 'galera1.domain'
+      node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
+    end
+  end
+  let(:galera_2) do
+    stub_node('galera2') do |node|
+      node.automatic['hostname'] = 'galera2'
+      node.automatic['fqdn'] = 'galera2.domain'
+      node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
+    end
+  end
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(
+    runner = ChefSpec::ServerRunner.new(
       platform: 'debian', version: '7.4',
       step_into: ['mariadb_configuration']
-    ) do |node|
+    ) do |node, server|
       node.automatic['memory']['total'] = '2048kB'
       node.automatic['ipaddress'] = '1.1.1.1'
-      node.set['mariadb']['galera']['wsrep_sst_method'] = 'xtrabackup-v2'
-      node.set['mariadb']['rspec'] = true
+      node.override['mariadb']['galera']['wsrep_sst_method'] = 'xtrabackup-v2'
+      node.override['mariadb']['rspec'] = true
+      server.update_node(node)
+      server.create_node(galera_1)
+      server.create_node(galera_2)
     end
     runner.converge('mariadb::galera')
   end
@@ -136,8 +156,6 @@ describe 'debian::mariadb::galera10-xtrabackup-v2' do
   end
   before do
     allow(Mixlib::ShellOut).to receive(:new).and_return(shellout)
-    stub_search(:node, 'mariadb_galera_cluster_name:galera_cluster')
-      .and_return([stub_node('galera1'), stub_node('galera2')])
   end
 
   it 'Installs Mariadb package' do

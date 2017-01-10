@@ -62,14 +62,16 @@ when 'from_source'
   # To be filled as soon as possible
 end
 
-if node['mariadb']['galera']['wsrep_sst_method'] == 'rsync'
-  package 'rsync' do
-    action :install
-  end
-elsif node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
-  %w(percona-xtrabackup socat pv).each do |pkg|
-    package pkg do
+if node['mariadb']['install']['extra_packages']
+  if node['mariadb']['galera']['wsrep_sst_method'] == 'rsync'
+    package 'rsync' do
       action :install
+    end
+  elsif node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
+    %w(percona-xtrabackup socat pv).each do |pkg|
+      package pkg do
+        action :install
+      end
     end
   end
 end

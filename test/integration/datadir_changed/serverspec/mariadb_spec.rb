@@ -38,7 +38,7 @@ describe "verify the tuning attributes set in #{mysql_config_file}" do
   end
 end
 
-describe 'verify the tuning attributes set in ' + includedir + '/innodb.cnf' do
+describe 'verify the tuning attributes set in ' + includedir + '/20-innodb.cnf' do
   {
     innodb_buffer_pool_size: '256M',
     innodb_flush_method: 'O_DIRECT',
@@ -46,19 +46,19 @@ describe 'verify the tuning attributes set in ' + includedir + '/innodb.cnf' do
     innodb_open_files: 400
   }.each do |attribute, value|
     describe command("grep -E \"^#{attribute}\\s+\" " \
-                     "#{includedir}/innodb.cnf") do
+                     "#{includedir}/20-innodb.cnf") do
       its(:stdout) { should match(/#{value}/) }
     end
   end
 end
 
-describe 'verify the tuning attributes set in ' + includedir + '/replication.cnf' do
+describe 'verify the tuning attributes set in ' + includedir + '/30-replication.cnf' do
   {
     max_binlog_size: '100M',
     expire_logs_days: 10
   }.each do |attribute, value|
     describe command("grep -E \"^#{attribute}\\s+\" " \
-                     "#{includedir}/replication.cnf") do
+                     "#{includedir}/30-replication.cnf") do
       its(:stdout) { should match(/#{value}/) }
     end
   end

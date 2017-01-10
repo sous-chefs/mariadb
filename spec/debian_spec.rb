@@ -109,7 +109,7 @@ describe 'debian::mariadb::client' do
       ) do |node|
         node.automatic['memory']['total'] = '2048kB'
         node.automatic['ipaddress'] = '1.1.1.1'
-        node.set['mariadb']['client']['development_files'] = false
+        node.override['mariadb']['client']['development_files'] = false
       end
       runner.converge('mariadb::client')
     end

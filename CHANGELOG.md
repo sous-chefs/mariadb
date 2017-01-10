@@ -3,6 +3,14 @@ mariadb CHANGELOG
 
 This file is used to list changes made in each version of the mariadb cookbook.
 
+1.0.1
+-----
+
+- Add an option to not install extra packages
+- Correct some Units tests (Use ServerRunner instead of SoloRunner to test search)
+- Update OS version to check with Kitchen
+- Correct ServerSpec tests
+
 1.0.0
 -----
 
