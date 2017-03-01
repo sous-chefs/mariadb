@@ -1,10 +1,6 @@
 AllCops:
   Exclude:
     - '**/Vagrantfile'
-    - 'vendor/**/*'
-LineLength:
-  Max: 120
-Style/MultilineOperationIndentation:
-  EnforcedStyle: indented
-Style/SignalException:
-  EnforcedStyle: only_raise
+
+# Cookstyle todo
+inherit_from: .rubocop_todo.yml

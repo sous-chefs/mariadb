@@ -1,10 +1,21 @@
-language: ruby
-rvm:
-- 2.2.5
-bundler_args: --without development
-gemfile:
-- Gemfile
-script:
-- bundle exec foodcritic --epic-fail any .
-- bundle exec rubocop
-- bundle exec rspec
+sudo: required
+dist: trusty
+
+# install the stable release of chef-dk.
+addons:
+  apt:
+    sources:
+      - chef-stable-trusty
+    packages:
+      - chefdk
+
+matrix:
+  include:
+    - before_script:
+      - eval "$(/opt/chefdk/bin/chef shell-init bash)"
+      - /opt/chefdk/embedded/bin/chef --version
+      - /opt/chefdk/embedded/bin/cookstyle --version
+      - /opt/chefdk/embedded/bin/foodcritic --version
+    - script:
+      - /opt/chefdk/bin/chef exec rake
+      env: UNIT_AND_LINT=1
