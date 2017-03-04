@@ -10,13 +10,16 @@ if node['mariadb']['use_default_repository']
   when 'apt'
     include_recipe 'apt::default'
 
+    apt_key = 'CBCB082A1BB943DB'
+    apt_key = 'F1656F24C74CD1D8' if node['platform'] == 'ubuntu' && node['platform_version'].split('.')[0].to_i >= 16
+
     apt_repository "mariadb-#{node['mariadb']['install']['version']}" do
       uri 'http://' + node['mariadb']['apt_repository']['base_url'] + '/' + \
         node['mariadb']['install']['version'] + '/' + node['platform']
       distribution node['lsb']['codename']
       components ['main']
       keyserver 'keyserver.ubuntu.com'
-      key 'CBCB082A1BB943DB'
+      key apt_key
     end
   when 'yum'
     include_recipe 'yum::default'
