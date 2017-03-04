@@ -1,191 +1,277 @@
-mariadb CHANGELOG
-=================
+# mariadb CHANGELOG
 
-This file is used to list changes made in each version of the mariadb cookbook.
+All notable changes to this project will be documented in this file.
 
-1.0.1
------
+The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
+
+## Unreleased
+
+### Fixed
+
+- Make open-files-limit configurable (previously commented out in template) (#97)
+
+### Changed
+
+- Changed CHANGELOG format to follow [Keep a Changelog (v0.3.0)](http://keepachangelog.com/en/0.3.0/)
+
+## 1.0.1
+
+### Fixed
+
+- Correct ServerSpec tests
+- Correct some Units tests (Use ServerRunner instead of SoloRunner to test search)
+
+### Added
 
 - Add an option to not install extra packages
-- Correct some Units tests (Use ServerRunner instead of SoloRunner to test search)
 - Update OS version to check with Kitchen
-- Correct ServerSpec tests
 
-1.0.0
------
+## 1.0.0
 
-- Resolve lint issues in Gemfile
-- Misc lint fixes
-- Apply a more standard .gitignore
-- Disable rubocop inspection of Vagrantfiles + vendor dir
-- Misc CI fixes
+### Fixed
+
+- Fix fetching apt key on every run bug (#91)
+- Fix Foodcritic and RuboCop offences
+- Fix ChefSpec tests (and adding more coverage)
+- Fix some typos
+- Fix CI
+- Fix non-interpolated array
+- Fix only_if
+- Fix unary operator; ensure script exits on any error
+- Prevent cookbook from crashing Chef < 12
+
+### Added
+
 - Add support for configuring skip-name-resolve
 - Add missing code to my.cnf template to deploy mysqld_safe options
-- fix for foodcritic
-- fix unary operator; ensure script exits on any error
-- feat: adds the ability to config skip-log-bin to be present
-- Prevent this cookbook from crashing Chef < 12
-- Correct Issue #91
-- Correct Rubocop Offenses
-- Fix rubocop offences
-- add test for bin_log unset
-- Support binlog disabling (by setting log_bin to false)
-- make databags optional
-- add exception handling, when searching for data bag
-- Rubocop fixes
-- Foodcritic fixes
-- Update chef components to more recent versions
-- Fix unfortunate typo
-- fix only_if
-- fix non-interpolated array
-- fix final specs
-- fix centos specs
-- fix specs
-- use Berkshelf 4.x and rvm 2.1.7
-- fixing FC002 FC009 and FC023
-- fixing attribute typo
-- fixing tests, adding /root/.my.cnf support
+- Add the ability to config skip-log-bin to be present
+- Add MariaDB 10.1 and data bag support
+- Add exception handling, when searching for data bag
 - Add some mandatory attributes and minor fixes
-- Add MariaDB 10.1 and data_bag support
-- Fixed tab to spaces
-- Added sensitive tag to execute statement
+- Add test for bin_log unset
+- Add sensitive tag to execute statement
+- Add support to disable binlog (by setting `log_bin` to `false`)
+
+### Changed
+
+- Apply a more standard .gitignore
+- Update chef components to more recent versions
+- Update documentation for 'options' hash
+- Use Berkshelf 4.x and RVM 2.1.7
+
+### Removed
+
 - Remove anonymous users and test database by default
-- update documentation for 'options' hash
-- Fix use of keyserver
 
-0.3.3
------
-- [ENH #110] - adds the ability to config skip-log-bin to be present
+## 0.3.3
 
-0.3.2
------
-- [BUG #125] - Add missing code to my.cnf template to deploy mysqld_safe options
-- [ENH #126] - Add support for configuring skip-name-resolve
+### Added
 
-0.3.1
------
-- [BUG #76] - Service is restarted every run if not localhost
-- [BUG #73] - Fix directory permissions regression
-- [BUG #69] - Update repository.rb to be able to manage Scientific Linux
-- [BUG #57] - Add user and password to correct debian-grants
-- [ENH #71] - Add xtrabackup-v2 support for SST Method
-- [ENH #62] - Allow Galera cluster nodes to be configured when using Chef Solo
-- [ENH #64] - Add a vagrant config to test a galera cluster
-- [BUG #66] - mariadb_configuration template uses current cookbook as template source
-- [BUG #68] - Correct service name inconsistency on CentOS 7
+- Add the ability to configure `skip-log-bin` to be present (#110)
 
-0.3.0
-------
-- [ENH] - Add support for using operating system shipped mariadb packages
+## 0.3.2
 
-0.2.12
-------
-- [BUG #39] - Push gpg key adds through http/80 - Helps with firewalled installs
-- [ENH #46] - Add cookbook attribute on configuration lwrp
-- [ENH #47] - Allow to pass true for unary options
-- [BUG #48] - Load the needed plugins at startup
+### Fixed
 
-0.2.11
-------
-- [ENH #38] - Add CentOS support
-- [ENH #40] - Add sensitive flag to resource that deal with passwords
-- [BUG #43] - Fix convert TypeError in the replication provider
+- Add missing code to `my.cnf` template to deploy `mysqld_safe` options (#125)
 
-0.2.10
-------
-- [BUG] - Audit Plugin test and installation - Correct bad notifies, and stdout test
+### Added
 
-0.2.9
------
-- [BUG #36] - Audit plugin installation can crash mariadb server
+- Add support for configuring skip-name-resolve (#126)
 
-0.2.8
------
-- [BUG #30] - When using galera, nodes were not sorted, applying configuration change too often
-- [BUG #31] - ChefSpec coverage was not 100%
-- [BUG #28] - Remove the only_if to mysql service
-- [BUG #29] - Add a switch to not launch audit plugin install, when already installed
-- [ENH] - Add a switch to separate server install and audit install when needed
-- [ENH] - Add a rule to authorize line length to be 120 characters long
+## 0.3.1
 
-0.2.7
------
-- [BUG #24] - Fix convert TypeError in the replication provider
-- [BUG #25] - Data are now moved when default datadir is changed
-- [ENH #21] - Add audit_plugin management
+### Fixed
 
-0.2.6
------
-- [BUG #18] - Fix provider mariadb_replication compilation error
-- [DOCS] - Complete Changelog, and correct README
+- Add user and password to correct debian-grants (#57)
+- Correct service name inconsistency on CentOS 7 (#68)
+- Fix directory permissions regression (#73)
+- `mariadb_configuration` template uses current cookbook as template source (#66)
+- Service is restarted every run if not localhost (#76)
 
-0.2.5
------
-- [ENH #16] - Add a LWRP to manage replication slave
-- [ENH #17] - Be able to not install development files within client recipe
-- [ENH #11] - Fix the galera root password preseed
-- [BUG #12] - Fix the debian-sys-maint user creation/password change
-- [BUG #6] - Can change the apt repository base_url when the default one fail
-- [TEST] - Add new tests for the new features (galera,development files install,replication LWRP)
-- [DOCS] - Complete Changelog, and add new features explanations into README
+### Added
 
-0.2.4
------
-- [BUG #10] - Correct a FC004 broken rule
-- [BUG #9] - Correct foodcritic tests (add --epic-fail any to be sure it fails when a broken rule is detected)
+- Add Scientific Linux support (#69)
+- Add a vagrant config to test a Galera cluster (#64)
+- Add xtrabackup-v2 support for SST Method (#71)
+- Allow Galera cluster nodes to be configured when using Chef Solo (#62)
 
-0.2.3
------
-- [BUG #4] - Add a real management of mysql root password
-- [ENH #5] - Now restart mysql service when port is changed
-- [ENH #7] - Remove or add root remote access via attribute
-- [DOCS] - Complete documentations
-- [TEST] - Add a lot of chefspec and kitchen/serverspec tests
+## 0.3.0
 
-0.2.2
------
-- [sinfomicien] - Correct repository install under debian family
-- [sinfomicien] - Correct client install to add dev files
-- [sinfomicien] - Correct and add multiples tests
+### Added
 
-0.2.1
------
-- [sinfomicien] - Use stove to package (remove PaxHeaders.*)
+- Add support for using operating system shipped mariadb packages
 
-0.2.0
------
-- [sinfomicien] -  Add rpm/yum management
-- [sinfomicien] -  Refactor the whole recipes list and management to ease it
-- [sinfomicien] -  Correct the Documentation
-- [sinfomicien] -  Rename the provider (from extraconf to configuration), and add matchers to it
-- [sinfomicien] -  Add a recipe to manage client only installation
-- [sinfomicien] -  Refactor all tests to manage new platform (centos/redhat/fedora)
+## 0.2.12
 
-0.1.8
------
-- [sinfomicien] -  Add ignore-failure to debian grants correct, as it can break on initial setup
+### Fixed
 
-0.1.7
------
-- [sinfomicien] -  Correct a typo (unnecessary call to run_command)
+- Push gpg key adds through http/80 - Helps with firewalled installs (#39)
+- Load the needed plugins at startup (#48)
 
-0.1.6
------
-- [sinfomicien] -  improve Galera configuration management
-- [sinfomicien] -  Add new rspec tests
-- [sinfomicien] -  Create Kitchen test suite
+### Added
 
-0.1.5
------
-- [sinfomicien] -  improve attributes management
+- Add cookbook attribute on configuration LWRP (#46)
+- Allow to pass true for unary options (#47)
 
-0.1.4
------
-- [sinfomicien] - adapt galera55 recipe to use a generic galera recipe
-- [sinfomicien] - use a generic galera recipe to create the galera10 recipe
-- [sinfomicien] - Improve documentation 
+## 0.2.11
 
+### Fixed
 
-0.1.0
------
-- [sinfomicien] - Initial release of mariadb
+- Fix TypeError in the replication provider (#43)
+
+### Added
+
+- Add CentOS support (#38)
+- Add sensitive flag to resource that deal with passwords (#40)
+
+## 0.2.10
+
+### Fixed
+
+- Audit Plugin test and installation - Correct bad notifies and stdout test
+
+## 0.2.9
+
+### Fixed
+
+- Audit plugin installation can crash mariadb server (#36)
+
+## 0.2.8
+
+### Fixed
+
+- Add a switch to not launch audit plugin install, when already installed (#29)
+- Remove the `only_if` to mysql service (#28)
+- When using Galera, nodes were not sorted, applying configuration change too often (#30)
+
+### Added
+
+- Add more ChefSpec coverage (#31)
+- Add a switch to separate server install and audit install when needed
+- Add a RuboCop rule to allow line length to be 120 characters long
+
+## 0.2.7
+
+### Fixed
+
+- Fix convert TypeError in the replication provider (#24)
+- Data is now moved when `['mariadb']['mysqld']['datadir']` is changed (#25)
+
+### Added
+
+- Add `audit_plugin` management (#31)
+
+## 0.2.6
+
+### Fixed
+
+- Fix provider `mariadb_replication` compilation error (#18)
+
+### Added
+
+- Complete CHANGELOG and correct README
+
+## 0.2.5
+
+### Fixed
+
+- Fix the debian-sys-maint user creation/password change (#12)
+- Fix the Galera root password preseed (#11)
+
+### Added
+
+- Add a LWRP to manage replication slave (#16)
+- Add attribute to set custom `apt_repository`'s' `base_url` (#6)
+- Add new tests for the new features (Galera, development files install, replication LWRP)
+- Add option to skip installing development files within client recipe (#17)
+- Add CHANGELOG and add new feature explanations to README
+
+## 0.2.4
+
+### Fixed
+
+- Fix FC004 broken rule (#10)
+- Fix Foodcritic tests (add --epic-fail any to be sure it fails when a broken rule is detected) (#9)
+
+## 0.2.3
+
+### Fixed
+
+- Fix management of the mysql root password (#4)
+
+### Added
+
+- Add a lot of ChefSpec and kitchen/ServerSpec tests
+- Add ability to add or remove root remote access via attribute (#7)
+- Add immediate restart of the `mysql` service when port is changed (#5)
+- Add more documentation
+
+## 0.2.2
+
+### Fixed
+
+- Fix and add multiple tests
+- Fix client install to add dev files
+- Fix repository install under Debian family
+
+## 0.2.1
+
+### Added
+
+- Add stove to package/publish cookbook (remove PaxHeaders)
+
+## 0.2.0
+
+### Fixed
+
+- Correct the Documentation
+
+### Added
+
+- Add a recipe to manage client only installation
+- Add RPM/Yum management
+
+### Changed
+
+- Refactor all tests to manage new platform (CentOS/RedHat/Fedora)
+- Refactor the whole recipes list and management to ease it
+- Rename the provider (from `extraconf` to `configuration`) and add matchers for it
+
+## 0.1.8
+
+### Added
+
+- Add ignore-failure to debian-grants correct as it can break on initial setup
+
+## 0.1.7
+
+### Fixed
+
+- Correct a typo (unnecessary call to `run_command`)
+
+## 0.1.6
+
+### Added
+
+- Add new rspec tests
+- Create Kitchen test suite
+- Improve Galera configuration management
+
+## 0.1.5
+
+### Added
+
+- Improve attributes management
+
+## 0.1.4
+
+### Added
+
+- Adapt `galera55` recipe to use a generic galera recipe
+- Improve documentation
+- Use a generic Galera recipe to create the galera10 recipe
+
+## 0.1.0
+
+- Initial release of mariadb
