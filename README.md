@@ -1,7 +1,7 @@
 MariaDB Cookbook
 ================
 
-[![Build Status](https://travis-ci.org/sinfomicien/mariadb.png)](https://travis-ci.org/sinfomicien/mariadb)
+[![Build Status](https://travis-ci.org/sinfomicien/mariadb.svg?branch=master)](https://travis-ci.org/sinfomicien/mariadb) [![Cookbook Version](https://img.shields.io/cookbook/v/mariadb.svg)](https://supermarket.chef.io/cookbooks/mariadb)
 
 Description
 -----------
