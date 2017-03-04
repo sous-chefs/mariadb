@@ -1,0 +1,154 @@
+---
+driver:
+  name: dokken
+  privileged: true # because Docker and SystemD/Upstart
+  chef_version: current
+
+transport:
+  name: dokken
+
+provisioner:
+  name: dokken
+
+platforms:
+- name: centos-6
+  driver:
+    image: centos:6
+    platform: rhel
+    pid_one_command: /sbin/init
+    intermediate_instructions:
+      - RUN yum -y install which initscripts
+
+- name: centos-7
+  driver:
+    image: centos:7
+    platform: rhel
+    pid_one_command: /usr/lib/systemd/systemd
+    intermediate_instructions:
+      - RUN yum -y install lsof which initscripts net-tools
+
+- name: debian-7
+  driver:
+    image: debian:7
+    pid_one_command: /sbin/init
+    intermediate_instructions:
+      - RUN /usr/bin/apt-get update
+      - RUN /usr/bin/apt-get install lsb-release net-tools -y
+
+- name: debian-8
+  driver:
+    image: debian:8
+    pid_one_command: /bin/systemd
+    intermediate_instructions:
+      - RUN /usr/bin/apt-get update
+      - RUN /usr/bin/apt-get install lsb-release net-tools -y
+
+- name: ubuntu-12.04
+  driver:
+    image: ubuntu-upstart:12.04
+    pid_one_command: /sbin/init
+    intermediate_instructions:
+      - RUN /usr/bin/apt-get update
+      - RUN /usr/bin/apt-get install net-tools -y
+
+- name: ubuntu-14.04
+  driver:
+    image: ubuntu-upstart:14.04
+    pid_one_command: /sbin/init
+    intermediate_instructions:
+      - RUN /usr/bin/apt-get update
+      - RUN /usr/bin/apt-get install net-tools -y
+
+- name: ubuntu-16.04
+  driver:
+    image: ubuntu:16.04
+    pid_one_command: /bin/systemd
+    intermediate_instructions:
+      - RUN /usr/bin/apt-get update
+      - RUN /usr/bin/apt-get install net-tools -y
+
+suites:
+  #
+  # default
+  #
+  - name: default
+    run_list:
+      - recipe[mariadb::default]
+    attributes:
+      mariadb:
+        use_default_repository: true
+  #
+  # native
+  #
+  - name: native
+    run_list:
+      - recipe[mariadb::default]
+    attributes:
+      mariadb:
+        install:
+          prefer_os_package: true
+    includes:
+      - centos-7
+  #
+  # replication
+  #
+  - name: replication
+    run_list:
+      - recipe[mariadb_test::replication]
+    attributes:
+      mariadb:
+        use_default_repository: true
+  #
+  # galera
+  #
+  - name: galera
+    run_list:
+      - recipe[mariadb::galera]
+    attributes:
+      mariadb:
+        use_default_repository: true
+  #
+  # datadir_changed
+  #
+  - name: datadir_changed
+    run_list:
+      - recipe[mariadb::default]
+    attributes:
+      mariadb:
+        use_default_repository: true
+        mysqld:
+          datadir: /home/mysql
+  #
+  # port_changed
+  #
+  - name: port_changed
+    run_list:
+      - recipe[mariadb::default]
+    attributes:
+      mariadb:
+        server_root_password: gsql
+        use_default_repository: true
+        mysqld:
+          port: 3307
+  #
+  # plugins
+  #
+  - name: plugins
+    run_list:
+      - recipe[mariadb::default]
+    attributes:
+      mariadb:
+        use_default_repository: true
+        plugins:
+          audit: true
+  #
+  # no_binlog
+  #
+  - name: no_binlog
+    run_list:
+      - recipe[mariadb::default]
+    attributes:
+      mariadb:
+        use_default_repository: true
+        replication:
+          log_bin: false

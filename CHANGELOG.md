@@ -10,9 +10,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Make open-files-limit configurable (previously commented out in template) (#97)
 
+### Added
+
+- Add Docker tests to Travis for smoke tests
+- Add docker CI tests (add new APT key to fix #107, add Supermarket version badge and change Travis badge to show master build status to README)
+
 ### Changed
 
-- Changed CHANGELOG format to follow [Keep a Changelog (v0.3.0)](http://keepachangelog.com/en/0.3.0/)
+- Change CHANGELOG format to follow [Keep a Changelog (v0.3.0)](http://keepachangelog.com/en/0.3.0/)
+- Update Vagrant box names to match latest OS versions for testing with VirtualBox
+
+### Removed
+
+- Remove Fedora platfrom from Test-Kitchen, not something we'll test on going forward.
 
 ## 1.0.1
 
