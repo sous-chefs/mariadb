@@ -8,11 +8,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 
-- Make open-files-limit configurable (previously commented out in template) (#97)
+- Make open-files-limit configurable (previously commented out in template) ([#97](https://github.com/sinfomicien/mariadb/issues/97))
+
+### Added
+
+- Add Docker tests to Travis for smoke tests
+- Add docker CI tests (add new APT key to fix [#107](https://github.com/sinfomicien/mariadb/issues/107), add Supermarket version badge and change Travis badge to show master build status to README)
 
 ### Changed
 
-- Changed CHANGELOG format to follow [Keep a Changelog (v0.3.0)](http://keepachangelog.com/en/0.3.0/)
+- Change CHANGELOG format to follow [Keep a Changelog (v0.3.0)](http://keepachangelog.com/en/0.3.0/)
+- Update Vagrant box names to match latest OS versions for testing with VirtualBox
+
+### Removed
+
+- Remove Fedora platfrom from Test-Kitchen, not something we'll test on going forward.
 
 ## 1.0.1
 
@@ -30,7 +40,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 
-- Fix fetching apt key on every run bug (#91)
+- Fix fetching apt key on every run bug ([#91](https://github.com/sinfomicien/mariadb/issues/91))
 - Fix Foodcritic and RuboCop offences
 - Fix ChefSpec tests (and adding more coverage)
 - Fix some typos
@@ -67,34 +77,34 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- Add the ability to configure `skip-log-bin` to be present (#110)
+- Add the ability to configure `skip-log-bin` to be present ([#110](https://github.com/sinfomicien/mariadb/issues/110))
 
 ## 0.3.2
 
 ### Fixed
 
-- Add missing code to `my.cnf` template to deploy `mysqld_safe` options (#125)
+- Add missing code to `my.cnf` template to deploy `mysqld_safe` options ([#125](https://github.com/sinfomicien/mariadb/issues/125))
 
 ### Added
 
-- Add support for configuring skip-name-resolve (#126)
+- Add support for configuring skip-name-resolve ([#126](https://github.com/sinfomicien/mariadb/issues/126))
 
 ## 0.3.1
 
 ### Fixed
 
-- Add user and password to correct debian-grants (#57)
-- Correct service name inconsistency on CentOS 7 (#68)
-- Fix directory permissions regression (#73)
-- `mariadb_configuration` template uses current cookbook as template source (#66)
-- Service is restarted every run if not localhost (#76)
+- Add user and password to correct debian-grants ([#57](https://github.com/sinfomicien/mariadb/issues/57))
+- Correct service name inconsistency on CentOS 7 ([#68](https://github.com/sinfomicien/mariadb/issues/68))
+- Fix directory permissions regression ([#73](https://github.com/sinfomicien/mariadb/issues/73))
+- `mariadb_configuration` template uses current cookbook as template source ([#66](https://github.com/sinfomicien/mariadb/issues/66))
+- Service is restarted every run if not localhost ([#76](https://github.com/sinfomicien/mariadb/issues/76))
 
 ### Added
 
-- Add Scientific Linux support (#69)
-- Add a vagrant config to test a Galera cluster (#64)
-- Add xtrabackup-v2 support for SST Method (#71)
-- Allow Galera cluster nodes to be configured when using Chef Solo (#62)
+- Add Scientific Linux support ([#69](https://github.com/sinfomicien/mariadb/issues/69))
+- Add a vagrant config to test a Galera cluster ([#64](https://github.com/sinfomicien/mariadb/issues/64))
+- Add xtrabackup-v2 support for SST Method ([#71](https://github.com/sinfomicien/mariadb/issues/71))
+- Allow Galera cluster nodes to be configured when using Chef Solo ([#62](https://github.com/sinfomicien/mariadb/issues/62))
 
 ## 0.3.0
 
@@ -106,24 +116,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 
-- Push gpg key adds through http/80 - Helps with firewalled installs (#39)
-- Load the needed plugins at startup (#48)
+- Push gpg key adds through http/0 - Helps with firewalled installs ([#39](https://github.com/sinfomicien/mariadb/issues/39))
+- Load the needed plugins at startup ([#48](https://github.com/sinfomicien/mariadb/issues/48))
 
 ### Added
 
-- Add cookbook attribute on configuration LWRP (#46)
-- Allow to pass true for unary options (#47)
+- Add cookbook attribute on configuration LWRP ([#46](https://github.com/sinfomicien/mariadb/issues/46))
+- Allow to pass true for unary options ([#47](https://github.com/sinfomicien/mariadb/issues/47))
 
 ## 0.2.11
 
 ### Fixed
 
-- Fix TypeError in the replication provider (#43)
+- Fix TypeError in the replication provider ([#43](https://github.com/sinfomicien/mariadb/issues/43))
 
 ### Added
 
-- Add CentOS support (#38)
-- Add sensitive flag to resource that deal with passwords (#40)
+- Add CentOS support ([#38](https://github.com/sinfomicien/mariadb/issues/38))
+- Add sensitive flag to resource that deal with passwords ([#40](https://github.com/sinfomicien/mariadb/issues/40))
 
 ## 0.2.10
 
@@ -135,19 +145,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 
-- Audit plugin installation can crash mariadb server (#36)
+- Audit plugin installation can crash mariadb server ([#36](https://github.com/sinfomicien/mariadb/issues/36))
 
 ## 0.2.8
 
 ### Fixed
 
-- Add a switch to not launch audit plugin install, when already installed (#29)
-- Remove the `only_if` to mysql service (#28)
-- When using Galera, nodes were not sorted, applying configuration change too often (#30)
+- Add a switch to not launch audit plugin install, when already installed ([#29](https://github.com/sinfomicien/mariadb/issues/29))
+- Remove the `only_if` to mysql service ([#28](https://github.com/sinfomicien/mariadb/issues/28))
+- When using Galera, nodes were not sorted, applying configuration change too often ([#30](https://github.com/sinfomicien/mariadb/issues/30))
 
 ### Added
 
-- Add more ChefSpec coverage (#31)
+- Add more ChefSpec coverage ([#31](https://github.com/sinfomicien/mariadb/issues/31))
 - Add a switch to separate server install and audit install when needed
 - Add a RuboCop rule to allow line length to be 120 characters long
 
@@ -155,18 +165,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 
-- Fix convert TypeError in the replication provider (#24)
-- Data is now moved when `['mariadb']['mysqld']['datadir']` is changed (#25)
+- Fix convert TypeError in the replication provider ([#24](https://github.com/sinfomicien/mariadb/issues/24))
+- Data is now moved when `['mariadb']['mysqld']['datadir']` is changed ([#25](https://github.com/sinfomicien/mariadb/issues/25))
 
 ### Added
 
-- Add `audit_plugin` management (#31)
+- Add `audit_plugin` management ([#31](https://github.com/sinfomicien/mariadb/issues/31))
 
 ## 0.2.6
 
 ### Fixed
 
-- Fix provider `mariadb_replication` compilation error (#18)
+- Fix provider `mariadb_replication` compilation error ([#18](https://github.com/sinfomicien/mariadb/issues/18))
 
 ### Added
 
@@ -176,35 +186,35 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 
-- Fix the debian-sys-maint user creation/password change (#12)
-- Fix the Galera root password preseed (#11)
+- Fix the debian-sys-maint user creation/password change ([#12](https://github.com/sinfomicien/mariadb/issues/12))
+- Fix the Galera root password preseed ([#11](https://github.com/sinfomicien/mariadb/issues/11))
 
 ### Added
 
-- Add a LWRP to manage replication slave (#16)
-- Add attribute to set custom `apt_repository`'s' `base_url` (#6)
+- Add a LWRP to manage replication slave ([#16](https://github.com/sinfomicien/mariadb/issues/16))
+- Add attribute to set custom `apt_repository`'s' `base_url` ([#6](https://github.com/sinfomicien/mariadb/issues/6))
 - Add new tests for the new features (Galera, development files install, replication LWRP)
-- Add option to skip installing development files within client recipe (#17)
+- Add option to skip installing development files within client recipe ([#17](https://github.com/sinfomicien/mariadb/issues/17))
 - Add CHANGELOG and add new feature explanations to README
 
 ## 0.2.4
 
 ### Fixed
 
-- Fix FC004 broken rule (#10)
-- Fix Foodcritic tests (add --epic-fail any to be sure it fails when a broken rule is detected) (#9)
+- Fix FC004 broken rule ([#10](https://github.com/sinfomicien/mariadb/issues/10))
+- Fix Foodcritic tests (add --epic-fail any to be sure it fails when a broken rule is detected) ([#9](https://github.com/sinfomicien/mariadb/issues/9))
 
 ## 0.2.3
 
 ### Fixed
 
-- Fix management of the mysql root password (#4)
+- Fix management of the mysql root password ([#4](https://github.com/sinfomicien/mariadb/issues/4))
 
 ### Added
 
 - Add a lot of ChefSpec and kitchen/ServerSpec tests
-- Add ability to add or remove root remote access via attribute (#7)
-- Add immediate restart of the `mysql` service when port is changed (#5)
+- Add ability to add or remove root remote access via attribute ([#7](https://github.com/sinfomicien/mariadb/issues/7))
+- Add immediate restart of the `mysql` service when port is changed ([#5](https://github.com/sinfomicien/mariadb/issues/5))
 - Add more documentation
 
 ## 0.2.2
