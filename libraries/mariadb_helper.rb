@@ -147,6 +147,5 @@ module MariaDB
         "/usr/bin/#{cmd}"
       end
     end
-
   end
 end

@@ -242,7 +242,6 @@ describe 'centos::mariadb::scl' do
   end
 end
 
-
 describe 'centos::mariadb::client' do
   let(:chef_run) do
     runner = ChefSpec::ServerRunner.new(
