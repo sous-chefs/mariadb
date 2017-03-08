@@ -5,21 +5,31 @@ driver:
 provisioner:
   name: chef_zero
 
+verifier:
+  name: inspec
+
 platforms:
-  - name: debian-7.11
-  - name: ubuntu-12.04
   - name: centos-6.8
-  - name: centos-7.2
+  - name: centos-7.3
+  - name: debian-7.11
+  - name: debian-8.7
+  - name: ubuntu-12.04
   - name: ubuntu-14.04
-  - name: fedora-25
+  - name: ubuntu-16.04
 
 suites:
+  #
+  # default
+  #
   - name: default
     run_list:
       - recipe[mariadb::default]
     attributes:
       mariadb:
         use_default_repository: true
+  #
+  # native
+  #
   - name: native
     run_list:
       - recipe[mariadb::default]
@@ -28,20 +38,28 @@ suites:
         install:
           prefer_os_package: true
     includes:
-      - centos-7.0
-      - fedora-21
+      - centos-7.3
+  #
+  # replication
+  #
   - name: replication
     run_list:
       - recipe[mariadb_test::replication]
     attributes:
       mariadb:
         use_default_repository: true
+  #
+  # galera
+  #
   - name: galera
     run_list:
       - recipe[mariadb::galera]
     attributes:
       mariadb:
         use_default_repository: true
+  #
+  # datadir_changed
+  #
   - name: datadir_changed
     run_list:
       - recipe[mariadb::default]
@@ -50,6 +68,9 @@ suites:
         use_default_repository: true
         mysqld:
           datadir: /home/mysql
+  #
+  # port_changed
+  #
   - name: port_changed
     run_list:
       - recipe[mariadb::default]
@@ -59,6 +80,9 @@ suites:
         use_default_repository: true
         mysqld:
           port: 3307
+  #
+  # plugins
+  #
   - name: plugins
     run_list:
       - recipe[mariadb::default]
@@ -67,7 +91,10 @@ suites:
         use_default_repository: true
         plugins:
           audit: true
-  - name: no_binlog 
+  #
+  # no_binlog
+  #
+  - name: no_binlog
     run_list:
       - recipe[mariadb::default]
     attributes:
