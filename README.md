@@ -85,6 +85,12 @@ Attributes
     <td>Indicator for preferring use packages shipped by running os</td>
     <td><tt>false</tt></td>
   </tr>
+  <tr>
+    <td><tt>['mariadb']['install']['prefer_scl_package']</tt></td>
+    <td>Boolean</td>
+    <td>Indicator for preferring packages from software collections repository</td>
+    <td><tt>false</tt></td>
+  </tr>
 </table>
 
 Usage
