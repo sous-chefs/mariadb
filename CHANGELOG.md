@@ -15,6 +15,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add Docker tests to Travis for smoke tests
 - Add docker CI tests (add new APT key to fix [#107](https://github.com/sinfomicien/mariadb/issues/107), add Supermarket version badge and change Travis badge to show master build status to README)
 
+### Added
+
+- Add Docker tests to Travis for smoke tests
+- Add docker CI tests (add new APT key to fix #107, add Supermarket version badge and change Travis badge to show master build status to README)
+
 ### Changed
 
 - Change CHANGELOG format to follow [Keep a Changelog (v0.3.0)](http://keepachangelog.com/en/0.3.0/)
