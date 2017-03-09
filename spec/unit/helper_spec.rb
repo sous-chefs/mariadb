@@ -170,10 +170,8 @@ describe MariaDB::Helper do
 
     context 'scl package provided' do
       let(:support_platforms) do
-        Hash['redhat' => %w(6.8 7.0 7.1),
-             'centos' => %w(6.8 7.0),
+        Hash['centos' => %w(6.8 7.0),
              'scientific' => %w(6.8),
-             'fedora' => %w(19 20 21)
         ]
       end
 
