@@ -32,6 +32,13 @@ template node['mariadb']['configuration']['path'] + '/my.cnf' do
   mode '0644'
 end
 
+directory '/etc/my.cnf.d/' do
+  owner 'root'
+  group 'root'
+  mode '0755'
+  action :create
+end
+
 innodb_options = {}
 
 innodb_options['comment1'] = '#'
