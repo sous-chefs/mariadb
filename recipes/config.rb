@@ -94,7 +94,7 @@ if node['mariadb']['replication']['log_bin']
 end
 
 unless node['mariadb']['replication']['server_id'].empty?
-  replication_opts['server-id'] = node['mariadb']['replication']['server_id']
+  replication_opts['server_id'] = node['mariadb']['replication']['server_id']
 end
 node['mariadb']['replication']['options'].each do |key, value|
   replication_opts[key] = value
