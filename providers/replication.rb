@@ -20,13 +20,13 @@ def get_mysql_command(host, port, user, password)
   mysql_command
 end
 
-def is_slave_running?(mysql_command)
+def slave_running?(mysql_command)
   command = <<-EOS
     slave_running=$(#{mysql_command} -s -e "select variable_value from information_schema.global_status where variable_name = 'Slave_running';");
     if [[ "$slave_running" =~ "ON" ]]; then exit 0; else exit 1; fi
   EOS
 
-  return system(command)
+  system(command)
 end
 
 action :add do
@@ -66,7 +66,7 @@ action :add do
     new_resource.password
   )
 
-  if is_slave_running?(mysql_command)
+  if slave_running?(mysql_command)
     Chef::Log.warn('You cannot change master servers while a slave is running.')
     Chef::Log.warn('To change master servers you must manually stop the slave first.')
   end
@@ -74,7 +74,7 @@ action :add do
   execute 'add_replication_from_master_' + new_resource.name do
     # Add sensitive true when foodcritic #233 fixed
     command '/bin/echo "' + sql_string + '" | ' + mysql_command
-    not_if { is_slave_running?(mysql_command) }
+    not_if { slave_running?(mysql_command) }
     action :run
   end
 end
@@ -94,11 +94,11 @@ action :remove do
 end
 
 action :start do
-  if new_resource.name == 'default'
-    command_master_connection = ''
-  else
-    command_master_connection = ' \'' + new_resource.name + '\''
-  end
+  command_master_connection = if new_resource.name == 'default'
+                                ''
+                              else
+                                ' \'' + new_resource.name + '\''
+                              end
 
   mysql_command = get_mysql_command(
     new_resource.host,
@@ -111,16 +111,16 @@ action :start do
     # Add sensitive true when foodcritic #233 fixed
     command '/bin/echo "START SLAVE' + command_master_connection + ';' \
       '" | ' + mysql_command
-    not_if { is_slave_running?(mysql_command) }
+    not_if { slave_running?(mysql_command) }
   end
 end
 
 action :stop do
-  if new_resource_name == 'default'
-    command_master_connection = ''
-  else
-    command_master_connection = ' \'' + new_resource.name + '\''
-  end
+  command_master_connection = if new_resource_name == 'default'
+                                ''
+                              else
+                                ' \'' + new_resource.name + '\''
+                              end
 
   mysql_command = get_mysql_command(
     new_resource.host,
@@ -133,7 +133,7 @@ action :stop do
     # Add sensitive true when foodcritic #233 fixed
     command '/bin/echo "STOP SLAVE' + command_master_connection + ';' \
       '" | ' + mysql_command
-    only_if { is_slave_running?(mysql_command) }
+    only_if { slave_running?(mysql_command) }
     action :run
   end
 end
