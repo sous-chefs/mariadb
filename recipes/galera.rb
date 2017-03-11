@@ -97,6 +97,7 @@ else
     log 'Chef search results' do
       message "Searching for \"#{node['mariadb']['galera']['cluster_search_query']}\" \
         resulted in \"#{galera_cluster_nodes}\" ..."
+      level :debug
     end
   end
   # Sort Nodes by fqdn

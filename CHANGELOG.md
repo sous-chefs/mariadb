@@ -23,6 +23,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 
 - Change CHANGELOG format to follow [Keep a Changelog (v0.3.0)](http://keepachangelog.com/en/0.3.0/)
+- Changed `Chef search results` message log level to `debug` to remove unnecessary output
 - Update Vagrant box names to match latest OS versions for testing with VirtualBox
 
 ### Removed
