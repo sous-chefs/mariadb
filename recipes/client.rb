@@ -35,7 +35,7 @@ when 'package'
     # On CentOS at least, there's a conflict between MariaDB and mysql-libs
     package 'mysql-libs' do
       action :remove
-      not_if { use_os_package }
+      not_if { use_os_package || node['platform_version'].to_i >= 7 }
     end
 
     # rubocop:disable BlockNesting
