@@ -78,39 +78,43 @@ end
 
 include_recipe "#{cookbook_name}::config"
 
-galera_cluster_nodes = []
-if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo] || Chef::Config[:local_mode]
-  if node['mariadb']['galera']['cluster_nodes'].empty?
-    Chef::Log.warn('By default this recipe uses search (unsupported by Chef Solo).' \
-                   ' Nodes may manually be configured as attributes.')
+if node['mariadb']['galera']['gcomm_address'].nil?
+  galera_cluster_nodes = []
+  if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo] || Chef::Config[:local_mode]
+    if node['mariadb']['galera']['cluster_nodes'].empty?
+      Chef::Log.warn('By default this recipe uses search (unsupported by Chef Solo).' \
+                     ' Nodes may manually be configured as attributes.')
+    else
+      galera_cluster_nodes = node['mariadb']['galera']['cluster_nodes']
+    end
   else
-    galera_cluster_nodes = node['mariadb']['galera']['cluster_nodes']
+    if node['mariadb']['galera']['cluster_search_query'].empty?
+      galera_cluster_nodes = search(
+        :node, \
+        "mariadb_galera_cluster_name:#{node['mariadb']['galera']['cluster_name']}"
+      )
+    else
+      galera_cluster_nodes = search 'node', node['mariadb']['galera']['cluster_search_query']
+      log 'Chef search results' do
+        message "Searching for \"#{node['mariadb']['galera']['cluster_search_query']}\" \
+          resulted in \"#{galera_cluster_nodes}\" ..."
+        level :debug
+      end
+    end
+    # Sort Nodes by fqdn
+    galera_cluster_nodes.sort! { |x, y| x[:fqdn] <=> y[:fqdn] }
+  end
+
+  first = true
+  gcomm = 'gcomm://'
+  galera_cluster_nodes.each do |lnode|
+    next unless lnode.name != node.name
+    gcomm += ',' unless first
+    gcomm += lnode['fqdn']
+    first = false
   end
 else
-  if node['mariadb']['galera']['cluster_search_query'].empty?
-    galera_cluster_nodes = search(
-      :node, \
-      "mariadb_galera_cluster_name:#{node['mariadb']['galera']['cluster_name']}"
-    )
-  else
-    galera_cluster_nodes = search 'node', node['mariadb']['galera']['cluster_search_query']
-    log 'Chef search results' do
-      message "Searching for \"#{node['mariadb']['galera']['cluster_search_query']}\" \
-        resulted in \"#{galera_cluster_nodes}\" ..."
-      level :debug
-    end
-  end
-  # Sort Nodes by fqdn
-  galera_cluster_nodes.sort! { |x, y| x[:fqdn] <=> y[:fqdn] }
-end
-
-first = true
-gcomm = 'gcomm://'
-galera_cluster_nodes.each do |lnode|
-  next unless lnode.name != node.name
-  gcomm += ',' unless first
-  gcomm += lnode['fqdn']
-  first = false
+  gcomm = node['mariadb']['galera']['gcomm_address']
 end
 
 galera_options = {}
