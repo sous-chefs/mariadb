@@ -228,6 +228,7 @@ if platform?('debian', 'ubuntu')
       cmd.run_command
       cmd.error?
     end
+    sensitive true
     ignore_failure true
     sensitive true
   end
