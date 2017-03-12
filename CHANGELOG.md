@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Removed
 
 - Remove Fedora platfrom from Test-Kitchen, not something we'll test on going forward
+- Remove Ubuntu 12.04 LTS from Test-Kitchen, not something we'll test on going forward as it reaches EOL in one month
 
 ## 1.0.1
 
