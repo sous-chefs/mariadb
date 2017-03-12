@@ -23,8 +23,8 @@ Requirements
 
 #### operating system
 - `debian` - this cookbook is fully tested on debian
-- `ubuntu` - not fully tested on ubuntu, but should work
-- `centos` - not fully tested on centos, but should work
+- `ubuntu` - this cookbook is fully tested on ubuntu
+- `centos` - this cookbook is fully tested on centos
 
 Attributes
 ----------
