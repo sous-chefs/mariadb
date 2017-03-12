@@ -8,23 +8,27 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 
-- Make open-files-limit configurable (previously commented out in template) ([#97](https://github.com/sinfomicien/mariadb/issues/97))
+- Correctly set server-id and fixed replication provider `nil` string bug ([#118](https://github.com/sinfomicien/mariadb/issues/118))
+- Make open-files-limit configurable (previously commented out in template) ([#118](https://github.com/sinfomicien/mariadb/issues/118))
+- Fix package name for RedHat family distros using MariaDB 10.1 ([#138](https://github.com/sinfomicien/mariadb/issues/138))
 
 ### Added
 
+- Add ability to specify your own `gcomm://` address for Galera replication ([#139](https://github.com/sinfomicien/mariadb/issues/139))
 - Add attribute containing `my.cnf` sections to configure to allow users to override what cookbook manages
+- Add attributes to configure general and slow log options ([#137](https://github.com/sinfomicien/mariadb/issues/137))
+- Add Docker CI tests (add new APT key to fix [#107](https://github.com/sinfomicien/mariadb/issues/107), add Supermarket version badge and change Travis badge to show master build status to README)
 - Add Docker tests to Travis for smoke tests
-- Add docker CI tests (add new APT key to fix [#107](https://github.com/sinfomicien/mariadb/issues/107), add Supermarket version badge and change Travis badge to show master build status to README)
 
 ### Changed
 
 - Change CHANGELOG format to follow [Keep a Changelog (v0.3.0)](http://keepachangelog.com/en/0.3.0/)
-- Changed `Chef search results` message log level to `debug` to remove unnecessary output
+- Change `Chef search results` message log level to `debug` to remove unnecessary output ([#90](https://github.com/sinfomicien/mariadb/issues/90))
 - Update Vagrant box names to match latest OS versions for testing with VirtualBox
 
 ### Removed
 
-- Remove Fedora platfrom from Test-Kitchen, not something we'll test on going forward.
+- Remove Fedora platfrom from Test-Kitchen, not something we'll test on going forward
 
 ## 1.0.1
 
