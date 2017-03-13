@@ -186,26 +186,7 @@ describe 'centos::mariadb::scl' do
     end
 
     it 'Server service with the correct name' do
-      expect(os_service.service_name).to eq 'mariadb'
-    end
-
-    context 'fedora 19 with different service name' do
-      let(:chef_run) do
-        runner = ChefSpec::ServerRunner.new(
-          platform: 'fedora', version: '19',
-          step_into: ['mariadb_configuration']
-        ) do |node|
-          node.automatic['memory']['total'] = '2048kB'
-          node.automatic['ipaddress'] = '1.1.1.1'
-          node.override['mariadb']['install']['prefer_scl_package'] = true
-        end
-        runner.converge('mariadb::default')
-      end
-      let(:os_service) { chef_run.service('mysql') }
-
-      it 'Server service with the correct name' do
-        expect(os_service.service_name).to eq 'mariadb'
-      end
+      expect(os_service.service_name).to eq 'rh-mariadb100-mariadb'
     end
   end
 
