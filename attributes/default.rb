@@ -15,6 +15,8 @@ else
   default['mariadb']['mysqld_safe']['socket'] = '/var/run/mysqld/mysqld.sock'
 end
 
+default['mariadb']['sections'] = %w(mysql mysqldump mysqlcheck mysqladmin mysqlshow)
+
 #
 # mysqld default configuration
 #
@@ -44,6 +46,7 @@ default['mariadb']['mysqld']['skip_log_bin']            = 'false'
 default['mariadb']['mysqld']['skip_name_resolve']       = 'false'
 default['mariadb']['mysqld']['bind_address']            = '127.0.0.1'
 default['mariadb']['mysqld']['max_connections']         = '100'
+default['mariadb']['mysqld']['max_statement_time']      = ''
 default['mariadb']['mysqld']['connect_timeout']         = '5'
 default['mariadb']['mysqld']['wait_timeout']            = '600'
 default['mariadb']['mysqld']['max_allowed_packet']      = '16M'
@@ -67,7 +70,16 @@ default['mariadb']['mysqld']['query_cache_size'] = '64M'
 default['mariadb']['mysqld']['query_cache_type'] = ''
 default['mariadb']['mysqld']['default_storage_engine'] = 'InnoDB'
 default['mariadb']['mysqld']['options'] = {}
-
+# logging
+default['mariadb']['mysqld']['general_log_file'] = '/var/log/mysql/mysql.log'
+default['mariadb']['mysqld']['general_log'] = 0
+default['mariadb']['mysqld']['log_warnings'] = 2
+default['mariadb']['mysqld']['slow_query_log'] = 0
+default['mariadb']['mysqld']['slow_query_log_file'] = '/var/log/mysql/mariadb-slow.log'
+default['mariadb']['mysqld']['long_query_time'] = 10
+default['mariadb']['mysqld']['log_slow_rate_limit'] = 1000
+default['mariadb']['mysqld']['log_slow_verbosity'] = 'query_plan'
+default['mariadb']['mysqld']['log_output'] = 'FILE'
 #
 # InnoDB default configuration
 #
