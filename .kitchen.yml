@@ -39,6 +39,19 @@ suites:
     includes:
       - centos-7.3
   #
+  # scl
+  #
+  - name: scl
+    run_list:
+      - recipe[mariadb::default]
+    attributes:
+      mariadb:
+        install:
+          prefer_scl_package: true
+    includes:
+      - centos-7.3
+      - centos-6.8
+  #
   # replication
   #
   - name: replication
