@@ -26,6 +26,8 @@ env:
   - INSTANCE=default-ubuntu-1404
   - INSTANCE=default-ubuntu-1604
   - INSTANCE=native-centos-7
+  - INSTANCE=scl-centos-7
+  - INSTANCE=scl-centos-6
   - INSTANCE=replication-centos-6
   - INSTANCE=replication-centos-7
   - INSTANCE=replication-debian-7

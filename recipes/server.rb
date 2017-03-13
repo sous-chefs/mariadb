@@ -27,6 +27,11 @@ when 'package'
     # currently, no releases with apt (e.g. ubuntu) ship mariadb
     # only provide one type of server here (with yum support)
     include_recipe "#{cookbook_name}::_redhat_server_native"
+  elsif use_scl_package?(node['mariadb']['install']['prefer_scl_package'],
+                         node['platform'], node['platform_version']) &&
+      scl_version_available?(node['mariadb']['install']['version'])
+    # only for RH family distributives
+    include_recipe "#{cookbook_name}::_redhat_server_scl"
   else
     include_recipe "#{cookbook_name}::repository"
 
@@ -119,13 +124,22 @@ if  node['mariadb']['allow_root_pass_change'] ||
     sensitive true
     action :nothing
   end
-
+  mysql_cmd = mysqlbin_cmd(node['mariadb']['install']['prefer_scl_package'],
+                           node['mariadb']['install']['version'],
+                           'mysql')
+  mysqladmin_cmd = mysqlbin_cmd(node['mariadb']['install']['prefer_scl_package'],
+                                node['mariadb']['install']['version'],
+                                'mysqladmin')
   template '/etc/mariadb_grants' do
     sensitive true
     source 'mariadb_grants.erb'
     owner 'root'
     group 'root'
     mode '0600'
+    variables(
+      mysql_cmd: mysql_cmd,
+      mysqladmin_cmd: mysqladmin_cmd
+    )
     notifies :run, 'execute[install-grants]', :immediately
   end
 end
