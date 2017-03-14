@@ -30,7 +30,9 @@ def slave_running?(mysql_command)
     if [[ "$slave_running" =~ "ON" ]]; then exit 0; else exit 1; fi
   EOS
 
-  system(command)
+  shell_cmd = Mixlib::ShellOut.new(command)
+  shell_cmd.run_command
+  shell_cmd.exitstatus
 end
 
 action :add do
