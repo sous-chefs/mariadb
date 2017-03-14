@@ -109,6 +109,7 @@ default['mariadb']['galera']['wsrep_slave_threads'] = '4'
 # Default value is '1' but can be relaxed to '2' or even '0' with Galera
 default['mariadb']['galera']['innodb_flush_log_at_trx_commit'] = '2'
 default['mariadb']['galera']['wsrep_node_address_interface'] = ''
+default['mariadb']['galera']['wsrep_node_port'] = '4567'
 default['mariadb']['galera']['wsrep_node_incoming_address_interface'] = ''
 default['mariadb']['galera']['wsrep_provider_options'] = {
   'gcache.size' => '512M'
