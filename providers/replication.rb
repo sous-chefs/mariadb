@@ -32,7 +32,7 @@ def slave_running?(mysql_command)
 
   shell_cmd = Mixlib::ShellOut.new(command)
   shell_cmd.run_command
-  shell_cmd.exitstatus
+  shell_cmd.exitstatus == 0
 end
 
 action :add do
