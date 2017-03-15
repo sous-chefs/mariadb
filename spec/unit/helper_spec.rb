@@ -163,4 +163,89 @@ describe MariaDB::Helper do
       end
     end
   end
+
+  describe '#use_scl_package?' do
+    let(:dummy_class) { Class.new { include MariaDB::Helper } }
+    let(:dummy_helper) { dummy_class.new }
+
+    context 'scl package provided' do
+      let(:support_platforms) do
+        Hash['centos' => %w(6.8 7.0),
+             'scientific' => %w(6.8),
+        ]
+      end
+
+      it 'os_package_provided to be true' do
+        support_platforms.each do |platform, ver_list|
+          ver_list.each do |version|
+            expect(
+              dummy_helper.scl_package_provided?(
+                platform, version
+              )
+            ).to be true
+          end
+        end
+      end
+      it 'use scl package' do
+        support_platforms.each do |platform, ver_list|
+          ver_list.each do |version|
+            expect(
+              dummy_helper.use_scl_package?(
+                true, platform, version
+              )
+            ).to be true
+            expect(
+              dummy_helper.use_scl_package?(
+                false, platform, version
+              )
+            ).to be false
+          end
+        end
+      end
+    end
+    context 'scl package not provided' do
+      let(:unsupport_platforms) do
+        Hash['redhat' => %w(5.5 5.6),
+             'centos' => %w(5.2 5.7),
+             'fedora' => %w(17 18),
+        ]
+      end
+
+      it 'scl_package_provided to be false' do
+        unsupport_platforms.each do |platform, ver_list|
+          ver_list.each do |version|
+            expect(
+              dummy_helper.scl_package_provided?(
+                platform, version
+              )
+            ).to be false
+          end
+        end
+      end
+
+      it 'cannot use scl package' do
+        warn_called = false
+        allow(Chef::Log).to receive(:warn) { warn_called = true }
+        unsupport_platforms.each do |platform, ver_list|
+          ver_list.each do |version|
+            warn_called = false
+            expect(
+              dummy_helper.use_scl_package?(
+                true, platform, version
+              )
+            ).to be false
+            expect(warn_called).to be true
+
+            warn_called = false
+            expect(
+              dummy_helper.use_scl_package?(
+                false, platform, version
+              )
+            ).to be false
+            expect(warn_called).to be false
+          end
+        end
+      end
+    end
+  end
 end

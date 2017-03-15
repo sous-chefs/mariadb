@@ -28,7 +28,13 @@ when 'package'
     node['platform_version']
   )
 
-  include_recipe "#{cookbook_name}::repository" unless use_os_package
+  use_scl_package = use_scl_package?(
+    node['mariadb']['install']['prefer_scl_package'],
+    node['platform'],
+    node['platform_version']
+  )
+
+  include_recipe "#{cookbook_name}::repository" unless use_os_package || use_scl_package
 
   case node['platform_family']
   when 'rhel'
@@ -37,13 +43,20 @@ when 'package'
       action :remove
       not_if { use_os_package }
     end
-
     # rubocop:disable BlockNesting
     if use_os_package
       node.default['mariadb']['client']['packages'] = if node['mariadb']['client']['development_files']
                                                         %w(mariadb mariadb-devel)
                                                       else
                                                         %w(mariadb)
+                                                      end
+    elsif use_scl_package
+      node.default['mariadb']['client']['packages'] = if node['mariadb']['client']['development_files']
+                                                        scl_package_name(node['mariadb']['install']['version'],
+                                                                         'mariadb', 'mariadb-devel')
+                                                      else
+                                                        scl_package_name(node['mariadb']['install']['version'],
+                                                                         'mariadb')
                                                       end
     else
       node.default['mariadb']['client']['packages'] = if node['mariadb']['client']['development_files']
@@ -52,13 +65,23 @@ when 'package'
                                                         %w(MariaDB-client)
                                                       end
     end
-    # rubocop:enable BlockNesting
   when 'fedora'
-    node.default['mariadb']['client']['packages'] = if node['mariadb']['client']['development_files']
-                                                      %w(mariadb mariadb-devel)
-                                                    else
-                                                      %w(mariadb)
-                                                    end
+    if use_scl_package
+      node.default['mariadb']['client']['packages'] = if node['mariadb']['client']['development_files']
+                                                        scl_package_name(node['mariadb']['install']['version'],
+                                                                         'client', 'devel')
+                                                      else
+                                                        scl_package_name(node['mariadb']['install']['version'],
+                                                                         'client')
+                                                      end
+    else
+      node.default['mariadb']['client']['packages'] = if node['mariadb']['client']['development_files']
+                                                        %w(mariadb mariadb-devel)
+                                                      else
+                                                        %w(mariadb)
+                                                      end
+    end
+    # rubocop:enable BlockNesting
   when 'suse'
     node.default['mariadb']['client']['packages'] = if node['mariadb']['client']['development_files']
                                                       %w(mariadb-community-server-client libmariadbclient-devel)
@@ -66,14 +89,12 @@ when 'package'
                                                       %w(mariadb-community-server-client)
                                                     end
   when 'debian'
-    if node['mariadb']['client']['development_files']
-      node.default['mariadb']['client']['packages'] = \
-        %W(mariadb-client-#{node['mariadb']['install']['version']}
-           libmariadbclient-dev)
-    else
-      node.default['mariadb']['client']['packages'] = \
-        %W(mariadb-client-#{node['mariadb']['install']['version']})
-    end
+    node.default['mariadb']['client']['packages'] = if node['mariadb']['client']['development_files']
+                                                      %W(mariadb-client-#{node['mariadb']['install']['version']}
+                                                         libmariadbclient-dev)
+                                                    else
+                                                      %W(mariadb-client-#{node['mariadb']['install']['version']})
+                                                    end
   end
 
   node['mariadb']['client']['packages'].each do |name|

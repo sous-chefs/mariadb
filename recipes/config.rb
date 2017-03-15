@@ -32,6 +32,14 @@ template node['mariadb']['configuration']['path'] + '/my.cnf' do
   mode '0644'
 end
 
+directory '/etc/my.cnf.d/' do
+  owner 'root'
+  group 'root'
+  mode '0755'
+  action :create
+  not_if { ::Dir.exist?('/etc/my.cnf.d/') }
+end
+
 innodb_options = {}
 
 innodb_options['comment1'] = '#'

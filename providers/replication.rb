@@ -3,6 +3,8 @@
 # Provider:: replication
 #
 
+include MariaDB::Helper
+
 # rubocop:disable Metrics/BlockLength
 
 use_inline_resources if defined?(use_inline_resources)
@@ -12,7 +14,9 @@ def whyrun_supported?
 end
 
 def get_mysql_command(host, port, user, password)
-  mysql_command = '/usr/bin/mysql'
+  mysql_command = mysqlbin_cmd(node['mariadb']['install']['prefer_scl_package'],
+                               node['mariadb']['install']['version'],
+                               'mysql')
   mysql_command += ' -h ' + host unless host.nil?
   mysql_command += ' -P ' + port unless port.nil?
   mysql_command += ' -u ' + user unless user.nil?
@@ -26,7 +30,9 @@ def slave_running?(mysql_command)
     if [[ "$slave_running" =~ "ON" ]]; then exit 0; else exit 1; fi
   EOS
 
-  system(command)
+  shell_cmd = Mixlib::ShellOut.new(command)
+  shell_cmd.run_command
+  shell_cmd.exitstatus == 0
 end
 
 action :add do
