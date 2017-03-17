@@ -13,8 +13,8 @@ audit_plugin_options['server_audit_syslog_facility'] = \
   node['mariadb']['audit_plugin']['server_audit_syslog_facility']
 audit_plugin_options['server_audit_syslog_priority'] = \
   node['mariadb']['audit_plugin']['server_audit_syslog_priority']
-
-audit_plugin_options['server_audit_logging'] = 'ON'
+audit_plugin_options['server_audit_logging'] = \
+  node['mariadb']['audit_plugin']['server_audit_logging']
 
 # Install the MariaDB Audit Plugin
 mysql_cmd = mysqlbin_cmd(node['mariadb']['install']['prefer_scl_package'],

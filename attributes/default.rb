@@ -194,3 +194,4 @@ default['mariadb']['audit_plugin']['server_audit_output_type'] = 'file'
 # Syslog(require server_audit_output_type = syslog)
 default['mariadb']['audit_plugin']['server_audit_syslog_facility'] = 'LOG_USER'
 default['mariadb']['audit_plugin']['server_audit_syslog_priority'] = 'LOG_INFO'
+default['mariadb']['audit_plugin']['server_audit_logging'] ='OFF'
