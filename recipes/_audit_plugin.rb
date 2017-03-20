@@ -13,21 +13,26 @@ audit_plugin_options['server_audit_syslog_facility'] = \
   node['mariadb']['audit_plugin']['server_audit_syslog_facility']
 audit_plugin_options['server_audit_syslog_priority'] = \
   node['mariadb']['audit_plugin']['server_audit_syslog_priority']
-
-audit_plugin_options['enable'] = '#server_audit_logging = ON'
+audit_plugin_options['server_audit_logging'] = \
+  node['mariadb']['audit_plugin']['server_audit_logging']
 
 # Install the MariaDB Audit Plugin
 mysql_cmd = mysqlbin_cmd(node['mariadb']['install']['prefer_scl_package'],
                          node['mariadb']['install']['version'],
                          'mysql')
 execute 'install_mariadb_audit_plugin' do
-  command "#{mysql_cmd} -e \"INSTALL PLUGIN server_audit "\
-          "SONAME 'server_audit';\""
+  command "#{mysql_cmd} -u root --password=" + \
+          node['mariadb']['server_root_password'] + \
+          " -e \"INSTALL PLUGIN server_audit SONAME 'server_audit';\""
   notifies :run, 'execute[configure_mariadb_audit_plugin]', :immediately
+  sensitive true
   not_if do
-    cmd = Mixlib::ShellOut.new("#{mysql_cmd} -u root -B -N -e \"SELECT 1 "\
-                               'FROM information_schema.plugins '\
-                               "WHERE PLUGIN_NAME = 'SERVER_AUDIT'"\
+    cmd = Mixlib::ShellOut.new("#{mysql_cmd} -u root " \
+                               '--password=' + \
+                               node['mariadb']['server_root_password'] + \
+                               ' -B -N -e "SELECT 1 ' \
+                               'FROM information_schema.plugins ' \
+                               "WHERE PLUGIN_NAME = 'SERVER_AUDIT'" \
                                "AND PLUGIN_STATUS = 'ACTIVE';\"")
     cmd.run_command
     cmd.stdout.to_i == 1
@@ -43,7 +48,9 @@ execute 'configure_mariadb_audit_plugin' do
     'SET GLOBAL server_audit_syslog_facility=\'' + \
     node['mariadb']['audit_plugin']['server_audit_syslog_facility'] + '\';' \
     'SET GLOBAL server_audit_syslog_priority=\'' + \
-    node['mariadb']['audit_plugin']['server_audit_syslog_priority'] + '\';"' \
+    node['mariadb']['audit_plugin']['server_audit_syslog_priority'] + '\';' \
+    'SET GLOBAL server_audit_logging=\'' + \
+    node['mariadb']['audit_plugin']['server_audit_logging'] + '\';" ' \
     "| #{mysql_cmd}"
   action :nothing
 end
