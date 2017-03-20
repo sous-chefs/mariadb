@@ -30,7 +30,7 @@ execute 'install_mariadb_audit_plugin' do
     cmd = Mixlib::ShellOut.new("#{mysql_cmd} -u root " \
                                '--password=' + \
                                node['mariadb']['server_root_password'] + \
-                               ' -B -N -e \"SELECT 1 ' \
+                               ' -B -N -e "SELECT 1 ' \
                                'FROM information_schema.plugins ' \
                                "WHERE PLUGIN_NAME = 'SERVER_AUDIT'" \
                                "AND PLUGIN_STATUS = 'ACTIVE';\"")
