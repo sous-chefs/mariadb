@@ -28,10 +28,10 @@ execute 'install_mariadb_audit_plugin' do
   sensitive true
   not_if do
     cmd = Mixlib::ShellOut.new("#{mysql_cmd} -u root " \
-                               "--password=" + \
+                               '--password=' + \
                                node['mariadb']['server_root_password'] + \
-                               " -B -N -e \"SELECT 1 " \
-                               "FROM information_schema.plugins " \
+                               ' -B -N -e \"SELECT 1 ' \
+                               'FROM information_schema.plugins ' \
                                "WHERE PLUGIN_NAME = 'SERVER_AUDIT'" \
                                "AND PLUGIN_STATUS = 'ACTIVE';\"")
     cmd.run_command
@@ -48,8 +48,9 @@ execute 'configure_mariadb_audit_plugin' do
     'SET GLOBAL server_audit_syslog_facility=\'' + \
     node['mariadb']['audit_plugin']['server_audit_syslog_facility'] + '\';' \
     'SET GLOBAL server_audit_syslog_priority=\'' + \
-    node['mariadb']['audit_plugin']['server_audit_syslog_priority'] + '\';"' \
-    'SET GLOBAL server_audit_logging=\'ON\';' \
+    node['mariadb']['audit_plugin']['server_audit_syslog_priority'] + '\';' \
+    'SET GLOBAL server_audit_logging=\'' + \
+    node['mariadb']['audit_plugin']['server_audit_logging'] + '\';" ' \
     "| #{mysql_cmd}"
   action :nothing
 end
