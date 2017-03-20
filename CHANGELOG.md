@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.3.0 (2017-03-20)
+
+### Added
+
+- Add ability to enable and disable server audit logging ([#150](https://github.com/sinfomicien/mariadb/issues/150))
+
 ## 1.2.0 (2017-03-15)
 
 ### Added
