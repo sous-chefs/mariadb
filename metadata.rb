@@ -13,6 +13,7 @@ supports 'debian', '>= 7.0'
 supports 'centos', '>= 6.4'
 supports 'redhat', '>= 7.0'
 
+depends 'build-essential'
 depends 'apt'
 depends 'yum'
 depends 'yum-epel'
