@@ -104,6 +104,7 @@ List of availables recipes:
 - mariadb::server
 - mariadb::galera
 - mariadb::client
+- mariadb::devel
 
 Please be ware that by default, the root password is empty! If you want have changed it use the `node['mariadb']['server_root_password']` attribute to put a correct value. And by default the remote root access is not activated. Use `node['mariadb']['forbid_remote_root']` attribute to change it.
 
@@ -117,15 +118,18 @@ As wee need to have the same password for this user on the whole cluster nodes..
 
 #### mariadb::client
 
-By default this recipe install the client, and all needed packages to develop client application. If you do not want to install development files when installing client package,
+By default this recipe installs the client, and all needed packages to develop client application. If you do not want to install development files when installing client package,
 set the attribute `node['mariadb']['client']['development_files']` to false. 
+
+#### mariadb::devel
+
+By default this recipe installs all needed packages to develop client application.
 
 Providers
 ----------
 
 This recipe define 2  providers:
 - `Chef::Provider::Mariadb::Configuration` shortcut resource `mariadb_configuration`
-- `Chef::Provider::Mariadb::Replication` shortcut resource `mariadb_replication`
 
 #### mariadb_configuration
 
@@ -174,7 +178,7 @@ It have 4 actions:
 
 The resource name need to be 'default' if your don't want to use a named connection (multi source replication in MariaDB 10).
 
-So by default the provider try to use the local instance of mysql, with the current user and no password. If you want to change, you have to define `host`, `port`, `user` or `password`
+So by default the provider try to use the local instance of mysql, with the current root and password set in attribute node['mariadb']['server_root_password']. If you want to change, you have to define `host`, `port`, `user` or `password`
 
 ```ruby
 mariadb_replication 'default' do
@@ -198,6 +202,12 @@ mariadb_replication 'usefull_conn_name' do
   action :add
 end
 ```
+
+By default, resource doesn't change master if slave is running. If you want to let resource change slave settings for replication channel while slave is running use `change_master_while_running` property. When it's set to `true` slave settings will be changed
+if either one of `master_host`, `master_port`, `master_user`, `master_password` and `master_use_gtid` was changed.
+
+Changes of only `master_log_file` and/or `master_log_pos` don't affect server if slave is already configured.
+
 
 Contributing
 ------------
