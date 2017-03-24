@@ -76,7 +76,3 @@ execute 'preseed mariadb-server' do
           '/var/cache/local/preseeding/mariadb-server.seed'
   action :nothing
 end
-
-package "mariadb-server-#{node['mariadb']['install']['version']}" do
-  action :install
-end

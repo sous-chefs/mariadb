@@ -25,23 +25,17 @@ when 'package'
   # Include recipes to install repositories
   include_recipe "#{cookbook_name}::_mariadb_repository"
 
-  # Include RH specific recipe
-  include_recipe "#{cookbook_name}::_redhat_client" if \
-    %w(redhat centos fedora scientific amazon).include?(node['platform'])
-
-  # Install client package
-  client_package_name = packages_names_to_install(node['platform'],
-                                                  node['platform_version'],
-                                                  node['mariadb']['install']['version'],
-                                                  node['mariadb']['install']['prefer_os_package'],
-                                                  node['mariadb']['install']['prefer_scl_package'])['client']
-  package 'MariaDB-client' do
-    package_name client_package_name
+  # Install devel package
+  devel_package_name = packages_names_to_install(node['platform'],
+                                                 node['platform_version'],
+                                                 node['mariadb']['install']['version'],
+                                                 node['mariadb']['install']['prefer_os_package'],
+                                                 node['mariadb']['install']['prefer_scl_package'])['devel']
+  package 'MariaDB-devel' do
+    package_name devel_package_name
     action :install
   end
 
-  # Install devel package if required
-  include_recipe "#{cookbook_name}::devel" if node['mariadb']['client']['development_files']
 when 'from_source'
   # To be filled as soon as possible
 end
