@@ -17,13 +17,26 @@
 # limitations under the License.
 #
 
+use_os_native = use_os_native_package?(node['mariadb']['install']['prefer_os_package'],
+                                       node['platform'],
+                                       node['platform_version'])
+use_scl = use_scl_package?(node['mariadb']['install']['prefer_scl_package'],
+                           node['platform'],
+                           node['platform_version']) &&
+          scl_version_available?(node['mariadb']['install']['version'])
+
 # To force removing of mariadb-libs on CentOS >= 7
 package 'MariaDB-shared' do
   action :install
+  not_if { use_os_native || use_scl }
 end
 
-package 'MariaDB-server' do
-  action :install
+ruby_block 'MariaDB first start' do
+  block do
+    true
+  end
+  action :nothing
+  subscribes :run, 'package[MariaDB-server]', :immediately
   notifies :create, 'directory[/var/log/mysql]', :immediately
   notifies :start, 'service[mysql]', :immediately
   notifies :run, 'execute[change first install root password]', :immediately
@@ -43,6 +56,3 @@ execute 'change first install root password' do
   sensitive true
   not_if { node['mariadb']['server_root_password'].empty? }
 end
-
-# Default policy for RH and fedora is to name it mysql
-node.default['mariadb']['mysqld']['service_name'] = 'mysql'

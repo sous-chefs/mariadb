@@ -61,19 +61,6 @@ module MariaDB
       package_provided
     end
 
-    # Helper to determine mariadb server service name shipped by native package
-    # If no native package available on this platform, return nil
-    # @param [String] os_platform Indicate operating system type, e.g. centos
-    # @param [String] os_version Indicate operating system version, e.g. 7.0
-    def os_service_name(os_platform, os_version)
-      return nil unless os_package_provided?(os_platform, os_version)
-      service_name = 'mariadb'
-      if os_platform == 'fedora' && os_version.to_i >= 19
-        service_name = 'mysqld'
-      end
-      service_name
-    end
-
     # Helper to determine whether to use os native package
     # @param [Boolean] prefer_os Indicate whether to prefer os native package
     # @param [String] os_platform Indicate operating system type, e.g. centos
@@ -91,7 +78,7 @@ module MariaDB
     end
 
     # Helper to determine whether to use scl package
-    # @param [Boolean] prefer_os Indicate whether to prefer os native package
+    # @param [Boolean] prefer_scl Indicate whether to prefer package from SCL
     # @param [String] os_platform Indicate operating system type, e.g. centos
     # @param [String] os_version Indicate operating system version, e.g. 7.0
     def use_scl_package?(prefer_scl, os_platform, os_version)
@@ -133,18 +120,102 @@ module MariaDB
 
     # Helper to determine scl packages names
     # @param [String] version Indicate requested version of mariadb
-    # @param [String] version Indicate mariadb component name
-    def scl_package_name(mariadb_version, *packages)
-      packages.map do |package|
-        "#{scl_collection_name(mariadb_version)}-#{package}"
-      end
+    # @param [String] package Indicate mariadb component name
+    def scl_package_name(version, package)
+      "#{scl_collection_name(version)}-#{package}"
     end
 
+    # Helper to determine the command required to execute mariadb utils
+    # @param [Boolean] prefer_scl Indicate whether to prefer package from SCL
+    # @param [String] mariadb_version Indicate requested version of mariadb
+    # @param [String] cmd Indicate what command has to be executed
     def mysqlbin_cmd(prefer_scl, mariadb_version, cmd)
       if prefer_scl && scl_version_available?(mariadb_version)
         "scl enable #{scl_collection_name(mariadb_version)} -- #{cmd}"
       else
         "/usr/bin/#{cmd}"
+      end
+    end
+
+    # Helper to determine names of mariadb packages provided by OS
+    # @param [String] os_platform Indicate operating system type, e.g. centos
+    def native_packages_names(os_platform)
+      case os_platform
+      when 'redhat', 'centos', 'scientific', 'fedora'
+        { 'devel' => 'mariadb-devel',
+          'client' => 'mariadb',
+          'server' => 'mariadb-server' }
+      when 'suse'
+        { 'devel' => 'libmariadbclient-devel',
+          'client' => 'mariadb-community-server-client',
+          'server' => 'mariadb-community-server' }
+      when 'debian', 'ubuntu'
+        { 'devel' => 'libmariadbclient-dev',
+          'client' => 'mariadb-client',
+          'server' => 'mariadb-server' }
+      end
+    end
+
+    # Helper to determine names of mariadb packages provided by SCL
+    # @param [String] os_platform Indicate operating system type, e.g. centos
+    # @param [String] mariadb_version Indicate requested version of mariadb
+    def scl_packages_names(os_platform, mariadb_version)
+      packages = {}
+      native_packages_names(os_platform).each_pair do |package_type, package_name|
+        packages[package_type] = scl_package_name(mariadb_version, package_name)
+      end
+      packages
+    end
+
+    # Helper to determine names of mariadb packages provided by MariaDB
+    # @param [String] os_platform Indicate operating system type, e.g. centos
+    # @param [String] version Indicate requested version of mariadb
+    def mariadb_packages_names(os_platform, version)
+      if %w(debian ubuntu).include?(os_platform)
+        { 'devel' => 'libmariadbclient-dev',
+          'client' => "mariadb-client-#{version}",
+          'server' => "mariadb-server-#{version}" }
+      else
+        { 'devel' => 'MariaDB-devel',
+          'client' => 'MariaDB-client',
+          'server' => 'MariaDB-server' }
+      end
+    end
+
+    # Helper to determine names of packages to be used for chosen mariadb version
+    # @param [String] os_platform Indicate operating system type, e.g. centos
+    # @param [String] os_version Indicate operating system version
+    # @param [String] mariadb_version Indicate requested version of mariadb
+    # @param [Boolean] prefer_os Indicate whether to prefer os native package
+    # @param [Boolean] prefer_scl Indicate whether to prefer package from SCL
+    def packages_names_to_install(os_platform, os_version, mariadb_version, prefer_os, prefer_scl)
+      if use_os_native_package?(prefer_os, os_platform, os_version)
+        native_packages_names(os_platform)
+      elsif use_scl_package?(prefer_scl, os_platform, os_version)
+        scl_packages_names(os_platform, mariadb_version)
+      else
+        mariadb_packages_names(os_platform, mariadb_version)
+      end
+    end
+
+    # Helper to determine service name for given OS and chosen installation method
+    # @param [String] os_platform Indicate operating system type, e.g. centos
+    # @param [String] os_version Indicate operating system version
+    # @param [String] mariadb_version Indicate requested version of mariadb
+    # @param [Boolean] prefer_os Indicate whether to prefer os native package
+    # @param [Boolean] prefer_scl Indicate whether to prefer package from SCL
+    def mariadb_service_name(os_platform, os_version, mariadb_version, prefer_os, prefer_scl)
+      if use_os_native_package?(prefer_os, os_platform, os_version)
+        case os_platform
+        when 'fedora'
+          os_version.to_i >= 19 ? 'mysqld' : 'mysql'
+        when 'redhat', 'centos', 'scientific', 'debian', 'ubuntu'
+          'mariadb'
+        end
+      elsif use_scl_package?(prefer_scl, os_platform, os_version)
+        "#{scl_collection_name(mariadb_version)}-mariadb"
+      else
+        'mysql'
       end
     end
   end

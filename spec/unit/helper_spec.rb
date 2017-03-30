@@ -53,6 +53,9 @@ describe MariaDB::Helper do
              'fedora' => %w(19 20 21)
         ]
       end
+      let(:support_mariadb) do
+        Array['5.5', '10.0', '10.1']
+      end
 
       it 'os_package_provided to be true' do
         support_platforms.each do |platform, ver_list|
@@ -83,21 +86,19 @@ describe MariaDB::Helper do
         end
       end
 
-      it 'native os service name' do
+      it 'mariadb service name' do
         support_platforms.each do |platform, ver_list|
           ver_list.each do |version|
-            if platform == 'fedora' && version >= '19'
+            support_mariadb.each do |mariadb_version|
               expect(
-                dummy_helper.os_service_name(
-                  platform, version
+                dummy_helper.mariadb_service_name(
+                  platform, version, mariadb_version, true, false
                 )
-              ).to eq 'mysqld'
-            else
-              expect(
-                dummy_helper.os_service_name(
-                  platform, version
-                )
-              ).to eq 'mariadb'
+              ).to eq(if platform == 'fedora' && version.to_i >= 19
+                        'mysqld'
+                      else
+                        'mariadb'
+                      end)
             end
           end
         end
@@ -113,6 +114,9 @@ describe MariaDB::Helper do
              'debian' => %w(7.8)
         ]
       end
+      let(:support_mariadb) do
+        Array['5.5', '10.0', '10.1']
+      end
 
       it 'os_package_provided to be false' do
         unsupport_platforms.each do |platform, ver_list|
@@ -122,6 +126,20 @@ describe MariaDB::Helper do
                 platform, version
               )
             ).to be false
+          end
+        end
+      end
+
+      it 'mariadb service falls back to default' do
+        unsupport_platforms.each do |platform, ver_list|
+          ver_list.each do |version|
+            support_mariadb.each do |mariadb_version|
+              expect(
+                dummy_helper.mariadb_service_name(
+                  platform, version, mariadb_version, true, false
+                )
+              ).to eq 'mysql'
+            end
           end
         end
       end
@@ -149,18 +167,6 @@ describe MariaDB::Helper do
           end
         end
       end
-
-      it 'no native os service name' do
-        unsupport_platforms.each do |platform, ver_list|
-          ver_list.each do |version|
-            expect(
-              dummy_helper.os_service_name(
-                platform, version
-              )
-            ).to eq nil
-          end
-        end
-      end
     end
   end
 
@@ -173,6 +179,9 @@ describe MariaDB::Helper do
         Hash['centos' => %w(6.8 7.0),
              'scientific' => %w(6.8),
         ]
+      end
+      let(:support_mariadb) do
+        Array['5.5', '10.0', '10.1']
       end
 
       it 'os_package_provided to be true' do
@@ -202,13 +211,37 @@ describe MariaDB::Helper do
           end
         end
       end
+      it 'mariadb service name' do
+        support_platforms.each do |platform, ver_list|
+          ver_list.each do |version|
+            support_mariadb.each do |mariadb_version|
+              expect(
+                dummy_helper.mariadb_service_name(
+                  platform, version, mariadb_version, false, true
+                )
+              ).to eq case mariadb_version
+                      when '5.5'
+                        'mariadb55-mariadb'
+                      when '10.0'
+                        'rh-mariadb100-mariadb'
+                      when '10.1'
+                        'rh-mariadb101-mariadb'
+                      end
+            end
+          end
+        end
+      end
     end
+
     context 'scl package not provided' do
       let(:unsupport_platforms) do
         Hash['redhat' => %w(5.5 5.6),
              'centos' => %w(5.2 5.7),
              'fedora' => %w(17 18),
         ]
+      end
+      let(:support_mariadb) do
+        Array['5.5', '10.0', '10.1']
       end
 
       it 'scl_package_provided to be false' do
@@ -219,6 +252,20 @@ describe MariaDB::Helper do
                 platform, version
               )
             ).to be false
+          end
+        end
+      end
+
+      it 'mariadb service falls back to default' do
+        unsupport_platforms.each do |platform, ver_list|
+          ver_list.each do |version|
+            support_mariadb.each do |mariadb_version|
+              expect(
+                dummy_helper.mariadb_service_name(
+                  platform, version, mariadb_version, false, true
+                )
+              ).to eq 'mysql'
+            end
           end
         end
       end

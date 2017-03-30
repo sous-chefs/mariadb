@@ -170,6 +170,7 @@ default['mariadb']['debian']['host'] = 'localhost'
 default['mariadb']['install']['type'] = 'package'
 default['mariadb']['install']['version'] = '10.0'
 default['mariadb']['install']['prefer_os_package'] = false
+default['mariadb']['install']['prefer_scl_package'] = false
 default['mariadb']['install']['extra_packages'] = true
 
 #

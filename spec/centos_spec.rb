@@ -12,7 +12,19 @@ describe 'centos::mariadb::default' do
     runner.converge('mariadb::default')
   end
 
-  it 'Installs Mariadb package' do
+  it 'Include recipe to choose repository' do
+    expect(chef_run).to include_recipe('mariadb::_mariadb_repository')
+  end
+
+  it 'Include server recipe' do
+    expect(chef_run).to include_recipe('mariadb::server')
+  end
+
+  it 'Include redhat recipe' do
+    expect(chef_run).to include_recipe('mariadb::_redhat_server')
+  end
+
+  it 'Installs Mariadb-server package' do
     expect(chef_run).to install_package('MariaDB-server')
   end
 
@@ -43,60 +55,75 @@ describe 'centos::mariadb::default' do
     expect(chef_run).to add_mariadb_configuration('30-replication')
   end
 
+  it 'Create Log directory' do
+    directory_log = chef_run.directory('/var/log/mysql')
+    first_run_block = chef_run.ruby_block('MariaDB first start')
+    expect(directory_log).to do_nothing
+    expect(first_run_block).to do_nothing
+    expect(first_run_block).to notify('directory[/var/log/mysql]')
+      .to(:create)
+      .immediately
+  end
+
+  it 'Enable and start MariaDB service' do
+    server_package = chef_run.package('MariaDB-server')
+    first_run_block = chef_run.ruby_block('MariaDB first start')
+    expect(server_package).to notify('service[mysql]')
+      .to(:enable)
+    expect(first_run_block).to notify('service[mysql]')
+      .to(:start)
+      .immediately
+  end
+
   it 'Don t execute root password change at install' do
     expect(chef_run).to_not run_execute('change first install root password')
   end
 
-  it 'Create Log directory' do
-    directory_log = chef_run.directory('/var/log/mysql')
-    expect(directory_log).to do_nothing
-    resource = chef_run.package('MariaDB-server')
-    expect(resource).to notify('directory[/var/log/mysql]')
-      .to(:create)
-      .immediately
-  end
-end
+  context 'Installation from MariaDB repository' do
+    let(:mariadb_package) { chef_run.package('MariaDB-server') }
+    let(:mariadb_service) { chef_run.service('mysql') }
 
-describe 'centos::mariadb::native' do
-  let(:chef_run) do
-    runner = ChefSpec::ServerRunner.new(
-      platform: 'centos', version: '7.0',
-      step_into: ['mariadb_configuration']
-    ) do |node|
-      node.automatic['memory']['total'] = '2048kB'
-      node.automatic['ipaddress'] = '1.1.1.1'
-      node.override['mariadb']['install']['prefer_os_package'] = true
+    it 'Include MariaDB repository recipe' do
+      expect(chef_run).to include_recipe('mariadb::repository')
     end
-    runner.converge('mariadb::default')
+
+    it 'Installs Mariadb-shared package' do
+      expect(chef_run).to install_package('MariaDB-shared')
+    end
+
+    it 'MariaDB service with the correct name' do
+      expect(mariadb_service.service_name).to eq 'mysql'
+    end
+
+    it 'Package with the correct name' do
+      expect(mariadb_package.package_name).to eq 'MariaDB-server'
+    end
   end
 
-  context 'support for os shipped package' do
-    let(:os_package) { chef_run.package('mariadb-server') }
-    let(:os_service) { chef_run.service('mysql') }
+  context 'Installation from OS repository' do
+    let(:chef_run) do
+      runner = ChefSpec::ServerRunner.new(
+        platform: 'centos', version: '7.0',
+        step_into: ['mariadb_configuration']
+      ) do |node|
+        node.automatic['memory']['total'] = '2048kB'
+        node.automatic['ipaddress'] = '1.1.1.1'
+        node.override['mariadb']['install']['prefer_os_package'] = true
+      end
+      runner.converge('mariadb::default')
+    end
+    let(:mariadb_package) { chef_run.package('MariaDB-server') }
+    let(:mariadb_service) { chef_run.service('mysql') }
 
-    it 'Include native recipe' do
-      expect(chef_run).to include_recipe('mariadb::_redhat_server_native')
-      expect(chef_run).not_to include_recipe('mariadb::repository')
-      expect(chef_run).not_to include_recipe('mariadb::_redhat_server')
+    it 'MariaDB service with the correct name' do
+      expect(mariadb_service.service_name).to eq 'mariadb'
     end
 
-    it 'Install os shipped package' do
-      expect(chef_run).to install_package('mariadb-server')
+    it 'Package with the correct name' do
+      expect(mariadb_package.package_name).to eq 'mariadb-server'
     end
 
-    it 'Create Log directory' do
-      expect(chef_run).to create_directory('/var/log/mysql')
-    end
-
-    it 'Does not restart mysql service' do
-      expect(chef_run).to_not restart_service('mysql')
-    end
-
-    it 'Server service with the correct name' do
-      expect(os_service.service_name).to eq 'mariadb'
-    end
-
-    context 'fedora 19 with different service name' do
+    context 'Fedora 19 from OS repository has different service name' do
       let(:chef_run) do
         runner = ChefSpec::ServerRunner.new(
           platform: 'fedora', version: '19',
@@ -108,118 +135,92 @@ describe 'centos::mariadb::native' do
         end
         runner.converge('mariadb::default')
       end
-      let(:os_service) { chef_run.service('mysql') }
+      let(:mariadb_service) { chef_run.service('mysql') }
 
-      it 'Server service with the correct name' do
-        expect(os_service.service_name).to eq 'mysqld'
+      it 'MariaDB service with the correct name' do
+        expect(mariadb_service.service_name).to eq 'mysqld'
       end
     end
   end
 
-  context ''
-  it 'Configure includedir in /etc/my.cnf' do
-    expect(chef_run).to create_template('/etc/my.cnf')
-    expect(chef_run).to render_file('/etc/my.cnf')
-      .with_content(%r{/etc/my.cnf.d})
-  end
-
-  it 'Configure replication in /etc/my.cnf.d/30-replication.cnf' do
-    expect(chef_run).to create_template('/etc/my.cnf.d/30-replication.cnf')
-    expect(chef_run).to render_file('/etc/my.cnf.d/30-replication.cnf')
-  end
-
-  it 'Configure InnoDB with attributes' do
-    expect(chef_run).to add_mariadb_configuration('20-innodb')
-    expect(chef_run).to render_file('/etc/my.cnf.d/20-innodb.cnf')
-      .with_content(/innodb_buffer_pool_size = 256M/)
-    expect(chef_run).to create_template('/etc/my.cnf.d/20-innodb.cnf')
-      .with(
-        user:  'root',
-        group: 'mysql',
-        mode:  '0640'
-      )
-  end
-
-  it 'Configure Replication' do
-    expect(chef_run).to add_mariadb_configuration('30-replication')
-  end
-
-  it 'Don t execute root password change at install' do
-    expect(chef_run).to_not run_execute('change first install root password')
-  end
-end
-
-describe 'centos::mariadb::scl' do
-  let(:chef_run) do
-    runner = ChefSpec::ServerRunner.new(
-      platform: 'centos', version: '7.0',
-      step_into: ['mariadb_configuration']
-    ) do |node|
-      node.automatic['memory']['total'] = '2048kB'
-      node.automatic['ipaddress'] = '1.1.1.1'
-      node.override['mariadb']['install']['prefer_scl_package'] = true
+  context 'Installation from SCL repository' do
+    let(:chef_run) do
+      runner = ChefSpec::ServerRunner.new(
+        platform: 'centos', version: '7.0',
+        step_into: ['mariadb_configuration']
+      ) do |node|
+        node.automatic['memory']['total'] = '2048kB'
+        node.automatic['ipaddress'] = '1.1.1.1'
+        node.override['mariadb']['install']['prefer_scl_package'] = true
+      end
+      runner.converge('mariadb::default')
     end
-    runner.converge('mariadb::default')
-  end
-
-  context 'support for scl package' do
-    let(:os_package) { chef_run.package('rh-mariadb100-mariadb-server') }
-    let(:os_service) { chef_run.service('mysql') }
+    let(:mariadb_package) { chef_run.package('MariaDB-server') }
+    let(:mariadb_service) { chef_run.service('mysql') }
 
     it 'Include scl recipe' do
-      expect(chef_run).to include_recipe('mariadb::_redhat_server_scl')
-      expect(chef_run).not_to include_recipe('mariadb::repository')
-      expect(chef_run).not_to include_recipe('mariadb::_redhat_server')
-      expect(chef_run).not_to include_recipe('mariadb::_redhat_server_native')
+      expect(chef_run).to include_recipe('yum-scl::default')
     end
 
-    it 'Install scl package' do
-      expect(chef_run).to install_package('rh-mariadb100-mariadb-server')
+    context 'MariaDB 10.0' do
+      it 'MariaDB service with the correct name' do
+        expect(mariadb_service.service_name).to eq 'rh-mariadb100-mariadb'
+      end
+
+      it 'Package with the correct name' do
+        expect(mariadb_package.package_name).to eq 'rh-mariadb100-mariadb-server'
+      end
     end
 
-    it 'Create Log directory' do
-      expect(chef_run).to create_directory('/var/log/mysql')
+    context 'MariaDB 5.5' do
+      let(:chef_run) do
+        runner = ChefSpec::ServerRunner.new(
+          platform: 'centos', version: '7.0',
+          step_into: ['mariadb_configuration']
+        ) do |node|
+          node.automatic['memory']['total'] = '2048kB'
+          node.automatic['ipaddress'] = '1.1.1.1'
+          node.override['mariadb']['install']['prefer_scl_package'] = true
+          node.override['mariadb']['install']['version'] = '5.5'
+        end
+        runner.converge('mariadb::default')
+      end
+      let(:mariadb_package) { chef_run.package('MariaDB-server') }
+      let(:mariadb_service) { chef_run.service('mysql') }
+
+      it 'MariaDB service with the correct name' do
+        expect(mariadb_service.service_name).to eq 'mariadb55-mariadb'
+      end
+
+      it 'Package with the correct name' do
+        expect(mariadb_package.package_name).to eq 'mariadb55-mariadb-server'
+      end
     end
 
-    it 'Does not restart mysql service' do
-      expect(chef_run).to_not restart_service('mysql')
+    context 'MariaDB 10.1' do
+      let(:chef_run) do
+        runner = ChefSpec::ServerRunner.new(
+          platform: 'centos', version: '7.0',
+          step_into: ['mariadb_configuration']
+        ) do |node|
+          node.automatic['memory']['total'] = '2048kB'
+          node.automatic['ipaddress'] = '1.1.1.1'
+          node.override['mariadb']['install']['prefer_scl_package'] = true
+          node.override['mariadb']['install']['version'] = '10.1'
+        end
+        runner.converge('mariadb::default')
+      end
+      let(:mariadb_package) { chef_run.package('MariaDB-server') }
+      let(:mariadb_service) { chef_run.service('mysql') }
+
+      it 'MariaDB service with the correct name' do
+        expect(mariadb_service.service_name).to eq 'rh-mariadb101-mariadb'
+      end
+
+      it 'Package with the correct name' do
+        expect(mariadb_package.package_name).to eq 'rh-mariadb101-mariadb-server'
+      end
     end
-
-    it 'Server service with the correct name' do
-      expect(os_service.service_name).to eq 'rh-mariadb100-mariadb'
-    end
-  end
-
-  context ''
-  it 'Configure includedir in /etc/my.cnf' do
-    expect(chef_run).to create_template('/etc/my.cnf')
-    expect(chef_run).to render_file('/etc/my.cnf')
-      .with_content(%r{/etc/my.cnf.d})
-  end
-
-  it 'Configure replication in /etc/my.cnf.d/30-replication.cnf' do
-    expect(chef_run).to create_template('/etc/my.cnf.d/30-replication.cnf')
-    expect(chef_run).to render_file('/etc/my.cnf.d/30-replication.cnf')
-  end
-
-  it 'Configure InnoDB with attributes' do
-    expect(chef_run).to add_mariadb_configuration('20-innodb')
-    expect(chef_run).to render_file('/etc/my.cnf.d/20-innodb.cnf')
-      .with_content(/innodb_buffer_pool_size = 256M/)
-    expect(chef_run).to create_template('/etc/my.cnf.d/20-innodb.cnf')
-      .with(
-        user:  'root',
-        group: 'mysql',
-        mode:  '0640'
-      )
-  end
-
-  it 'Configure Replication' do
-    expect(chef_run).to add_mariadb_configuration('30-replication')
-  end
-
-  it 'Don t execute root password change at install' do
-    expect(chef_run).to_not run_execute('change first install root password')
   end
 end
 
@@ -235,8 +236,12 @@ describe 'centos::mariadb::client' do
     runner.converge('mariadb::client')
   end
 
-  it 'Remove mysql-libs package' do
-    expect(chef_run).to remove_package('mysql-libs')
+  it 'Include RH specific recipe' do
+    expect(chef_run).to include_recipe('mariadb::_redhat_client')
+  end
+
+  it 'Include recipe to choose repository' do
+    expect(chef_run).to include_recipe('mariadb::_mariadb_repository')
   end
 
   it 'Install MariaDB Client Package' do
@@ -246,6 +251,119 @@ describe 'centos::mariadb::client' do
   it 'Install MariaDB Client Devel Package' do
     expect(chef_run).to install_package('MariaDB-devel')
   end
+
+  it 'Include devel recipe' do
+    expect(chef_run).to include_recipe('mariadb::devel')
+  end
+
+  context 'Installation from MariaDB repository' do
+    let(:mariadb_client_package) { chef_run.package('MariaDB-client') }
+    let(:mariadb_devel_package) { chef_run.package('MariaDB-devel') }
+
+    it 'Include MariaDB repository recipe' do
+      expect(chef_run).to include_recipe('mariadb::repository')
+    end
+
+    it 'Remove mysql-libs package' do
+      expect(chef_run).to remove_package('mysql-libs')
+    end
+
+    it 'Packages with the correct name' do
+      expect(mariadb_client_package.package_name).to eq 'MariaDB-client'
+      expect(mariadb_devel_package.package_name).to eq 'MariaDB-devel'
+    end
+  end
+
+  context 'Installation from OS repository' do
+    let(:chef_run) do
+      runner = ChefSpec::ServerRunner.new(
+        platform: 'centos', version: '7.0',
+        step_into: ['mariadb_configuration']
+      ) do |node|
+        node.automatic['memory']['total'] = '2048kB'
+        node.automatic['ipaddress'] = '1.1.1.1'
+        node.override['mariadb']['install']['prefer_os_package'] = true
+      end
+      runner.converge('mariadb::client')
+    end
+    let(:mariadb_client_package) { chef_run.package('MariaDB-client') }
+    let(:mariadb_devel_package) { chef_run.package('MariaDB-devel') }
+
+    it 'Packages with the correct name' do
+      expect(mariadb_client_package.package_name).to eq 'mariadb'
+      expect(mariadb_devel_package.package_name).to eq 'mariadb-devel'
+    end
+  end
+
+  context 'Installation from SCL repository' do
+    let(:chef_run) do
+      runner = ChefSpec::ServerRunner.new(
+        platform: 'centos', version: '7.0',
+        step_into: ['mariadb_configuration']
+      ) do |node|
+        node.automatic['memory']['total'] = '2048kB'
+        node.automatic['ipaddress'] = '1.1.1.1'
+        node.override['mariadb']['install']['prefer_scl_package'] = true
+      end
+      runner.converge('mariadb::client')
+    end
+    let(:mariadb_client_package) { chef_run.package('MariaDB-client') }
+    let(:mariadb_devel_package) { chef_run.package('MariaDB-devel') }
+
+    it 'Include SCL repository recipe' do
+      expect(chef_run).to include_recipe('yum-scl::default')
+    end
+
+    it 'Remove mysql-libs package' do
+      expect(chef_run).to remove_package('mysql-libs')
+    end
+
+    context 'MariaDB 10.0' do
+      it 'Packages with the correct name' do
+        expect(mariadb_client_package.package_name).to eq 'rh-mariadb100-mariadb'
+        expect(mariadb_devel_package.package_name).to eq 'rh-mariadb100-mariadb-devel'
+      end
+    end
+
+    context 'MariaDB 5.5' do
+      let(:chef_run) do
+        runner = ChefSpec::ServerRunner.new(
+          platform: 'centos', version: '7.0',
+          step_into: ['mariadb_configuration']
+        ) do |node|
+          node.automatic['memory']['total'] = '2048kB'
+          node.automatic['ipaddress'] = '1.1.1.1'
+          node.override['mariadb']['install']['prefer_scl_package'] = true
+          node.override['mariadb']['install']['version'] = '5.5'
+        end
+        runner.converge('mariadb::client')
+      end
+      it 'Packages with the correct name' do
+        expect(mariadb_client_package.package_name).to eq 'mariadb55-mariadb'
+        expect(mariadb_devel_package.package_name).to eq 'mariadb55-mariadb-devel'
+      end
+    end
+
+    context 'MariaDB 10.1' do
+      let(:chef_run) do
+        runner = ChefSpec::ServerRunner.new(
+          platform: 'centos', version: '7.0',
+          step_into: ['mariadb_configuration']
+        ) do |node|
+          node.automatic['memory']['total'] = '2048kB'
+          node.automatic['ipaddress'] = '1.1.1.1'
+          node.override['mariadb']['install']['prefer_scl_package'] = true
+          node.override['mariadb']['install']['version'] = '10.1'
+        end
+        runner.converge('mariadb::client')
+      end
+      it 'Packages with the correct name' do
+        expect(mariadb_client_package.package_name).to eq 'rh-mariadb101-mariadb'
+        expect(mariadb_devel_package.package_name).to eq 'rh-mariadb101-mariadb-devel'
+      end
+    end
+  end
+
   context 'Without development files' do
     let(:chef_run) do
       runner = ChefSpec::ServerRunner.new(
@@ -259,155 +377,8 @@ describe 'centos::mariadb::client' do
       runner.converge('mariadb::client')
     end
 
-    it 'Install MariaDB Client Package' do
-      expect(chef_run).to install_package('MariaDB-client')
-    end
-
     it 'Don t install MariaDB Client Devel Package' do
       expect(chef_run).to_not install_package('MariaDB-devel')
-    end
-  end
-end
-
-describe 'centos::mariadb::client::native' do
-  let(:chef_run) do
-    runner = ChefSpec::ServerRunner.new(
-      platform: 'centos', version: '7.0',
-      step_into: ['mariadb_configuration']
-    ) do |node|
-      node.automatic['memory']['total'] = '2048kB'
-      node.automatic['ipaddress'] = '1.1.1.1'
-      node.override['mariadb']['install']['prefer_os_package'] = true
-    end
-    runner.converge('mariadb::client')
-  end
-
-  it 'Do not remove mysql-libs' do
-    expect(chef_run).not_to remove_package('mysql-libs')
-  end
-
-  it 'Install MariaDB Client and Devel Package shipped by os' do
-    expect(chef_run).not_to include_recipe('mariadb::repository')
-    expect(chef_run).to install_package('mariadb')
-    expect(chef_run).to install_package('mariadb-devel')
-  end
-
-  context 'Without development files' do
-    let(:chef_run) do
-      runner = ChefSpec::ServerRunner.new(
-        platform: 'centos', version: '7.0',
-        step_into: ['mariadb_configuration']
-      ) do |node|
-        node.automatic['memory']['total'] = '2048kB'
-        node.automatic['ipaddress'] = '1.1.1.1'
-        node.override['mariadb']['install']['prefer_os_package'] = true
-        node.override['mariadb']['client']['development_files'] = false
-      end
-      runner.converge('mariadb::client')
-    end
-
-    it 'Install MariaDB Client Package' do
-      expect(chef_run).to install_package('mariadb')
-    end
-
-    it 'Don t install MariaDB Client Devel Package' do
-      expect(chef_run).to_not install_package('mariadb-devel')
-    end
-  end
-end
-
-describe 'centos::mariadb::client::scl' do
-  let(:chef_run) do
-    runner = ChefSpec::ServerRunner.new(
-      platform: 'centos', version: '7.0',
-      step_into: ['mariadb_configuration']
-    ) do |node|
-      node.automatic['memory']['total'] = '2048kB'
-      node.automatic['ipaddress'] = '1.1.1.1'
-      node.override['mariadb']['install']['prefer_scl_package'] = true
-    end
-    runner.converge('mariadb::client')
-  end
-
-  it 'Remove mysql-libs' do
-    expect(chef_run).to remove_package('mysql-libs')
-  end
-
-  it 'Install MariaDB v.10.0 Client and Devel Package from scl' do
-    expect(chef_run).not_to include_recipe('mariadb::repository')
-    expect(chef_run).to install_package('rh-mariadb100-mariadb')
-    expect(chef_run).to install_package('rh-mariadb100-mariadb-devel')
-  end
-
-  context 'Without development files' do
-    let(:chef_run) do
-      runner = ChefSpec::ServerRunner.new(
-        platform: 'centos', version: '7.0',
-        step_into: ['mariadb_configuration']
-      ) do |node|
-        node.automatic['memory']['total'] = '2048kB'
-        node.automatic['ipaddress'] = '1.1.1.1'
-        node.override['mariadb']['install']['prefer_scl_package'] = true
-        node.override['mariadb']['client']['development_files'] = false
-      end
-      runner.converge('mariadb::client')
-    end
-
-    it 'Install MariaDB v.10.0 Client Package' do
-      expect(chef_run).to install_package('rh-mariadb100-mariadb')
-    end
-
-    it 'Don t install MariaDB Client Devel Package' do
-      expect(chef_run).to_not install_package('rh-mariadb100-devel')
-    end
-  end
-end
-
-describe 'centos::mariadb::client::scl::101' do
-  let(:chef_run) do
-    runner = ChefSpec::ServerRunner.new(
-      platform: 'centos', version: '7.0',
-      step_into: ['mariadb_configuration']
-    ) do |node|
-      node.automatic['memory']['total'] = '2048kB'
-      node.automatic['ipaddress'] = '1.1.1.1'
-      node.override['mariadb']['install']['prefer_scl_package'] = true
-      node.override['mariadb']['install']['version'] = '10.1'
-    end
-    runner.converge('mariadb::client')
-  end
-
-  it 'Remove mysql-libs' do
-    expect(chef_run).to remove_package('mysql-libs')
-  end
-
-  it 'Install MariaDB v.10.1 Client and Devel Package from scl' do
-    expect(chef_run).not_to include_recipe('mariadb::repository')
-    expect(chef_run).to install_package('rh-mariadb101-mariadb')
-    expect(chef_run).to install_package('rh-mariadb101-mariadb-devel')
-  end
-
-  context 'Without development files' do
-    let(:chef_run) do
-      runner = ChefSpec::ServerRunner.new(
-        platform: 'centos', version: '7.0',
-        step_into: ['mariadb_configuration']
-      ) do |node|
-        node.automatic['memory']['total'] = '2048kB'
-        node.automatic['ipaddress'] = '1.1.1.1'
-        node.override['mariadb']['install']['prefer_scl_package'] = true
-        node.override['mariadb']['client']['development_files'] = false
-        node.override['mariadb']['install']['version'] = '10.1'
-      end
-      runner.converge('mariadb::client')
-    end
-
-    it 'Install MariaDB v.10.1 Client Package' do
-      expect(chef_run).to install_package('rh-mariadb101-mariadb')
-    end
-
-    it 'Don t install MariaDB Client Devel Package' do
-      expect(chef_run).to_not install_package('rh-mariadb101-devel')
     end
   end
 end
