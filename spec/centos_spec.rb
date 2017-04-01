@@ -79,6 +79,48 @@ describe 'centos::mariadb::default' do
     expect(chef_run).to_not run_execute('change first install root password')
   end
 
+  context 'Installation with alternative data directory' do
+    let(:chef_run) do
+      runner = ChefSpec::ServerRunner.new(
+        platform: 'centos', version: '7.0',
+        step_into: ['mariadb_configuration']
+      ) do |node|
+        node.automatic['memory']['total'] = '2048kB'
+        node.automatic['ipaddress'] = '1.1.1.1'
+        node.override['mariadb']['install']['prefer_os_package'] = true
+        node.override['mariadb']['mysqld']['datadir'] = '/home/mysql'
+      end
+      runner.converge('mariadb::default')
+    end
+
+    it 'Create data directory' do
+      data_directory = chef_run.directory('/home/mysql')
+      expect(chef_run).to create_directory('/home/mysql')
+      expect(data_directory).to notify('service[mysql]')
+        .to(:stop)
+        .immediately
+      expect(data_directory).to notify('bash[move-datadir]')
+        .to(:run)
+        .immediately
+      expect(data_directory).to notify('service[mysql]')
+        .to(:start)
+        .immediately
+    end
+
+    it 'Move data directory' do
+      move_datadir_block = chef_run.bash('move-datadir')
+      expect(move_datadir_block).to do_nothing
+    end
+
+    it 'Restore security context' do
+      restore_security_context = chef_run.bash('Restore security context')
+      expect(restore_security_context).to do_nothing
+      expect(restore_security_context).to subscribe_to('bash[move-datadir]')
+        .on(:run)
+        .immediately
+    end
+  end
+
   context 'Installation from MariaDB repository' do
     let(:mariadb_package) { chef_run.package('MariaDB-server') }
     let(:mariadb_service) { chef_run.service('mysql') }
