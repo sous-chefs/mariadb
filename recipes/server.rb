@@ -83,7 +83,7 @@ if node['mariadb']['mysqld']['datadir'] !=
   bash 'Restore security context' do
     user 'root'
     code "/usr/sbin/restorecon -v #{node['mariadb']['mysqld']['default_datadir']}"
-    only_if "[ -f /usr/sbin/selinuxenabled ] && /usr/sbin/selinuxenabled"
+    only_if '[ -f /usr/sbin/selinuxenabled ] && /usr/sbin/selinuxenabled'
     subscribes :run, 'bash[move-datadir]', :immediately
     action :nothing
   end
