@@ -134,7 +134,7 @@ describe 'debian::mariadb::galera10-xtrabackup-v2' do
       node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
     end
   end
-  let(:chef_run) do
+  cached(:chef_run) do
     runner = ChefSpec::ServerRunner.new(
       platform: 'debian', version: '7.4',
       step_into: ['mariadb_configuration']

@@ -12,7 +12,7 @@ end
 includedir = '/etc/mysql/conf.d'
 mysql_config_file = '/etc/mysql/my.cnf'
 case os[:family]
-when 'fedora', 'centos', 'redhat'
+when 'centos', 'redhat'
   includedir = '/etc/my.cnf.d'
   mysql_config_file = '/etc/my.cnf'
 end

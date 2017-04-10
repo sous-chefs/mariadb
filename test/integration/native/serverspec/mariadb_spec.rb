@@ -1,9 +1,6 @@
 require 'spec_helper'
 
-service_name = 'mariadb'
-service_name = 'mysqld' if os[:family] == 'fedora' && os[:release].to_i == 19
-
-describe service(service_name) do
+describe service('mariadb') do
   it { should be_enabled }
   it { should be_running }
 end
@@ -15,7 +12,7 @@ end
 includedir = '/etc/mysql/conf.d'
 mysql_config_file = '/etc/mysql/my.cnf'
 case os[:family]
-when 'fedora', 'centos', 'redhat'
+when 'centos', 'redhat'
   includedir = '/etc/my.cnf.d'
   mysql_config_file = '/etc/my.cnf'
 end
