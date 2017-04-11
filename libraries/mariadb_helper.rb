@@ -40,8 +40,6 @@ module MariaDB
       case os_platform
       when 'centos', 'redhat'
         package_provided = true if os_version.to_i == 7
-      when 'fedora'
-        package_provided = true if os_version.to_i >= 19
       end
       package_provided
     end
@@ -55,8 +53,6 @@ module MariaDB
       case os_platform
       when 'centos', 'redhat', 'scientific'
         package_provided = true if os_version.to_i >= 6
-      when 'fedora'
-        package_provided = true if os_version.to_i >= 19
       end
       package_provided
     end
@@ -141,7 +137,7 @@ module MariaDB
     # @param [String] os_platform Indicate operating system type, e.g. centos
     def native_packages_names(os_platform)
       case os_platform
-      when 'redhat', 'centos', 'scientific', 'fedora'
+      when 'redhat', 'centos', 'scientific'
         { 'devel' => 'mariadb-devel',
           'client' => 'mariadb',
           'server' => 'mariadb-server' }
@@ -207,8 +203,6 @@ module MariaDB
     def mariadb_service_name(os_platform, os_version, mariadb_version, prefer_os, prefer_scl)
       if use_os_native_package?(prefer_os, os_platform, os_version)
         case os_platform
-        when 'fedora'
-          os_version.to_i >= 19 ? 'mysqld' : 'mysql'
         when 'redhat', 'centos', 'scientific', 'debian', 'ubuntu'
           'mariadb'
         end

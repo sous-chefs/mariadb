@@ -42,7 +42,7 @@ when 'package'
   case node['platform']
   when 'debian', 'ubuntu'
     include_recipe "#{cookbook_name}::_debian_server"
-  when 'redhat', 'centos', 'fedora', 'scientific', 'amazon'
+  when 'redhat', 'centos', 'scientific', 'amazon'
     include_recipe "#{cookbook_name}::_redhat_server"
   end
 

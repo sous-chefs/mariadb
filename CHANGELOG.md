@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Removed
+
+- Remove Fedora support, tested versions are long gone EOL and hard to support; only latest version has a repo on yum.mariadb.org
+
 ## 1.3.0 (2017-03-20)
 
 ### Added
