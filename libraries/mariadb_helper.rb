@@ -40,6 +40,10 @@ module MariaDB
       case os_platform
       when 'centos', 'redhat'
         package_provided = true if os_version.to_i == 7
+      when 'opensuse'
+        package_provided = true if os_version.to_i == 13
+      when 'opensuseleap'
+        package_provided = true if os_version.to_i == 42
       end
       package_provided
     end
@@ -145,6 +149,10 @@ module MariaDB
         { 'devel' => 'libmariadbclient-devel',
           'client' => 'mariadb-community-server-client',
           'server' => 'mariadb-community-server' }
+      when 'opensuse', 'opensuseleap'
+        { 'devel' => 'libmysqlclient-devel',
+          'client' => 'mariadb-client',
+          'server' => 'mariadb' }
       when 'debian', 'ubuntu'
         { 'devel' => 'libmariadbclient-dev',
           'client' => 'mariadb-client',
