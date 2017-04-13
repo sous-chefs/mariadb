@@ -31,8 +31,12 @@ env:
   - INSTANCE=default-ubuntu-1404 CHEF_VERSION=12.19.36
   - INSTANCE=default-ubuntu-1604
   - INSTANCE=default-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=default-opensuse-leap
+  - INSTANCE=default-opensuse-leap CHEF_VERSION=12.19.36
   - INSTANCE=native-centos-7
   - INSTANCE=native-centos-7 CHEF_VERSION=12.19.36
+  - INSTANCE=native-opensuse-leap
+  - INSTANCE=native-opensuse-leap CHEF_VERSION=12.19.36
   - INSTANCE=scl-centos-6
   - INSTANCE=scl-centos-6 CHEF_VERSION=12.19.36
   - INSTANCE=scl-centos-7
@@ -49,6 +53,8 @@ env:
   - INSTANCE=replication-ubuntu-1404 CHEF_VERSION=12.19.36
   - INSTANCE=replication-ubuntu-1604
   - INSTANCE=replication-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=replication-opensuse-leap
+  - INSTANCE=replication-opensuse-leap CHEF_VERSION=12.19.36
   - INSTANCE=galera-centos-6
   - INSTANCE=galera-centos-6 CHEF_VERSION=12.19.36
   - INSTANCE=galera-centos-7
@@ -61,6 +67,8 @@ env:
   - INSTANCE=galera-ubuntu-1404 CHEF_VERSION=12.19.36
   - INSTANCE=galera-ubuntu-1604
   - INSTANCE=galera-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=galera-opensuse-leap
+  - INSTANCE=galera-opensuse-leap CHEF_VERSION=12.19.36
   - INSTANCE=datadir-changed-centos-6
   - INSTANCE=datadir-changed-centos-6 CHEF_VERSION=12.19.36
   - INSTANCE=datadir-changed-centos-7
@@ -73,6 +81,8 @@ env:
   - INSTANCE=datadir-changed-ubuntu-1404 CHEF_VERSION=12.19.36
   - INSTANCE=datadir-changed-ubuntu-1604
   - INSTANCE=datadir-changed-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=datadir-changed-opensuse-leap
+  - INSTANCE=datadir-changed-opensuse-leap CHEF_VERSION=12.19.36
   - INSTANCE=port-changed-centos-6
   - INSTANCE=port-changed-centos-6 CHEF_VERSION=12.19.36
   - INSTANCE=port-changed-centos-7
@@ -85,6 +95,8 @@ env:
   - INSTANCE=port-changed-ubuntu-1404 CHEF_VERSION=12.19.36
   - INSTANCE=port-changed-ubuntu-1604
   - INSTANCE=port-changed-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=port-changed-opensuse-leap
+  - INSTANCE=port-changed-opensuse-leap CHEF_VERSION=12.19.36
   - INSTANCE=plugins-centos-6
   - INSTANCE=plugins-centos-6 CHEF_VERSION=12.19.36
   - INSTANCE=plugins-centos-7
@@ -97,6 +109,8 @@ env:
   - INSTANCE=plugins-ubuntu-1404 CHEF_VERSION=12.19.36
   - INSTANCE=plugins-ubuntu-1604
   - INSTANCE=plugins-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=plugins-opensuse-leap
+  - INSTANCE=plugins-opensuse-leap CHEF_VERSION=12.19.36
   - INSTANCE=no-binlog-centos-6
   - INSTANCE=no-binlog-centos-6 CHEF_VERSION=12.19.36
   - INSTANCE=no-binlog-centos-7
@@ -109,6 +123,8 @@ env:
   - INSTANCE=no-binlog-ubuntu-1404 CHEF_VERSION=12.19.36
   - INSTANCE=no-binlog-ubuntu-1604
   - INSTANCE=no-binlog-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=no-binlog-opensuse-leap
+  - INSTANCE=no-binlog-opensuse-leap CHEF_VERSION=12.19.36
 
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
@@ -127,7 +143,9 @@ matrix:
     - env: INSTANCE=default-debian-8
     - env: INSTANCE=default-ubuntu-1404
     - env: INSTANCE=default-ubuntu-1604
+    - env: INSTANCE=default-opensuse-leap
     - env: INSTANCE=native-centos-7
+    - env: INSTANCE=native-opensuse-leap
     - env: INSTANCE=scl-centos-7
     - env: INSTANCE=scl-centos-6
     - env: INSTANCE=replication-centos-6
@@ -136,36 +154,42 @@ matrix:
     - env: INSTANCE=replication-debian-8
     - env: INSTANCE=replication-ubuntu-1404
     - env: INSTANCE=replication-ubuntu-1604
+    - env: INSTANCE=replication-opensuse-leap
     - env: INSTANCE=galera-centos-6
     - env: INSTANCE=galera-centos-7
     - env: INSTANCE=galera-debian-7
     - env: INSTANCE=galera-debian-8
     - env: INSTANCE=galera-ubuntu-1404
     - env: INSTANCE=galera-ubuntu-1604
+    - env: INSTANCE=galera-opensuse-leap
     - env: INSTANCE=datadir-changed-centos-6
     - env: INSTANCE=datadir-changed-centos-7
     - env: INSTANCE=datadir-changed-debian-7
     - env: INSTANCE=datadir-changed-debian-8
     - env: INSTANCE=datadir-changed-ubuntu-1404
     - env: INSTANCE=datadir-changed-ubuntu-1604
+    - env: INSTANCE=datadir-changed-opensuse-leap
     - env: INSTANCE=port-changed-centos-6
     - env: INSTANCE=port-changed-centos-7
     - env: INSTANCE=port-changed-debian-7
     - env: INSTANCE=port-changed-debian-8
     - env: INSTANCE=port-changed-ubuntu-1404
     - env: INSTANCE=port-changed-ubuntu-1604
+    - env: INSTANCE=port-changed-opensuse-leap
     - env: INSTANCE=plugins-centos-6
     - env: INSTANCE=plugins-centos-7
     - env: INSTANCE=plugins-debian-7
     - env: INSTANCE=plugins-debian-8
     - env: INSTANCE=plugins-ubuntu-1404
     - env: INSTANCE=plugins-ubuntu-1604
+    - env: INSTANCE=plugins-opensuse-leap
     - env: INSTANCE=no-binlog-centos-6
     - env: INSTANCE=no-binlog-centos-7
     - env: INSTANCE=no-binlog-debian-7
     - env: INSTANCE=no-binlog-debian-8
     - env: INSTANCE=no-binlog-ubuntu-1404
     - env: INSTANCE=no-binlog-ubuntu-1604
+    - env: INSTANCE=no-binlog-opensuse-leap
   include:
     - script:
       - /opt/chefdk/bin/chef exec rake
