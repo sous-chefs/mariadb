@@ -3,6 +3,8 @@ when 'debian', 'ubuntu'
   install_method = 'apt'
 when 'redhat', 'centos', 'scientific', 'amazon'
   install_method = 'yum'
+when 'opensuse', 'opensuseleap'
+  install_method = 'zypper'
 end
 
 if node['mariadb']['use_default_repository']
@@ -40,6 +42,15 @@ if node['mariadb']['use_default_repository']
     case node['platform']
     when 'redhat', 'centos', 'scientific'
       include_recipe 'yum-epel::default'
+    end
+  when 'zypper'
+    include_recipe 'zypper::default'
+
+    zypper_repo "mariadb-#{node['mariadb']['install']['version']}" do
+      uri 'http://yum.mariadb.org/' + \
+        node['mariadb']['install']['version'] + "/opensuse#{node['platform_version'].to_i}-amd64"
+      key 'https://yum.mariadb.org/RPM-GPG-KEY-MariaDB'
+      action :add
     end
   end
 end
