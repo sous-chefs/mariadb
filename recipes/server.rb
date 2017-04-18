@@ -18,6 +18,10 @@
 #
 
 Chef::Recipe.send(:include, MariaDB::Helper)
+
+extend Chef::Util::Selinux
+selinux_enabled = selinux_enabled?
+
 case node['mariadb']['install']['type']
 when 'package'
   # Determine service name and register the resource
@@ -78,7 +82,7 @@ if node['mariadb']['mysqld']['datadir'] !=
   bash 'Restore security context' do
     user 'root'
     code "/usr/sbin/restorecon -v #{node['mariadb']['mysqld']['default_datadir']}"
-    only_if '[ -f /usr/sbin/selinuxenabled ] && /usr/sbin/selinuxenabled'
+    only_if { selinux_enabled }
     subscribes :run, 'bash[move-datadir]', :immediately
     action :nothing
   end
