@@ -17,8 +17,6 @@
 # limitations under the License.
 #
 
-# rubocop:disable Lint/EmptyWhen
-
 Chef::Recipe.send(:include, MariaDB::Helper)
 case node['mariadb']['install']['type']
 when 'package'
@@ -57,9 +55,6 @@ when 'package'
     action :install
     notifies :enable, 'service[mysql]'
   end
-
-when 'from_source'
-  # To be filled as soon as possible
 end
 
 include_recipe "#{cookbook_name}::config"
