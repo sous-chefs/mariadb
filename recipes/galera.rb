@@ -47,9 +47,6 @@ else
   end
 end
 
-include_recipe 'selinux_policy::install'
-
-
 case node['mariadb']['install']['type']
 when 'package'
   # include MariaDB repositories
@@ -113,17 +110,28 @@ if node['mariadb']['galera']['gcomm_address'].nil?
   galera_cluster_nodes.each do |lnode|
     next unless lnode.name != node.name
     gcomm += ',' unless first
-    gcomm += "#{lnode['fqdn']}:#{lnode['mariadb']['galera']['wsrep_node_port']}"
+    gcomm += if String(lnode['mariadb']['galera']['wsrep_node_port']).empty?
+               lnode['fqdn']
+             else
+               "#{lnode['fqdn']}:#{lnode['mariadb']['galera']['wsrep_node_port']}"
+             end
     first = false
   end
 else
   gcomm = node['mariadb']['galera']['gcomm_address']
 end
 
+include_recipe 'selinux_policy::install' if node['platform_family'] == 'rhel'
+
+extend Chef::Util::Selinux
+selinux_enabled = selinux_enabled?
+
 selinux_policy_port node['mariadb']['galera']['wsrep_node_port'] do
-    protocol 'tcp'
-    secontext 'mysqld_port_t'
-    action :add
+  protocol 'tcp'
+  secontext 'tram_port_t'
+  only_if { selinux_enabled }
+  not_if { String(node['mariadb']['galera']['wsrep_node_port']).empty? }
+  action :add
 end
 
 galera_options = {}
@@ -170,27 +178,32 @@ galera_options['wsrep_slave_threads'] = if node['mariadb']['galera'].attribute?(
                                         else
                                           node['cpu']['total'] * 4
                                         end
+
 ipaddress = ''
-if node['mariadb']['galera']['wsrep_node_address_interface'].empty?
-  iface = node['network']['interfaces'].reject {|k,v| v['flags'].include?('LOOPBACK') }.to_h.keys.first
-else
-  iface = node['mariadb']['galera']['wsrep_node_address_interface']
-end
+iface = if node['mariadb']['galera']['wsrep_node_address_interface'].empty?
+          node['network']['interfaces'].reject { |_k, v| v['flags'].include?('LOOPBACK') }.keys.first
+        else
+          node['mariadb']['galera']['wsrep_node_address_interface']
+        end
 node['network']['interfaces'][iface]['addresses'].each do |ip, params|
   params['family'] == 'inet' && ipaddress = ip
 end
-galera_options['wsrep_node_address'] = ipaddress unless ipaddress.empty?
+galera_options['wsrep_node_address'] = unless ipaddress.empty?
+                                         if String(node['mariadb']['galera']['wsrep_node_port']).empty?
+                                           ipaddress
+                                         else
+                                           "#{ipaddress}:#{node['mariadb']['galera']['wsrep_node_port']}"
+                                         end
+                                       end
 
+ipaddress_inc = ''
 unless node['mariadb']['galera']['wsrep_node_incoming_address_interface'].empty?
-  ipaddress_inc = ''
-  iface = node['mariadb']['galera']['wsrep_node_incoming_address_interface']
-  node['network']['interfaces'][iface]['addresses'].each do |ip, params|
+  iface_enc = node['mariadb']['galera']['wsrep_node_incoming_address_interface']
+  node['network']['interfaces'][iface_enc]['addresses'].each do |ip, params|
     params['family'] == 'inet' && ipaddress_inc = ip
   end
   galera_options['wsrep_node_incoming_address'] = ipaddress_inc unless ipaddress_inc.empty?
 end
-
-galera_options['wsrep_node_address'] = "#{galera_options['wsrep_node_address']}:#{node['mariadb']['galera']['wsrep_node_port']}"
 
 galera_options['wsrep_slave_threads'] = node['cpu']['total'] * 4
 node['mariadb']['galera']['options'].each do |key, value|
