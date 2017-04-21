@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 1.4.0 (2017-04-21)
+
+### Fixed
+
+- [#128](https://github.com/sinfomicien/mariadb/issues/128) solved, mysql-libs is prevented from being removed on newer CentOS versions causing Chef to break ([#153](https://github.com/sinfomicien/mariadb/pull/153))
+
+### Changed
+
+- `mariadb_replication` rewritten as a custom resource ([#151](https://github.com/sinfomicien/mariadb/pull/151))
 
 ### Removed
 
