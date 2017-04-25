@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.5.0 (2017-04-25)
+
+### Added
+
+- Add the ability to set a custom wsrep_node_port, for when you want to specify a non default `wsrep_node_incoming_address` value ([#152](https://github.com/sinfomicien/mariadb/pull/152))
+
 ## 1.4.0 (2017-04-21)
 
 ### Fixed
