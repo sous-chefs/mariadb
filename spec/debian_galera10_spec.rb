@@ -1,20 +1,76 @@
 require 'spec_helper'
 
-include Chef::Mixin::ShellOut
-
-describe 'debian::mariadb::galera10-rsync' do
+describe 'debian::mariadb::galera10-custom-wsrep-node-port' do
   let(:galera_1) do
-    stub_node('galera1') do |node|
+    stub_node('galera1', platform: 'debian', version: '7.4') do |node|
       node.automatic['hostname'] = 'galera1'
       node.automatic['fqdn'] = 'galera1.domain'
       node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
+      node.default['mariadb']['galera']['wsrep_node_port'] = 1234
     end
   end
   let(:galera_2) do
-    stub_node('galera2') do |node|
+    stub_node('galera2', platform: 'debian', version: '7.4') do |node|
       node.automatic['hostname'] = 'galera2'
       node.automatic['fqdn'] = 'galera2.domain'
       node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
+      node.default['mariadb']['galera']['wsrep_node_port'] = '2345'
+    end
+  end
+  let(:chef_run) do
+    runner = ChefSpec::ServerRunner.new(
+      platform: 'debian', version: '7.4',
+      step_into: ['mariadb_configuration']
+    ) do |node, server|
+      node.automatic['memory']['total'] = '2048kB'
+      node.automatic['ipaddress'] = '1.1.1.1'
+      node.override['mariadb']['rspec'] = true
+      node.override['mariadb']['galera']['wsrep_node_port'] = 1234
+      server.update_node(node)
+      server.create_node(galera_1)
+      server.create_node(galera_2)
+    end
+    runner.converge('mariadb::galera')
+  end
+  let(:shellout) do
+    double(run_command: nil, error!: nil, error?: false, stdout: '1',
+           stderr: double(empty?: true), exitstatus: 0,
+           :live_stream= => nil)
+  end
+  before do
+    allow(Mixlib::ShellOut).to receive(:new).and_return(shellout)
+  end
+
+  it 'Create Galera conf file' do
+    expect(chef_run).to add_mariadb_configuration('90-galera')
+    expect(chef_run).to create_template('/etc/mysql/conf.d/90-galera.cnf')
+      .with(
+        user:  'root',
+        group: 'mysql',
+        mode:  '0640'
+      )
+    expect(chef_run).to render_file('/etc/mysql/conf.d/90-galera.cnf')
+      .with_content(%r{^wsrep_cluster_address = gcomm://galera1.domain:1234,galera2.domain:2345$})
+    expect(chef_run).to render_file('/etc/mysql/conf.d/90-galera.cnf')
+      .with_content(/^wsrep_node_address = 10.0.0.2:1234$/)
+  end
+end
+
+describe 'debian::mariadb::galera10-rsync' do
+  let(:galera_1) do
+    stub_node('galera1', platform: 'debian', version: '7.4') do |node|
+      node.automatic['hostname'] = 'galera1'
+      node.automatic['fqdn'] = 'galera1.domain'
+      node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
+      node.default['mariadb']['galera']['wsrep_node_port'] = ''
+    end
+  end
+  let(:galera_2) do
+    stub_node('galera2', platform: 'debian', version: '7.4') do |node|
+      node.automatic['hostname'] = 'galera2'
+      node.automatic['fqdn'] = 'galera2.domain'
+      node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
+      node.default['mariadb']['galera']['wsrep_node_port'] = ''
     end
   end
   let(:chef_run) do
@@ -121,17 +177,19 @@ end
 
 describe 'debian::mariadb::galera10-xtrabackup-v2' do
   let(:galera_1) do
-    stub_node('galera1') do |node|
+    stub_node('galera2', platform: 'debian', version: '7.4') do |node|
       node.automatic['hostname'] = 'galera1'
       node.automatic['fqdn'] = 'galera1.domain'
       node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
+      node.default['mariadb']['galera']['wsrep_node_port'] = ''
     end
   end
   let(:galera_2) do
-    stub_node('galera2') do |node|
+    stub_node('galera2', platform: 'debian', version: '7.4') do |node|
       node.automatic['hostname'] = 'galera2'
       node.automatic['fqdn'] = 'galera2.domain'
       node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
+      node.default['mariadb']['galera']['wsrep_node_port'] = ''
     end
   end
   cached(:chef_run) do
