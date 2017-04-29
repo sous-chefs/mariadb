@@ -47,11 +47,11 @@ else
   end
 end
 
-if node['mariadb']['install']['version'] == '5.5' or node['mariadb']['install']['version'] == '10.0'
-  package_type='galera'
-else
-  package_type='server'
-end
+package_type = if %w(5.5 10.0).include?(node['mariadb']['install']['version'])
+                 'galera'
+               else
+                 'server'
+               end
 
 case node['mariadb']['install']['type']
 when 'package'
@@ -69,15 +69,15 @@ when 'from_source'
 end
 
 if node['mariadb']['install']['extra_packages']
-if node['mariadb']['galera']['wsrep_sst_method'] == 'rsync'
-  package 'rsync' do
-    action :install
-  end
+  if node['mariadb']['galera']['wsrep_sst_method'] == 'rsync'
+    package 'rsync' do
+      action :install
+    end
   elsif node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
     %w(percona-xtrabackup socat pv).each do |pkg|
       package pkg do
-      action :install
-    end
+        action :install
+      end
     end
   end
 end
@@ -85,44 +85,43 @@ end
 include_recipe "#{cookbook_name}::config"
 
 if node['mariadb']['galera']['gcomm_address'].nil?
-galera_cluster_nodes = []
+  galera_cluster_nodes = []
   if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo]
-  if node['mariadb']['galera']['cluster_nodes'].empty?
-    Chef::Log.warn('By default this recipe uses search (unsupported by Chef Solo).' \
-                   ' Nodes may manually be configured as attributes.')
-  else
-    galera_cluster_nodes = node['mariadb']['galera']['cluster_nodes']
-  end
-else
-  if node['mariadb']['galera']['cluster_search_query'].empty?
-    galera_cluster_nodes = search(
-      :node, \
-      "mariadb_galera_cluster_name:#{node['mariadb']['galera']['cluster_name']}"
-    )
-  else
-    galera_cluster_nodes = search 'node', node['mariadb']['galera']['cluster_search_query']
-    log 'Chef search results' do
-      message "Searching for \"#{node['mariadb']['galera']['cluster_search_query']}\" \
-        resulted in \"#{galera_cluster_nodes}\" ..."
-        level :debug
+    if node['mariadb']['galera']['cluster_nodes'].empty?
+      Chef::Log.warn('By default this recipe uses search (unsupported by Chef Solo).' \
+                     ' Nodes may manually be configured as attributes.')
+    else
+      galera_cluster_nodes = node['mariadb']['galera']['cluster_nodes']
     end
+  else
+    if node['mariadb']['galera']['cluster_search_query'].empty?
+      galera_cluster_nodes = search(
+        :node, \
+        "mariadb_galera_cluster_name:#{node['mariadb']['galera']['cluster_name']}"
+      )
+    else
+      galera_cluster_nodes = search 'node', node['mariadb']['galera']['cluster_search_query']
+      log 'Chef search results' do
+        message "Searching for \"#{node['mariadb']['galera']['cluster_search_query']}\" \
+          resulted in \"#{galera_cluster_nodes}\" ..."
+        level :debug
+      end
+    end
+    # Sort Nodes by fqdn
+    galera_cluster_nodes.sort! { |x, y| x[:fqdn] <=> y[:fqdn] }
   end
-  # Sort Nodes by fqdn
-  galera_cluster_nodes.sort! { |x, y| x[:fqdn] <=> y[:fqdn] }
-end
-
-first = true
-gcomm = 'gcomm://'
-galera_cluster_nodes.each do |lnode|
-  next unless lnode.name != node.name
-  gcomm += ',' unless first
+  first = true
+  gcomm = 'gcomm://'
+  galera_cluster_nodes.each do |lnode|
+    next unless lnode.name != node.name
+    gcomm += ',' unless first
     gcomm += if String(lnode['mariadb']['galera']['wsrep_node_port']).empty?
                lnode['fqdn']
              else
                "#{lnode['fqdn']}:#{lnode['mariadb']['galera']['wsrep_node_port']}"
              end
-  first = false
-end
+    first = false
+  end
 else
   gcomm = node['mariadb']['galera']['gcomm_address']
 end
@@ -169,15 +168,15 @@ unless node['mariadb']['galera']['wsrep_provider_options'].empty?
   galera_options['wsrep_provider_options'] = wsrep_prov_opt
 end
 galera_options['wsrep_cluster_address'] = gcomm
-galera_options['wsrep_cluster_name']    = \
+galera_options['wsrep_cluster_name'] = \
   node['mariadb']['galera']['cluster_name']
-galera_options['wsrep_sst_method']      = \
+galera_options['wsrep_sst_method'] = \
   node['mariadb']['galera']['wsrep_sst_method']
 if node['mariadb']['galera'].attribute?('wsrep_sst_auth')
-  galera_options['wsrep_sst_auth']        = \
+  galera_options['wsrep_sst_auth'] = \
     node['mariadb']['galera']['wsrep_sst_auth']
 end
-galera_options['wsrep_provider']        = \
+galera_options['wsrep_provider'] = \
   node['mariadb']['galera']['wsrep_provider']
 galera_options['wsrep_slave_threads'] = if node['mariadb']['galera'].attribute?('wsrep_slave_threads')
                                           node['mariadb']['galera']['wsrep_slave_threads']
@@ -211,7 +210,7 @@ unless node['mariadb']['galera']['wsrep_node_incoming_address_interface'].empty?
   galera_options['wsrep_node_incoming_address'] = ipaddress_inc unless ipaddress_inc.empty?
 end
 
-galera_options['wsrep_slave_threads']   = node['cpu']['total'] * 4
+galera_options['wsrep_slave_threads'] = node['cpu']['total'] * 4
 node['mariadb']['galera']['options'].each do |key, value|
   galera_options[key] = value
 end

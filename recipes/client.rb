@@ -52,4 +52,3 @@ template node['mariadb']['configuration']['path'] + '/my.cnf' do
   group 'root'
   mode '0644'
 end
-

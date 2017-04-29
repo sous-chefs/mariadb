@@ -26,9 +26,9 @@ if node['mariadb']['use_default_repository']
 
     target_platform = if node['platform'] == 'redhat' || node['platform'] == 'scientific'
                         "rhel#{node['platform_version'].to_i}"
-    else
+                      else
                         "#{node['platform']}#{node['platform_version'].to_i}"
-    end
+                      end
     yum_repository "mariadb-#{node['mariadb']['install']['version']}" do
       description 'MariaDB Official Repository'
       baseurl 'http://yum.mariadb.org/' + \
