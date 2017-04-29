@@ -206,7 +206,7 @@ max_allowed_packet	= <%= node['mariadb']['mysqldump']['max_allowed_packet'] %>
 [isamchk]
 key_buffer		= <%= node['mariadb']['isamchk']['key_buffer'] %>
 
-<% if node['mariadb']['sst'].key?('options') -%>
+<% if node['mariadb']['sst'] && node['mariadb']['sst']['options'] -%>
 [sst]
 <%   node['mariadb']['sst']['options'].each { |key, value| -%>
 <%= key %> = <%= value %>

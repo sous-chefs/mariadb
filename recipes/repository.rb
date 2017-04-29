@@ -19,8 +19,6 @@ if node['mariadb']['use_default_repository']
       distribution node['lsb']['codename']
       components ['main']
       keyserver node['mariadb']['install']['keyserver']
-      key '0xcbcb082a1bb943db'
-      keyserver 'keyserver.ubuntu.com'
       key apt_key
     end
   when 'yum'
