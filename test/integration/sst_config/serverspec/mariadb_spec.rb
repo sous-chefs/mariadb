@@ -19,7 +19,7 @@ describe "verify the sst attribues set in #{mysql_config_file}" do
   {
     tkey: '/etc/mysql/server-key.pem',
     tcert: '/etc/mysql/server-cert.pem',
-    encrypt: '3'
+    encrypt: '3',
   }.each do |attribute, value|
     describe command("grep -E \"^#{attribute}\\s+\" #{mysql_config_file}") do
       its(:stdout) { should match(/#{value}/) }
