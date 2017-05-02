@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.5.1 (2017-05-02)
+
+### Fixed
+
+- Remove check for chef-client running in local mode in the `galera` recipe which skips search - this prevents being able to search when using TK ([#160](https://github.com/sinfomicien/mariadb/pull/160))
+
 ## 1.5.0 (2017-04-25)
 
 ### Added
