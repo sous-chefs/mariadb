@@ -80,7 +80,7 @@ include_recipe "#{cookbook_name}::config"
 
 if node['mariadb']['galera']['gcomm_address'].nil?
   galera_cluster_nodes = []
-  if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo] || Chef::Config[:local_mode]
+  if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo]
     if node['mariadb']['galera']['cluster_nodes'].empty?
       Chef::Log.warn('By default this recipe uses search (unsupported by Chef Solo).' \
                      ' Nodes may manually be configured as attributes.')
