@@ -13,9 +13,8 @@ platforms:
   - name: centos-6.6
   - name: centos-7.0
   - name: ubuntu-14.04
-    driver_config:
-        box: chef/ubuntu-14.04
   - name: fedora-21
+  - name: ubuntu-16.04
 
 suites:
   - name: default
