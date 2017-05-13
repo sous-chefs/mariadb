@@ -3,6 +3,10 @@ mariadb CHANGELOG
 
 This file is used to list changes made in each version of the mariadb cookbook.
 
+0.3.4
+-----
+- [BUG #161] - Cherry-pick Ubuntu repo key fixes from master
+
 0.3.3
 -----
 - [ENH #110] - adds the ability to config skip-log-bin to be present
