@@ -17,9 +17,11 @@
 # limitations under the License.
 #
 
-# rubocop:disable Lint/EmptyWhen
-
 Chef::Recipe.send(:include, MariaDB::Helper)
+
+extend Chef::Util::Selinux
+selinux_enabled = selinux_enabled?
+
 case node['mariadb']['install']['type']
 when 'package'
   # Determine service name and register the resource
@@ -42,7 +44,7 @@ when 'package'
   case node['platform']
   when 'debian', 'ubuntu'
     include_recipe "#{cookbook_name}::_debian_server"
-  when 'redhat', 'centos', 'fedora', 'scientific', 'amazon'
+  when 'redhat', 'centos', 'scientific', 'amazon'
     include_recipe "#{cookbook_name}::_redhat_server"
   end
 
@@ -57,9 +59,6 @@ when 'package'
     action :install
     notifies :enable, 'service[mysql]'
   end
-
-when 'from_source'
-  # To be filled as soon as possible
 end
 
 include_recipe "#{cookbook_name}::config"
@@ -83,7 +82,7 @@ if node['mariadb']['mysqld']['datadir'] !=
   bash 'Restore security context' do
     user 'root'
     code "/usr/sbin/restorecon -v #{node['mariadb']['mysqld']['default_datadir']}"
-    only_if '[ -f /usr/sbin/selinuxenabled ] && /usr/sbin/selinuxenabled'
+    only_if { selinux_enabled }
     subscribes :run, 'bash[move-datadir]', :immediately
     action :nothing
   end

@@ -27,7 +27,7 @@ when 'package'
 
   # Include RH specific recipe
   include_recipe "#{cookbook_name}::_redhat_client" if \
-    %w(redhat centos fedora scientific amazon).include?(node['platform'])
+    %w(redhat centos scientific amazon).include?(node['platform'])
 
   # Install client package
   client_package_name = packages_names_to_install(node['platform'],
