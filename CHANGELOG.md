@@ -4,6 +4,32 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.5.1 (2017-05-02)
+
+### Fixed
+
+- Remove check for chef-client running in local mode in the `galera` recipe which skips search - this prevents being able to search when using TK ([#160](https://github.com/sinfomicien/mariadb/pull/160))
+
+## 1.5.0 (2017-04-25)
+
+### Added
+
+- Add the ability to set a custom wsrep_node_port, for when you want to specify a non default `wsrep_node_incoming_address` value ([#152](https://github.com/sinfomicien/mariadb/pull/152))
+
+## 1.4.0 (2017-04-21)
+
+### Fixed
+
+- [#128](https://github.com/sinfomicien/mariadb/issues/128) solved, mysql-libs is prevented from being removed on newer CentOS versions causing Chef to break ([#153](https://github.com/sinfomicien/mariadb/pull/153))
+
+### Changed
+
+- `mariadb_replication` rewritten as a custom resource ([#151](https://github.com/sinfomicien/mariadb/pull/151))
+
+### Removed
+
+- Remove Fedora support, tested versions are long gone EOL and hard to support; only latest version has a repo on yum.mariadb.org
+
 ## 1.3.0 (2017-03-20)
 
 ### Added

@@ -55,7 +55,7 @@ when 'package'
   case node['platform']
   when 'debian', 'ubuntu'
     include_recipe "#{cookbook_name}::_debian_galera"
-  when 'redhat', 'centos', 'fedora', 'scientific', 'amazon'
+  when 'redhat', 'centos', 'scientific', 'amazon'
     include_recipe "#{cookbook_name}::_redhat_galera"
   end
 when 'from_source'
@@ -80,7 +80,7 @@ include_recipe "#{cookbook_name}::config"
 
 if node['mariadb']['galera']['gcomm_address'].nil?
   galera_cluster_nodes = []
-  if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo] || Chef::Config[:local_mode]
+  if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo]
     if node['mariadb']['galera']['cluster_nodes'].empty?
       Chef::Log.warn('By default this recipe uses search (unsupported by Chef Solo).' \
                      ' Nodes may manually be configured as attributes.')
@@ -110,11 +110,28 @@ if node['mariadb']['galera']['gcomm_address'].nil?
   galera_cluster_nodes.each do |lnode|
     next unless lnode.name != node.name
     gcomm += ',' unless first
-    gcomm += lnode['fqdn']
+    gcomm += if String(lnode['mariadb']['galera']['wsrep_node_port']).empty?
+               lnode['fqdn']
+             else
+               "#{lnode['fqdn']}:#{lnode['mariadb']['galera']['wsrep_node_port']}"
+             end
     first = false
   end
 else
   gcomm = node['mariadb']['galera']['gcomm_address']
+end
+
+include_recipe 'selinux_policy::install' if node['platform_family'] == 'rhel'
+
+extend Chef::Util::Selinux
+selinux_enabled = selinux_enabled?
+
+selinux_policy_port node['mariadb']['galera']['wsrep_node_port'] do
+  protocol 'tcp'
+  secontext 'tram_port_t'
+  only_if { selinux_enabled }
+  not_if { String(node['mariadb']['galera']['wsrep_node_port']).empty? }
+  action :add
 end
 
 galera_options = {}
@@ -161,18 +178,28 @@ galera_options['wsrep_slave_threads'] = if node['mariadb']['galera'].attribute?(
                                         else
                                           node['cpu']['total'] * 4
                                         end
-unless node['mariadb']['galera']['wsrep_node_address_interface'].empty?
-  ipaddress = ''
-  iface = node['mariadb']['galera']['wsrep_node_address_interface']
-  node['network']['interfaces'][iface]['addresses'].each do |ip, params|
-    params['family'] == 'inet' && ipaddress = ip
-  end
-  galera_options['wsrep_node_address'] = ipaddress unless ipaddress.empty?
+
+ipaddress = ''
+iface = if node['mariadb']['galera']['wsrep_node_address_interface'].empty?
+          node['network']['interfaces'].reject { |_k, v| v['flags'].include?('LOOPBACK') }.keys.first
+        else
+          node['mariadb']['galera']['wsrep_node_address_interface']
+        end
+node['network']['interfaces'][iface]['addresses'].each do |ip, params|
+  params['family'] == 'inet' && ipaddress = ip
 end
+galera_options['wsrep_node_address'] = unless ipaddress.empty?
+                                         if String(node['mariadb']['galera']['wsrep_node_port']).empty?
+                                           ipaddress
+                                         else
+                                           "#{ipaddress}:#{node['mariadb']['galera']['wsrep_node_port']}"
+                                         end
+                                       end
+
+ipaddress_inc = ''
 unless node['mariadb']['galera']['wsrep_node_incoming_address_interface'].empty?
-  ipaddress_inc = ''
-  iface = node['mariadb']['galera']['wsrep_node_incoming_address_interface']
-  node['network']['interfaces'][iface]['addresses'].each do |ip, params|
+  iface_enc = node['mariadb']['galera']['wsrep_node_incoming_address_interface']
+  node['network']['interfaces'][iface_enc]['addresses'].each do |ip, params|
     params['family'] == 'inet' && ipaddress_inc = ip
   end
   galera_options['wsrep_node_incoming_address'] = ipaddress_inc unless ipaddress_inc.empty?

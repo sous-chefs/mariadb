@@ -47,10 +47,9 @@ describe MariaDB::Helper do
     let(:dummy_helper) { dummy_class.new }
 
     context 'os package provided' do
-      let(:support_platforms) do
+      let(:supported_platforms) do
         Hash['redhat' => %w(7.0 7.1),
              'centos' => %w(7.0),
-             'fedora' => %w(19 20 21)
         ]
       end
       let(:support_mariadb) do
@@ -58,7 +57,7 @@ describe MariaDB::Helper do
       end
 
       it 'os_package_provided to be true' do
-        support_platforms.each do |platform, ver_list|
+        supported_platforms.each do |platform, ver_list|
           ver_list.each do |version|
             expect(
               dummy_helper.os_package_provided?(
@@ -70,7 +69,7 @@ describe MariaDB::Helper do
       end
 
       it 'use native package' do
-        support_platforms.each do |platform, ver_list|
+        supported_platforms.each do |platform, ver_list|
           ver_list.each do |version|
             expect(
               dummy_helper.use_os_native_package?(
@@ -87,18 +86,14 @@ describe MariaDB::Helper do
       end
 
       it 'mariadb service name' do
-        support_platforms.each do |platform, ver_list|
+        supported_platforms.each do |platform, ver_list|
           ver_list.each do |version|
             support_mariadb.each do |mariadb_version|
               expect(
                 dummy_helper.mariadb_service_name(
                   platform, version, mariadb_version, true, false
                 )
-              ).to eq(if platform == 'fedora' && version.to_i >= 19
-                        'mysqld'
-                      else
-                        'mariadb'
-                      end)
+              ).to eq('mariadb')
             end
           end
         end
@@ -106,10 +101,9 @@ describe MariaDB::Helper do
     end
 
     context 'os package not provided' do
-      let(:unsupport_platforms) do
+      let(:unsupported_platforms) do
         Hash['redhat' => %w(5.5 6.4 6.5),
              'centos' => %w(5.4 6.6),
-             'fedora' => %w(17 18),
              'ubuntu' => %w(11.04 12.04 14.04),
              'debian' => %w(7.8)
         ]
@@ -119,7 +113,7 @@ describe MariaDB::Helper do
       end
 
       it 'os_package_provided to be false' do
-        unsupport_platforms.each do |platform, ver_list|
+        unsupported_platforms.each do |platform, ver_list|
           ver_list.each do |version|
             expect(
               dummy_helper.os_package_provided?(
@@ -131,7 +125,7 @@ describe MariaDB::Helper do
       end
 
       it 'mariadb service falls back to default' do
-        unsupport_platforms.each do |platform, ver_list|
+        unsupported_platforms.each do |platform, ver_list|
           ver_list.each do |version|
             support_mariadb.each do |mariadb_version|
               expect(
@@ -147,7 +141,7 @@ describe MariaDB::Helper do
       it 'cannot use native package' do
         warn_called = false
         allow(Chef::Log).to receive(:warn) { warn_called = true }
-        unsupport_platforms.each do |platform, ver_list|
+        unsupported_platforms.each do |platform, ver_list|
           ver_list.each do |version|
             warn_called = false
             expect(
@@ -175,7 +169,7 @@ describe MariaDB::Helper do
     let(:dummy_helper) { dummy_class.new }
 
     context 'scl package provided' do
-      let(:support_platforms) do
+      let(:supported_platforms) do
         Hash['centos' => %w(6.8 7.0),
              'scientific' => %w(6.8),
         ]
@@ -185,7 +179,7 @@ describe MariaDB::Helper do
       end
 
       it 'os_package_provided to be true' do
-        support_platforms.each do |platform, ver_list|
+        supported_platforms.each do |platform, ver_list|
           ver_list.each do |version|
             expect(
               dummy_helper.scl_package_provided?(
@@ -196,7 +190,7 @@ describe MariaDB::Helper do
         end
       end
       it 'use scl package' do
-        support_platforms.each do |platform, ver_list|
+        supported_platforms.each do |platform, ver_list|
           ver_list.each do |version|
             expect(
               dummy_helper.use_scl_package?(
@@ -212,7 +206,7 @@ describe MariaDB::Helper do
         end
       end
       it 'mariadb service name' do
-        support_platforms.each do |platform, ver_list|
+        supported_platforms.each do |platform, ver_list|
           ver_list.each do |version|
             support_mariadb.each do |mariadb_version|
               expect(
@@ -234,10 +228,9 @@ describe MariaDB::Helper do
     end
 
     context 'scl package not provided' do
-      let(:unsupport_platforms) do
+      let(:unsupported_platforms) do
         Hash['redhat' => %w(5.5 5.6),
              'centos' => %w(5.2 5.7),
-             'fedora' => %w(17 18),
         ]
       end
       let(:support_mariadb) do
@@ -245,7 +238,7 @@ describe MariaDB::Helper do
       end
 
       it 'scl_package_provided to be false' do
-        unsupport_platforms.each do |platform, ver_list|
+        unsupported_platforms.each do |platform, ver_list|
           ver_list.each do |version|
             expect(
               dummy_helper.scl_package_provided?(
@@ -257,7 +250,7 @@ describe MariaDB::Helper do
       end
 
       it 'mariadb service falls back to default' do
-        unsupport_platforms.each do |platform, ver_list|
+        unsupported_platforms.each do |platform, ver_list|
           ver_list.each do |version|
             support_mariadb.each do |mariadb_version|
               expect(
@@ -273,7 +266,7 @@ describe MariaDB::Helper do
       it 'cannot use scl package' do
         warn_called = false
         allow(Chef::Log).to receive(:warn) { warn_called = true }
-        unsupport_platforms.each do |platform, ver_list|
+        unsupported_platforms.each do |platform, ver_list|
           ver_list.each do |version|
             warn_called = false
             expect(

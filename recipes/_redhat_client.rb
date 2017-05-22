@@ -23,5 +23,5 @@ use_os_native = use_os_native_package?(node['mariadb']['install']['prefer_os_pac
 # To force removing of mariadb-libs on CentOS >= 7
 package 'mysql-libs' do
   action :remove
-  not_if { use_os_native }
+  not_if { use_os_native || (node['platform'] == 'centos' && node['platform_version'].to_i >= 7) }
 end

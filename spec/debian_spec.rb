@@ -8,7 +8,7 @@ describe 'debian::mariadb::default' do
     )
   end
 
-  let(:chef_run) do
+  cached(:chef_run) do
     runner = ChefSpec::SoloRunner.new(
       platform: 'debian', version: '7.4',
       step_into: ['mariadb_configuration']
@@ -83,7 +83,7 @@ describe 'debian::mariadb::default' do
 end
 
 describe 'debian::mariadb::client' do
-  let(:chef_run) do
+  cached(:chef_run) do
     runner = ChefSpec::SoloRunner.new(
       platform: 'debian', version: '7.4',
       step_into: ['mariadb_configuration']
@@ -102,7 +102,7 @@ describe 'debian::mariadb::client' do
     expect(chef_run).to install_package('libmariadbclient-dev')
   end
   context 'Without development files' do
-    let(:chef_run) do
+    cached(:chef_run) do
       runner = ChefSpec::SoloRunner.new(
         platform: 'debian', version: '7.4',
         step_into: ['mariadb_configuration']
