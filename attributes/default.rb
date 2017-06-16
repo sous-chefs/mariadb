@@ -179,9 +179,9 @@ default['mariadb']['install']['extra_packages'] = true
 #
 default['mariadb']['use_default_repository'] = false
 
-case node[:platform_family]
+case node['platform_family']
   when 'rhel'
-    default['mariadb']['apt_repository']['base_url'] = "https://yum.mariadb.org/#{node['mariadb']['install']['version'].to_s}/centos#{node['platform_version'].to_i}-#{node[:kernel][:machine]}/"
+    default['mariadb']['apt_repository']['base_url'] = "https://yum.mariadb.org/#{node['mariadb']['install']['version'].to_s}/centos#{node['platform_version'].to_i}-#{node['kernel']['machine']}/"
   when 'debian'
     default['mariadb']['apt_repository']['base_url'] = 'ftp.igh.cnrs.fr/pub/mariadb/repo'
 end
