@@ -50,12 +50,6 @@ shared_context 'MariaDB installation' do
   end
 end
 
-shared_examples 'Installation on RedHat' do
-  it 'Include recipe to choose repository' do
-    expect(chef_run).to include_recipe('mariadb::_mariadb_repository')
-  end
-end
-
 shared_examples 'MariaDB package installation' do |package, package_name|
   let(:chef_package) { chef_run.package("MariaDB-#{package}") }
   let(:chef_package_name) { package_name }

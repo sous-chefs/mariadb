@@ -45,7 +45,6 @@ describe 'mariadb::default' do
 
               case platform_name
               when 'centos'
-                it_behaves_like 'Installation on RedHat'
                 it_behaves_like 'MariaDB Server on RedHat'
               when 'debian'
                 it_behaves_like 'MariaDB Server on Debian'

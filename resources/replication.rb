@@ -3,7 +3,6 @@
 # Resource:: replication
 #
 
-actions :add, :remove, :start, :stop
 default_action :add
 
 # name of the extra conf file, used for .cnf filename
