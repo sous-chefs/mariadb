@@ -1,4 +1,4 @@
-require 'client_spec_helper'
+require 'spec_helper'
 
 describe 'mariadb::client' do
   before do
@@ -19,61 +19,47 @@ describe 'mariadb::client' do
             include_context('MariaDB installation')
             let(:node_attributes) do
               { platform: platform_name,
-                version: supported_version, 
-                step_into: ['mariadb_configuration'] } 
+                version: supported_version,
+                step_into: ['mariadb_configuration'] }
             end
-            let (:node_override_attributes) do
+            let(:node_override_attributes) do
               { 'mariadb' => { 'install' => case repo_name
                                             when 'SCL'
                                               { 'version' => mariadb_version,
-                                              'prefer_os_package' => false,
-                                              'prefer_scl_package' => true }
+                                                'prefer_os_package' => false,
+                                                'prefer_scl_package' => true }
                                             when 'OS'
                                               { 'version' => mariadb_version,
-                                              'prefer_os_package' => true,
-                                              'prefer_scl_package' => false }
+                                                'prefer_os_package' => true,
+                                                'prefer_scl_package' => false }
                                             else
                                               { 'version' => mariadb_version,
-                                              'prefer_os_package' => false,
-                                              'prefer_scl_package' => false }
+                                                'prefer_os_package' => false,
+                                                'prefer_scl_package' => false }
                                             end } }
-            end
-            let(:client_package) { chef_run.package('MariaDB-client') }
-            it_behaves_like 'MariaDB client installation'
-            it_behaves_like 'MariaDB devel installation'
-            case platform_name
-            when 'centos'
-              it_behaves_like 'Installation on RedHat'
-              it_behaves_like 'MariaDB client on RedHat'
-            #when 'debian'
-            #  it_behaves_like 'MariaDB client on Debian'
             end
             case repo_name
             when 'SCL'
-              package_name = case mariadb_version
-                             when '5.5'
-                               'mariadb55-mariadb'
-                             when '10.0'
-                               'rh-mariadb100-mariadb'
-                             when '10.1'
-                               'rh-mariadb101-mariadb'
-                             end
-              it_behaves_like 'Installation from SCL'
-              it 'Remove mysql-libs package' do
-                expect(chef_run).to remove_package('mysql-libs')
+              it_behaves_like 'Installation from SCL', %w(client devel), mariadb_version
+              if supported_version.to_i < 7
+                it 'Remove mysql-libs package' do
+                  expect(chef_run).to remove_package('mysql-libs')
+                end
               end
             when 'MariaDB'
-              it_behaves_like 'Installation from MariaDB'
-              package_name = platform_name == 'debian' ? "mariadb-client-#{mariadb_version}" : 'MariaDB-client'
-            else
-              package_name = 'mariadb'
-              it 'Remove mysql-libs package' do
-                expect(chef_run).not_to remove_package('mysql-libs')
+              case platform_name
+              when 'debian'
+                it_behaves_like 'Installation from MariaDB on Debian', %w(client devel), mariadb_version
+              when 'centos'
+                it_behaves_like 'Installation from MariaDB on RedHat', %w(client devel), mariadb_version
+                if supported_version.to_i < 7
+                  it 'Remove mysql-libs package' do
+                    expect(chef_run).to remove_package('mysql-libs')
+                  end
+                end
               end
-            end
-            let(:client_package_name) { package_name }
-            it "Installs package #{package_name}" do
-              expect(client_package.package_name).to eq client_package_name
+            else
+              it_behaves_like 'Installation from OS native repository', %w(client devel), mariadb_version
             end
           end
         end

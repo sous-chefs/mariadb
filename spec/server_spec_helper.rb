@@ -5,10 +5,6 @@ shared_examples 'MariaDB server installation' do
     expect(chef_run).to include_recipe('mariadb::server')
   end
 
-  it 'Installs Mariadb-server package' do
-    expect(chef_run).to install_package('MariaDB-server')
-  end
-
   it 'Configure MariaDB' do
     expect(chef_run).to create_template("#{mariadb_conf_attr('path')}/my.cnf")
     expect(chef_run).to render_file("#{mariadb_conf_attr('path')}/my.cnf")
@@ -16,7 +12,7 @@ shared_examples 'MariaDB server installation' do
 
   it 'Configure includedir' do
     expect(chef_run).to render_file("#{mariadb_conf_attr('path')}/my.cnf")
-      .with_content(%r{#{mariadb_conf_attr('includedir')}})
+      .with_content(/#{mariadb_conf_attr('includedir')}/)
   end
 
   it 'Configure replication' do
@@ -44,7 +40,6 @@ shared_examples 'MariaDB server installation' do
     expect(server_package).to notify('service[mysql]')
       .to(:enable)
   end
-  
   it 'Installs grants' do
     expect(chef_run.execute('install-grants')).to do_nothing
     expect(chef_run).to render_file('/etc/mariadb_grants')
@@ -79,10 +74,6 @@ shared_examples 'MariaDB Server with alternative datadir' do
 end
 
 shared_examples 'MariaDB Server on RedHat' do
-  it 'Include redhat recipe' do
-    expect(chef_run).to include_recipe('mariadb::_redhat_server')
-  end
-
   it 'Create includedir' do
     expect(chef_run).to create_directory("#{mariadb_conf_attr('includedir')}/")
   end
@@ -128,4 +119,3 @@ shared_examples 'MariaDB Server on Debian' do
     expect(execute).to do_nothing
   end
 end
-

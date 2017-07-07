@@ -16,27 +16,27 @@ describe 'mariadb::default' do
       supported_platforms.each_pair do |platform_name, supported_versions|
         supported_versions.each do |supported_version|
           [nil, '/home/mysql'].each do |data_dir|
-            context "MariaDB #{mariadb_version} on #{platform_name} #{supported_version}, repository: #{repo_name}, #{ data_dir ? 'datadir: '+data_dir : '' }" do
+            context "MariaDB #{mariadb_version} on #{platform_name} #{supported_version}, repository: #{repo_name}, #{data_dir ? 'datadir: ' + data_dir : ''}" do
               include_context('MariaDB installation')
               let(:node_attributes) do
                 { platform: platform_name,
-                  version: supported_version, 
-                  step_into: ['mariadb_configuration'] } 
+                  version: supported_version,
+                  step_into: ['mariadb_configuration'] }
               end
-              let (:node_override_attributes) do
+              let(:node_override_attributes) do
                 { 'mariadb' => { 'install' => case repo_name
                                               when 'SCL'
                                                 { 'version' => mariadb_version,
-                                                'prefer_os_package' => false,
-                                                'prefer_scl_package' => true }
+                                                  'prefer_os_package' => false,
+                                                  'prefer_scl_package' => true }
                                               when 'OS'
                                                 { 'version' => mariadb_version,
-                                                'prefer_os_package' => true,
-                                                'prefer_scl_package' => false }
+                                                  'prefer_os_package' => true,
+                                                  'prefer_scl_package' => false }
                                               else
                                                 { 'version' => mariadb_version,
-                                                'prefer_os_package' => false,
-                                                'prefer_scl_package' => false }
+                                                  'prefer_os_package' => false,
+                                                  'prefer_scl_package' => false }
                                               end,
                                  'mysqld' => { 'datadir' => data_dir } } }
               end
@@ -53,29 +53,20 @@ describe 'mariadb::default' do
 
               case repo_name
               when 'SCL'
-                it_behaves_like 'Installation from SCL'
-                package_name = case mariadb_version
-                               when '5.5'
-                                 'mariadb55-mariadb-server'
-                               when '10.0'
-                                 'rh-mariadb100-mariadb-server'
-                               when '10.1'
-                                 'rh-mariadb101-mariadb-server'
-                               end
+                it_behaves_like 'Installation from SCL', %w(server), mariadb_version
               when 'MariaDB'
-                it_behaves_like 'Installation from MariaDB'
-                package_name = platform_name == 'debian' ? "mariadb-server-#{mariadb_version}" : 'MariaDB-server'
+                case platform_name
+                when 'debian'
+                  it_behaves_like 'Installation from MariaDB on Debian', %w(server), mariadb_version
+                when 'centos'
+                  it_behaves_like 'Installation from MariaDB on RedHat', %w(server shared), mariadb_version
+                end
               else
-                package_name = 'mariadb-server'
-              end
-
-              let(:server_package_name) { package_name }
-              it "Installs package #{package_name}" do
-                expect(server_package.package_name).to eq server_package_name
+                it_behaves_like 'Installation from OS native repository', %w(server), mariadb_version
               end
 
               if data_dir
-                let (:data_directory) { mariadb_mysqld_attr('datadir') }
+                let(:data_directory) { mariadb_mysqld_attr('datadir') }
                 it_behaves_like 'MariaDB Server with alternative datadir'
               end
             end
