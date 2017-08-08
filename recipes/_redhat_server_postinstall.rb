@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: mariadb
-# Recipe:: _mariadb_repository
+# Recipe:: _redhat_server_postinstall
 #
 # Copyright 2014, blablacar.com
 #
@@ -17,13 +17,11 @@
 # limitations under the License.
 #
 
-if use_scl_package?(node['mariadb']['install']['prefer_scl_package'],
-                     node['platform'], node['platform_version']) &&
-   scl_version_available?(node['mariadb']['install']['version'])
-  # SCL repository
-  include_recipe 'yum-scl'
-elsif !use_os_native_package?(node['mariadb']['install']['prefer_os_package'],
-                              node['platform'], node['platform_version'])
-  # MariaDB repository
-  include_recipe "#{cookbook_name}::repository"
+
+execute 'change first install root password' do
+  command '/usr/bin/mysqladmin -u root password \'' + \
+    node['mariadb']['server_root_password'] + '\''
+  sensitive true
+  not_if { node['mariadb']['server_root_password'].empty? }
 end
+

@@ -22,6 +22,9 @@ Chef::Recipe.send(:include, MariaDB::Helper)
 extend Chef::Util::Selinux
 selinux_enabled = selinux_enabled?
 
+
+# --[ INSTALL ]------------------------
+
 case node['mariadb']['install']['type']
 when 'package'
   # Determine service name and register the resource
@@ -31,11 +34,6 @@ when 'package'
                                       node['mariadb']['install']['prefer_os_package'],
                                       node['mariadb']['install']['prefer_scl_package'])
   node.default['mariadb']['mysqld']['service_name'] = service_name unless service_name.nil?
-  service 'mysql' do
-    service_name node['mariadb']['mysqld']['service_name']
-    supports restart: true
-    action :nothing
-  end
 
   # Include recipe to install required repositories
   include_recipe "#{cookbook_name}::_mariadb_repository"
@@ -43,9 +41,11 @@ when 'package'
   # Include platform specific recipes
   case node['platform']
   when 'debian', 'ubuntu'
-    include_recipe "#{cookbook_name}::_debian_server"
+    include_recipe "#{cookbook_name}::_debian_server_preinstall"
+    platform_post_install_recipe = "#{cookbook_name}::_debian_server_postinstall"
   when 'redhat', 'centos', 'scientific', 'amazon'
-    include_recipe "#{cookbook_name}::_redhat_server"
+    include_recipe "#{cookbook_name}::_redhat_server_preinstall"
+    platform_post_install_recipe = "#{cookbook_name}::_redhat_server_postinstall"
   end
 
   # Install server package
@@ -57,11 +57,21 @@ when 'package'
   package 'MariaDB-server' do
     package_name server_package_name
     action :install
-    notifies :enable, 'service[mysql]'
+    notifies :create, 'ruby_block[restart_mysql]', :immediately
   end
+
 end
 
+
+# --[ CONFIGURE ]------------------------
+
 include_recipe "#{cookbook_name}::config"
+
+directory '/var/log/mysql' do
+   owner 'mysql'
+   group 'mysql'
+   mode '0755'
+end
 
 # move the datadir if needed
 if node['mariadb']['mysqld']['datadir'] !=
@@ -81,7 +91,7 @@ if node['mariadb']['mysqld']['datadir'] !=
 
   bash 'Restore security context' do
     user 'root'
-    code "/usr/sbin/restorecon -v #{node['mariadb']['mysqld']['default_datadir']}"
+    code "/sbin/restorecon -v #{node['mariadb']['mysqld']['default_datadir']}"
     only_if { selinux_enabled }
     subscribes :run, 'bash[move-datadir]', :immediately
     action :nothing
@@ -94,10 +104,13 @@ if node['mariadb']['mysqld']['datadir'] !=
     action :create
     notifies :stop, 'service[mysql]', :immediately
     notifies :run, 'bash[move-datadir]', :immediately
-    notifies :start, 'service[mysql]', :immediately
+    notifies :create, 'ruby_block[restart_mysql]', :immediately
     only_if { !File.symlink?(node['mariadb']['mysqld']['default_datadir']) }
   end
 end
+
+
+# --[ START SERVICE ]------------------------
 
 # restart the service if needed
 # workaround idea from https://github.com/stissot
@@ -111,46 +124,43 @@ execute 'mariadb-service-restart-needed' do
       node['mariadb']['mysqld']['socket']
     )
   end
-  notifies :restart, 'service[mysql]', :immediately
+  notifies :create, 'ruby_block[restart_mysql]', :immediately
 end
 
-if node['mariadb']['allow_root_pass_change']
-  # Used to change root password after first install
-  # Still experimental
-  md5 = if node['mariadb']['server_root_password'].empty?
-          Digest::MD5.hexdigest('empty')
-        else
-          Digest::MD5.hexdigest(node['mariadb']['server_root_password'])
-        end
 
-  file '/etc/mysql_root_change' do
-    content md5
-    action :create
-    notifies :run, 'execute[install-grants]', :immediately
-  end
+# Service definition allowing timely restart
+
+service 'mysql' do
+  service_name node['mariadb']['mysqld']['service_name']
+  supports :restart => true, :reload => true
+  action [:start, :enable]
 end
 
-if  node['mariadb']['allow_root_pass_change'] ||
-    node['mariadb']['remove_anonymous_users'] ||
-    node['mariadb']['forbid_remote_root'] ||
-    node['mariadb']['remove_test_database']
-  execute 'install-grants' do
-    command '/bin/bash -e /etc/mariadb_grants \'' + \
-      node['mariadb']['server_root_password'] + '\''
-    only_if { File.exist?('/etc/mariadb_grants') }
-    sensitive true
-    action :nothing
+
+ruby_block "restart_mysql" do
+  block do
+
+    r = resources(:service => "mysql")
+    a = Array.new(r.action)
+
+    a << :restart unless a.include?(:restart)
+    a.delete(:start) if a.include?(:restart)
+
+    r.action(a)
+
   end
-  template '/etc/mariadb_grants' do
-    sensitive true
-    source 'mariadb_grants.erb'
-    owner 'root'
-    group 'root'
-    mode '0600'
-    helpers MariaDB::Helper
-    notifies :run, 'execute[install-grants]', :immediately
-  end
+  action :nothing
 end
+
+# --[ POST INSTALL ]------------------------
+
+case node['mariadb']['install']['type']
+when 'package'
+  include_recipe platform_post_install_recipe
+end
+
+include_recipe "#{cookbook_name}::_mariadb_postinstall"
+
 
 # MariaDB Plugins
 include_recipe "#{cookbook_name}::plugins" if \

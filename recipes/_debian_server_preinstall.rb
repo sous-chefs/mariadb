@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: mariadb
-# Recipe:: _debian_server
+# Recipe:: _debian_server_preinstall
 #
 # Copyright 2014, blablacar.com
 #

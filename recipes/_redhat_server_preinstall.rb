@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: mariadb
-# Recipe:: _redhat_server
+# Recipe:: _redhat_server_preinstall
 #
 # Copyright 2014, blablacar.com
 #
@@ -29,30 +29,4 @@ use_scl = use_scl_package?(node['mariadb']['install']['prefer_scl_package'],
 package 'MariaDB-shared' do
   action :install
   not_if { use_os_native || use_scl }
-end
-
-ruby_block 'MariaDB first start' do
-  block do
-    true
-  end
-  action :nothing
-  subscribes :run, 'package[MariaDB-server]', :immediately
-  notifies :create, 'directory[/var/log/mysql]', :immediately
-  notifies :start, 'service[mysql]', :immediately
-  notifies :run, 'execute[change first install root password]', :immediately
-end
-
-directory '/var/log/mysql' do
-  action :nothing
-  user 'mysql'
-  group 'mysql'
-  mode '0755'
-end
-
-execute 'change first install root password' do
-  command '/usr/bin/mysqladmin -u root password \'' + \
-    node['mariadb']['server_root_password'] + '\''
-  action :nothing
-  sensitive true
-  not_if { node['mariadb']['server_root_password'].empty? }
 end
