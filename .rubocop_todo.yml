@@ -6,6 +6,22 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
+# Offense count: 21
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
+# SupportedStyles: aligned, indented
+Layout/MultilineOperationIndentation:
+  Exclude:
+    - 'providers/configuration.rb'
+    - 'providers/replication.rb'
+    - 'recipes/_audit_plugin.rb'
+    - 'recipes/_redhat_galera.rb'
+    - 'recipes/_redhat_server.rb'
+    - 'recipes/_redhat_server_native.rb'
+    - 'recipes/galera.rb'
+    - 'recipes/repository.rb'
+    - 'recipes/server.rb'
+
 # Offense count: 1
 # Cop supports --auto-correct.
 Lint/UnneededDisable:
@@ -20,22 +36,6 @@ Style/ConditionalAssignment:
   Exclude:
     - 'recipes/client.rb'
     - 'recipes/config.rb'
-
-# Offense count: 21
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
-# SupportedStyles: aligned, indented
-Style/MultilineOperationIndentation:
-  Exclude:
-    - 'providers/configuration.rb'
-    - 'providers/replication.rb'
-    - 'recipes/_audit_plugin.rb'
-    - 'recipes/_redhat_galera.rb'
-    - 'recipes/_redhat_server.rb'
-    - 'recipes/_redhat_server_native.rb'
-    - 'recipes/galera.rb'
-    - 'recipes/repository.rb'
-    - 'recipes/server.rb'
 
 # Offense count: 18
 # Cop supports --auto-correct.

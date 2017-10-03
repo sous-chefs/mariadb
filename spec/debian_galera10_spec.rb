@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'debian::mariadb::galera10-custom-wsrep-node-port' do
   let(:galera_1) do
-    stub_node('galera1', platform: 'debian', version: '7.4') do |node|
+    stub_node('galera1', platform: 'debian', version: '7.11') do |node|
       node.automatic['hostname'] = 'galera1'
       node.automatic['fqdn'] = 'galera1.domain'
       node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
@@ -10,7 +10,7 @@ describe 'debian::mariadb::galera10-custom-wsrep-node-port' do
     end
   end
   let(:galera_2) do
-    stub_node('galera2', platform: 'debian', version: '7.4') do |node|
+    stub_node('galera2', platform: 'debian', version: '7.11') do |node|
       node.automatic['hostname'] = 'galera2'
       node.automatic['fqdn'] = 'galera2.domain'
       node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
@@ -19,7 +19,7 @@ describe 'debian::mariadb::galera10-custom-wsrep-node-port' do
   end
   let(:chef_run) do
     runner = ChefSpec::ServerRunner.new(
-      platform: 'debian', version: '7.4',
+      platform: 'debian', version: '7.11',
       step_into: ['mariadb_configuration']
     ) do |node, server|
       node.automatic['memory']['total'] = '2048kB'
@@ -58,7 +58,7 @@ end
 
 describe 'debian::mariadb::galera10-rsync' do
   let(:galera_1) do
-    stub_node('galera1', platform: 'debian', version: '7.4') do |node|
+    stub_node('galera1', platform: 'debian', version: '7.11') do |node|
       node.automatic['hostname'] = 'galera1'
       node.automatic['fqdn'] = 'galera1.domain'
       node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
@@ -66,7 +66,7 @@ describe 'debian::mariadb::galera10-rsync' do
     end
   end
   let(:galera_2) do
-    stub_node('galera2', platform: 'debian', version: '7.4') do |node|
+    stub_node('galera2', platform: 'debian', version: '7.11') do |node|
       node.automatic['hostname'] = 'galera2'
       node.automatic['fqdn'] = 'galera2.domain'
       node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
@@ -75,7 +75,7 @@ describe 'debian::mariadb::galera10-rsync' do
   end
   let(:chef_run) do
     runner = ChefSpec::ServerRunner.new(
-      platform: 'debian', version: '7.4',
+      platform: 'debian', version: '7.11',
       step_into: ['mariadb_configuration']
     ) do |node, server|
       node.automatic['memory']['total'] = '2048kB'
@@ -177,7 +177,7 @@ end
 
 describe 'debian::mariadb::galera10-xtrabackup-v2' do
   let(:galera_1) do
-    stub_node('galera2', platform: 'debian', version: '7.4') do |node|
+    stub_node('galera2', platform: 'debian', version: '7.11') do |node|
       node.automatic['hostname'] = 'galera1'
       node.automatic['fqdn'] = 'galera1.domain'
       node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
@@ -185,7 +185,7 @@ describe 'debian::mariadb::galera10-xtrabackup-v2' do
     end
   end
   let(:galera_2) do
-    stub_node('galera2', platform: 'debian', version: '7.4') do |node|
+    stub_node('galera2', platform: 'debian', version: '7.11') do |node|
       node.automatic['hostname'] = 'galera2'
       node.automatic['fqdn'] = 'galera2.domain'
       node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
@@ -194,7 +194,7 @@ describe 'debian::mariadb::galera10-xtrabackup-v2' do
   end
   cached(:chef_run) do
     runner = ChefSpec::ServerRunner.new(
-      platform: 'debian', version: '7.4',
+      platform: 'debian', version: '7.11',
       step_into: ['mariadb_configuration']
     ) do |node, server|
       node.automatic['memory']['total'] = '2048kB'
