@@ -2,14 +2,14 @@ require 'spec_helper'
 
 describe 'debian::mariadb::galera55' do
   let(:galera_1) do
-    stub_node('galera1') do |node|
+    stub_node('galera1', platform: 'debian', version: '7.11') do |node|
       node.automatic['hostname'] = 'galera1'
       node.automatic['fqdn'] = 'galera1.domain'
       node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
     end
   end
   let(:galera_2) do
-    stub_node('galera2') do |node|
+    stub_node('galera2', platform: 'debian', version: '7.11') do |node|
       node.automatic['hostname'] = 'galera2'
       node.automatic['fqdn'] = 'galera2.domain'
       node.default['mariadb']['galera']['cluster_name'] = 'galera_cluster'
@@ -17,7 +17,7 @@ describe 'debian::mariadb::galera55' do
   end
   cached(:chef_run) do
     runner = ChefSpec::ServerRunner.new(
-      platform: 'debian', version: '7.4',
+      platform: 'debian', version: '7.11',
       step_into: ['mariadb_configuration']
     ) do |node, server|
       node.automatic['memory']['total'] = '2048kB'
@@ -37,7 +37,10 @@ describe 'debian::mariadb::galera55' do
   before do
     allow(Mixlib::ShellOut).to receive(:new).and_return(shellout)
     stub_search(:node, 'mariadb_galera_cluster_name:galera_cluster')
-      .and_return([stub_node('galera1'), stub_node('galera2')])
+      .and_return([
+        stub_node('galera1', platform: 'debian', version: '7.11'),
+        stub_node('galera2', platform: 'debian', version: '7.11')
+    ])
   end
 
   it 'Installs Mariadb package' do

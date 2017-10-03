@@ -6,11 +6,11 @@ describe 'mariadb::client' do
   end
   test_matrix = { '5.5' => { 'OS' => { 'centos' => %w(7.0) },
                              'SCL' => { 'centos' => %w(6.5 7.0) },
-                             'MariaDB' => { 'centos' => %w(6.5 7.0), 'debian' => %w(7.4) } },
+                             'MariaDB' => { 'centos' => %w(6.5 7.0), 'debian' => %w(7.11) } },
                   '10.0' => { 'SCL' => { 'centos' => %w(6.5 7.0) },
-                              'MariaDB' => { 'centos' => %w(6.5 7.0), 'debian' => %w(7.4) } },
+                              'MariaDB' => { 'centos' => %w(6.5 7.0), 'debian' => %w(7.11) } },
                   '10.1' => { 'SCL' => { 'centos' => %w(6.5 7.0) },
-                              'MariaDB' => { 'centos' => %w(6.5 7.0), 'debian' => %w(7.4) } } }
+                              'MariaDB' => { 'centos' => %w(6.5 7.0), 'debian' => %w(7.11) } } }
   test_matrix.each_pair do |mariadb_version, supported_repos|
     supported_repos.each_pair do |repo_name, supported_platforms|
       supported_platforms.each_pair do |platform_name, supported_versions|
