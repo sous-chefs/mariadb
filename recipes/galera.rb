@@ -289,7 +289,7 @@ if node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
       node['mariadb']['server_root_password'] + '\' '
   end
 
-  sstuser_cmd += '-e "GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ' \
+  sstuser_cmd += '-e "GRANT PROCESS, RELOAD, LOCK TABLES, REPLICATION CLIENT ' \
     ' ON *.* TO \'' + sstuser + \
     '\'@\'localhost\' ' \
     'IDENTIFIED BY \'' + sstpassword + '\'"'
