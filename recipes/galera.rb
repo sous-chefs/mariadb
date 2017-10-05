@@ -67,8 +67,14 @@ if node['mariadb']['install']['extra_packages']
     package 'rsync' do
       action :install
     end
-  elsif node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
+  elsif node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?$/
     %w(percona-xtrabackup socat pv).each do |pkg|
+      package pkg do
+        action :install
+      end
+    end
+  elsif node['mariadb']['galera']['wsrep_sst_method'] == 'xtrabackup-v24'
+    %w(percona-xtrabackup-24 socat pv).each do |pkg|
       package pkg do
         action :install
       end
@@ -165,8 +171,11 @@ end
 galera_options['wsrep_cluster_address'] = gcomm
 galera_options['wsrep_cluster_name'] = \
   node['mariadb']['galera']['cluster_name']
-galera_options['wsrep_sst_method'] = \
-  node['mariadb']['galera']['wsrep_sst_method']
+galera_options['wsrep_sst_method'] = if node['mariadb']['galera']['wsrep_sst_method'] == 'xtrabackup-v24'
+                                       'xtrabackup'
+                                     else
+                                       node['mariadb']['galera']['wsrep_sst_method']
+                                     end
 if node['mariadb']['galera'].attribute?('wsrep_sst_auth')
   galera_options['wsrep_sst_auth'] = \
     node['mariadb']['galera']['wsrep_sst_auth']
