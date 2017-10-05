@@ -38,9 +38,9 @@ describe 'debian::mariadb::galera55' do
     allow(Mixlib::ShellOut).to receive(:new).and_return(shellout)
     stub_search(:node, 'mariadb_galera_cluster_name:galera_cluster')
       .and_return([
-        stub_node('galera1', platform: 'debian', version: '7.11'),
-        stub_node('galera2', platform: 'debian', version: '7.11')
-    ])
+                    stub_node('galera1', platform: 'debian', version: '7.11'),
+                    stub_node('galera2', platform: 'debian', version: '7.11'),
+                  ])
   end
 
   it 'Installs Mariadb package' do
