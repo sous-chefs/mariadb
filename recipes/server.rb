@@ -22,7 +22,6 @@ Chef::Recipe.send(:include, MariaDB::Helper)
 extend Chef::Util::Selinux
 selinux_enabled = selinux_enabled?
 
-
 # --[ INSTALL ]------------------------
 
 case node['mariadb']['install']['type']
@@ -62,15 +61,14 @@ when 'package'
 
 end
 
-
 # --[ CONFIGURE ]------------------------
 
 include_recipe "#{cookbook_name}::config"
 
 directory '/var/log/mysql' do
-   owner 'mysql'
-   group 'mysql'
-   mode '0755'
+  owner 'mysql'
+  group 'mysql'
+  mode '0755'
 end
 
 # move the datadir if needed
@@ -109,7 +107,6 @@ if node['mariadb']['mysqld']['datadir'] !=
   end
 end
 
-
 # --[ START SERVICE ]------------------------
 
 # restart the service if needed
@@ -127,27 +124,23 @@ execute 'mariadb-service-restart-needed' do
   notifies :create, 'ruby_block[restart_mysql]', :immediately
 end
 
-
 # Service definition allowing timely restart
 
 service 'mysql' do
   service_name node['mariadb']['mysqld']['service_name']
-  supports :restart => true, :reload => true
+  supports restart: true, reload: true
   action [:start, :enable]
 end
 
-
-ruby_block "restart_mysql" do
+ruby_block 'restart_mysql' do
   block do
-
-    r = resources(:service => "mysql")
+    r = resources(service: 'mysql')
     a = Array.new(r.action)
 
     a << :restart unless a.include?(:restart)
     a.delete(:start) if a.include?(:restart)
 
     r.action(a)
-
   end
   action :nothing
 end
@@ -160,7 +153,6 @@ when 'package'
 end
 
 include_recipe "#{cookbook_name}::_mariadb_postinstall"
-
 
 # MariaDB Plugins
 include_recipe "#{cookbook_name}::plugins" if \

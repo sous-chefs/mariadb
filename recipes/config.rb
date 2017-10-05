@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-
 begin
   resources('ruby_block[restart_mysql]')
   no_mysql_restart_rc = false
