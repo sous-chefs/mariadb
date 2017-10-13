@@ -22,5 +22,5 @@ execute 'change first install root password' do
           node['mariadb']['server_root_password'] + '\''
   sensitive true
   not_if { node['mariadb']['server_root_password'].empty? }
-  only_if 'mysql -uroot -e "SELECT 1"'
+  not_if { File.exist?('/etc/mariadb_grants') }
 end
