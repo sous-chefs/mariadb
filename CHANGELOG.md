@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.5.3 (2017-10-13)
+
+This cookbook was transferred to Sous Chefs.
+
+### Fixed
+
+- Fixed bug where cookbook tries to set root password on every run instead of first install only ([#174](https://github.com/sinfomicien/mariadb/issues/174))
+
 ## 1.5.2 (2017-10-05)
 
 ### Fixed
