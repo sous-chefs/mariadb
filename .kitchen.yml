@@ -117,3 +117,13 @@ suites:
         use_default_repository: true
         replication:
           log_bin: false
+  #
+  # resources to manage databases and users
+  #
+  - name: resources
+    run_list:
+      - recipe[mariadb_test::resources]
+    attributes:
+      mariadb:
+        server_root_password: gsql
+        use_default_repository: true

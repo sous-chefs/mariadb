@@ -6,11 +6,13 @@ module MariaDB
     module Helper
       def initialize(new_resource, run_context)
         super
+        @connection_pool ||= {}
+        return if run_context.instance_variable_get(:@mysql2_gem_installed)
         mysql2_gem 'mysql2' do
           compile_time true
           action :install
         end
-        @connection_pool ||= {}
+        run_context.instance_variable_set(:@mysql2_gem_installed, true)
       end
 
       def connect(host:, port: '3306', username:, password: nil, socket: nil)
