@@ -293,7 +293,6 @@ action :revoke do
       Chef::Log.debug("#{@new_resource}: revoking access with statement [#{revoke_statement}]")
       run_query revoke_statement
       run_query 'FLUSH PRIVILEGES'
-      @new_resource.updated_by_last_action(true)
     end
   end
 end
