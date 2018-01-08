@@ -55,7 +55,7 @@ when 'package'
   case node['platform']
   when 'debian', 'ubuntu'
     include_recipe "#{cookbook_name}::_debian_galera"
-  when 'redhat', 'centos', 'scientific', 'amazon'
+  when 'redhat', 'centos', 'scientific', 'amazon', 'oracle'
     include_recipe "#{cookbook_name}::_redhat_galera"
   end
 when 'from_source'
