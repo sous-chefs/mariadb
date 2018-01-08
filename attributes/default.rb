@@ -1,6 +1,6 @@
 # platform dependent attributes
 case node['platform']
-when 'redhat', 'centos', 'scientific', 'amazon'
+when 'redhat', 'centos', 'scientific', 'amazon', 'oracle'
   default['mariadb']['configuration']['path'] = '/etc'
   default['mariadb']['configuration']['includedir'] = '/etc/my.cnf.d'
   default['mariadb']['mysqld']['socket'] = '/var/lib/mysql/mysql.sock'
