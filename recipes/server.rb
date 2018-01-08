@@ -42,7 +42,7 @@ when 'package'
   when 'debian', 'ubuntu'
     include_recipe "#{cookbook_name}::_debian_server_preinstall"
     platform_post_install_recipe = "#{cookbook_name}::_debian_server_postinstall"
-  when 'redhat', 'centos', 'scientific', 'amazon'
+  when 'redhat', 'centos', 'scientific', 'amazon', 'oracle'
     include_recipe "#{cookbook_name}::_redhat_server_preinstall"
     platform_post_install_recipe = "#{cookbook_name}::_redhat_server_postinstall"
   end
