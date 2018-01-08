@@ -26,7 +26,7 @@ default['mariadb']['forbid_remote_root']                = true
 default['mariadb']['server_root_password']              = ''
 default['mariadb']['root_my_cnf']                       = false
 default['mariadb']['allow_root_pass_change']            = false
-default['mariadb']['mysqld']['service_name'] = if node['platform'] == 'centos'
+default['mariadb']['mysqld']['service_name'] = if (node['platform'] == 'centos') or (node['platform'] == 'oracle')
                                                  'mariadb'
                                                else
                                                  'mysql'
