@@ -51,7 +51,7 @@ module MariaDB
     def scl_package_provided?(os_platform, os_version)
       package_provided = false
       case os_platform
-      when 'centos', 'redhat', 'scientific'
+      when 'centos', 'redhat', 'scientific', 'oracle'
         package_provided = true if os_version.to_i >= 6
       end
       package_provided
@@ -137,7 +137,7 @@ module MariaDB
     # @param [String] os_platform Indicate operating system type, e.g. centos
     def native_packages_names(os_platform)
       case os_platform
-      when 'redhat', 'centos', 'scientific'
+      when 'redhat', 'centos', 'scientific', 'oracle'
         { 'devel' => 'mariadb-devel',
           'client' => 'mariadb',
           'server' => 'mariadb-server' }
