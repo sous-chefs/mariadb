@@ -38,7 +38,7 @@ module MariaDB
     def os_package_provided?(os_platform, os_version)
       package_provided = false
       case os_platform
-      when 'centos', 'redhat'
+      when 'centos', 'redhat', 'oracle'
         package_provided = true if os_version.to_i == 7
       end
       package_provided
