@@ -65,6 +65,13 @@ env:
   - INSTANCE=no-binlog-debian-8 CHEF_VERSION=12.19.36
   - INSTANCE=no-binlog-ubuntu-1604
   - INSTANCE=no-binlog-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=resources-centos-7
+  - INSTANCE=resources-centos-7 CHEF_VERSION=12.19.36
+  - INSTANCE=resources-debian-8
+  - INSTANCE=resources-debian-8 CHEF_VERSION=12.19.36
+  - INSTANCE=resources-ubuntu-1604
+  - INSTANCE=resources-ubuntu-1604 CHEF_VERSION=12.19.36
+
 
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
@@ -100,6 +107,9 @@ matrix:
     - env: INSTANCE=no-binlog-centos-7
     - env: INSTANCE=no-binlog-debian-8
     - env: INSTANCE=no-binlog-ubuntu-1604
+    - env: INSTANCE=resources-centos-7
+    - env: INSTANCE=resources-debian-8
+    - env: INSTANCE=resources-ubuntu-1604
   include:
     - script:
       - /opt/chefdk/bin/chef exec rake
