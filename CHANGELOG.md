@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### Added
+
+- Added resource `mariadb_database` to manage databases ([#187](https://github.com/sous-chefs/mariadb/pull/187))
+- Added resource `mariadb_user` to manage users and privileges ([#187](https://github.com/sous-chefs/mariadb/pull/187))
+
 ## 1.5.3 (2017-10-13)
 
 This cookbook was transferred to Sous Chefs.
