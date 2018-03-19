@@ -166,11 +166,17 @@ module MariaDB
     # Helper to determine names of mariadb packages provided by MariaDB
     # @param [String] os_platform Indicate operating system type, e.g. centos
     # @param [String] version Indicate requested version of mariadb
-    def mariadb_packages_names(os_platform, version)
+    def mariadb_packages_names(os_platform, os_version, version)
       if %w(debian ubuntu).include?(os_platform)
-        { 'devel' => 'libmariadbclient-dev',
-          'client' => "mariadb-client-#{version}",
-          'server' => "mariadb-server-#{version}" }
+        if Gem::Version.new(os_version) >= Gem::Version.new('16.00')
+          { 'devel' => 'libmariadb-client-lgpl-dev',
+            'client' => "mariadb-client-#{version}",
+            'server' => "mariadb-server-#{version}" }
+        else
+          { 'devel' => 'libmariadbclient-dev',
+            'client' => "mariadb-client-#{version}",
+            'server' => "mariadb-server-#{version}" }
+        end
       else
         { 'devel' => 'MariaDB-devel',
           'client' => 'MariaDB-client',
@@ -190,7 +196,7 @@ module MariaDB
       elsif use_scl_package?(prefer_scl, os_platform, os_version)
         scl_packages_names(os_platform, mariadb_version)
       else
-        mariadb_packages_names(os_platform, mariadb_version)
+        mariadb_packages_names(os_platform, os_version, mariadb_version)
       end
     end
 
