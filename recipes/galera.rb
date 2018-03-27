@@ -140,7 +140,7 @@ selinux_policy_port node['mariadb']['galera']['wsrep_node_port'] do
   action :add
 end
 
-selinux_policy_port "#{node['mariadb']['galera']['wsrep_node_port'].to_i + 1}" do
+selinux_policy_port node['mariadb']['galera']['wsrep_node_port'].next do
   protocol 'tcp'
   secontext 'tram_port_t'
   only_if { selinux_enabled }
