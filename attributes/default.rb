@@ -197,3 +197,9 @@ default['mariadb']['audit_plugin']['server_audit_output_type'] = 'file'
 default['mariadb']['audit_plugin']['server_audit_syslog_facility'] = 'LOG_USER'
 default['mariadb']['audit_plugin']['server_audit_syslog_priority'] = 'LOG_INFO'
 default['mariadb']['audit_plugin']['server_audit_logging'] = 'OFF'
+
+# Workaround to be able to use mysql2 gem compiled only on chef embedded library
+default['mariadb']['mysql2_gem']['mariadb_connector_version'] = '3.0.4'
+default['mariadb']['mysql2_gem']['mariadb_connector_source_url'] = 'https://github.com/MariaDB/mariadb-connector-c/archive/v3.0.4.tar.gz'
+default['mariadb']['mysql2_gem']['curl_version'] = '7.59.0'
+default['mariadb']['mysql2_gem']['curl_source_url'] = 'https://github.com/curl/curl/releases/download/curl-7_59_0/curl-7.59.0.tar.gz'
