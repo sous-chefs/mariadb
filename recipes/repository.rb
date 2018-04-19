@@ -11,7 +11,15 @@ if node['mariadb']['use_default_repository']
     include_recipe 'apt::default'
 
     apt_key = 'CBCB082A1BB943DB'
+
     apt_key = 'F1656F24C74CD1D8' if node['platform'] == 'ubuntu' && node['platform_version'].split('.')[0].to_i >= 16
+
+    if node['platform'] == 'debian' && node['platform_version'].split('.')[0].to_i >= 9
+      apt_key = 'F1656F24C74CD1D8'
+      package 'dirmngr' do
+        action :install
+      end
+    end
 
     apt_repository "mariadb-#{node['mariadb']['install']['version']}" do
       uri 'http://' + node['mariadb']['apt_repository']['base_url'] + '/' + \
