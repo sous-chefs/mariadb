@@ -35,7 +35,13 @@ rescue Chef::Exceptions::ResourceNotFound
   end
 end
 
-template '/var/cache/local/preseeding/mariadb-galera-server.seed' do
+preseed_file = if node['mariadb']['install']['version'].to_f >= 10.2
+                 '/var/cache/local/preseeding/mariadb-server-' + node['mariadb']['install']['version'] + '.seed'
+               else
+                 '/var/cache/local/preseeding/mariadb-galera-server.seed'
+               end
+
+template preseed_file do
   source 'mariadb-server.seed.erb'
   owner 'root'
   group 'root'
@@ -46,8 +52,7 @@ template '/var/cache/local/preseeding/mariadb-galera-server.seed' do
 end
 
 execute 'preseed mariadb-galera-server' do
-  command '/usr/bin/debconf-set-selections ' \
-          '/var/cache/local/preseeding/mariadb-galera-server.seed'
+  command '/usr/bin/debconf-set-selections ' + preseed_file
   action :nothing
 end
 

@@ -16,6 +16,11 @@ platforms:
           name: chef_zero
           require_chef_omnibus: 12
   - name: debian-8.7
+  - name: debian-9.4
+    attributes:
+      mariadb:
+        install:
+          version: '10.2'
   - name: ubuntu-14.04
   - name: ubuntu-16.04
 
@@ -72,6 +77,19 @@ suites:
     attributes:
       mariadb:
         use_default_repository: true
+  #
+  # galera with mariabackup as SST method
+  #
+  - name: galera-mariabackup
+    run_list:
+      - recipe[mariadb::galera]
+    attributes:
+      mariadb:
+        use_default_repository: true
+        galera:
+          wsrep_sst_method: 'mariabackup'
+    includes:
+      - debian-9.4
   #
   # datadir_changed
   #
