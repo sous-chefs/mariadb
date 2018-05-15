@@ -167,7 +167,7 @@ end
 
 load_current_value do
   require 'mysql2'
-  socket = if node['mariadb']['client']['socket'] && host == 'localhost'
+  socket = if node['mariadb']['client']['socket'] && ctrl_host == 'localhost'
              node['mariadb']['client']['socket']
            end
   conn_options = { username: ctrl_user,
