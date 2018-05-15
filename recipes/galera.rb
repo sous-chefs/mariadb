@@ -140,6 +140,14 @@ selinux_policy_port node['mariadb']['galera']['wsrep_node_port'] do
   action :add
 end
 
+selinux_policy_port node['mariadb']['galera']['wsrep_node_port'].next do
+  protocol 'tcp'
+  secontext 'tram_port_t'
+  only_if { selinux_enabled }
+  not_if { String(node['mariadb']['galera']['wsrep_node_port']).empty? }
+  action :add
+end
+
 galera_options = {}
 
 # Mandatory settings

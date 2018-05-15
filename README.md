@@ -6,7 +6,7 @@ MariaDB Cookbook
 Description
 -----------
 
-This cookbook contains all the stuffs to install and configure a mariadb server on a dpkg/apt compliant system (typically debian), or a rpm/yum compliant system (typically centos)
+This cookbook contains all the stuffs to install and configure and manage a mariadb server on a dpkg/apt compliant system (typically debian), or a rpm/yum compliant system (typically centos)
 
 
 Requirements
@@ -125,10 +125,10 @@ set the attribute `node['mariadb']['client']['development_files']` to false.
 
 By default this recipe installs all needed packages to develop client application.
 
-Providers
+Resources/Providers
 ----------
 
-This recipe define 2  providers:
+This recipe define several custom resources and providers:
 - `Chef::Provider::Mariadb::Configuration` shortcut resource `mariadb_configuration`
 
 #### mariadb_configuration
@@ -208,6 +208,123 @@ if either one of `master_host`, `master_port`, `master_user`, `master_password` 
 
 Changes of only `master_log_file` and/or `master_log_pos` don't affect server if slave is already configured.
 
+#### mariadb_database
+
+Manage databases and execute SQL queries on them. It works by establishing a control connection to the MariaDB server using the `mysql2` chef gem (automatically installed). It has 3 actions:
+- create - to create a named database
+- drop - to drop a named database
+- query - to execute a SQL query
+
+##### Syntax
+
+The full syntax of all of the properties that are available to the `mariadb_database` resource is: 
+
+```ruby
+mariadb_database 'name' do
+  # Credentials for the control connection
+  user                       String # defaults to 'root'
+  host                       String # defaults to 'localhost'
+  port                       String # defaults to node['mariadb']['mysqld']['port']
+  password                   String # defaults to node['mariadb']['server_root_password'] 
+  # The database to be managed
+  database_name              String # defaults to 'name' if not specified
+  encoding                   String # defaults to 'utf8'
+  collation                  String # defaults to 'utf8_general_ci'
+  sql                        String, Proc # the SQL query to execute 
+  action                     Symbol # defaults to :create if not specified
+end
+```
+
+When `host` has the value `localhost`, it will try to connect using the Unix socket defined in `node['mariadb']['client']['socket']`, or TCP/IP if no socket is defined.
+
+##### Examples
+
+```ruby
+# Create a database
+mariadb_database 'wordpress-cust01' do
+  host '127.0.0.1'
+  user 'root'
+  password node['wordpress-cust01']['mysql']['initial_root_password']
+  action :create
+end
+ 
+# Drop a database
+mariadb_database 'baz' do
+  action :drop
+end
+ 
+# Query a database
+mariadb_database 'flush the privileges' do
+  sql 'flush privileges'
+  action :query
+end
+```
+
+The `query` action will NOT select a database before running the query, nor return the actual results from the SQL query.
+
+#### mariadb_user
+
+Manage users and grant them privileges on database objects. It works by establishing a control connection to the MariaDB server using the `mysql2` chef gem (automatically installed). It has 4 actions:
+- create - to create a user
+- drop - to drop a user
+- grant - to grant privileges to a user
+- revoke - to revoke privileges from a user
+
+##### Syntax
+
+The full syntax of all of the properties that are available to the `mariadb_user` resource is: 
+
+```ruby
+mariadb_user 'name' do
+  # Credentials for the control connection
+  ctrl_user                  String # defaults to 'root'
+  ctrl_host                  String # defaults to 'localhost'
+  ctrl_port                  String # defaults to node['mariadb']['mysqld']['port']
+  ctrl_password              String # defaults to node['mariadb']['server_root_password'] 
+  # The user to be managed
+  username                   String # defaults to 'name'
+  host                       String # defaults to 'localhost'
+  password                   String, HashedPassword
+  # The privileges to be granted/revoked
+  privileges                 Array # defaults to [:all]
+  database_name              String # to grant/revoke privileges on a database 
+  table                      String # to grant/revoke privileges on a particular database table
+  grant_option               true|false # defaults to false 
+  require_ssl                true|false # defaults to false
+  require_x509               true|false # defaults to false 
+  action                     Symbol # defaults to :create if not specified
+end
+```
+
+##### Examples
+
+```ruby
+# Create an user but grant no privileges
+mariadb_user 'disenfranchised' do
+  password 'super_secret'
+  action :create
+end
+ 
+# Create an user using a hashed password string instead of plain text one
+mariadb_user 'disenfranchised' do
+  password hashed_password('md5eacdbf8d9847a76978bd515fae200a2a')
+  action :create
+end
+
+# Drop a user
+mariadb_user 'foo_user' do
+  action :drop
+end
+
+# Grant SELECT, UPDATE, and INSERT privileges to all tables in foo db from all hosts
+mariadb_user 'foo_user' do
+  password 'super_secret'
+  database_name 'foo'
+  host '%'
+  privileges [:select,:update,:insert]
+  action :grant
+end
+```
 
 Contributing
 ------------

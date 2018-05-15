@@ -56,7 +56,7 @@ when 'package'
   package 'MariaDB-server' do
     package_name server_package_name
     action :install
-    notifies :create, 'ruby_block[restart_mysql]', :immediately
+    notifies :run, 'ruby_block[restart_mysql]', :immediately
   end
 
 end
@@ -102,7 +102,7 @@ if node['mariadb']['mysqld']['datadir'] !=
     action :create
     notifies :stop, 'service[mysql]', :immediately
     notifies :run, 'bash[move-datadir]', :immediately
-    notifies :create, 'ruby_block[restart_mysql]', :immediately
+    notifies :run, 'ruby_block[restart_mysql]', :immediately
     only_if { !File.symlink?(node['mariadb']['mysqld']['default_datadir']) }
   end
 end
@@ -121,7 +121,7 @@ execute 'mariadb-service-restart-needed' do
       node['mariadb']['mysqld']['socket']
     )
   end
-  notifies :create, 'ruby_block[restart_mysql]', :immediately
+  notifies :run, 'ruby_block[restart_mysql]', :immediately
 end
 
 # Service definition allowing timely restart

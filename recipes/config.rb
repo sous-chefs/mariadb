@@ -38,7 +38,7 @@ template node['mariadb']['configuration']['path'] + '/my.cnf' do
   owner 'root'
   group 'root'
   mode '0644'
-  notifies :create, 'ruby_block[restart_mysql]', :immediately unless no_mysql_restart_rc
+  notifies :run, 'ruby_block[restart_mysql]', :immediately unless no_mysql_restart_rc
 end
 
 directory '/etc/my.cnf.d/' do
@@ -94,7 +94,7 @@ mariadb_configuration '20-innodb' do
   section 'mysqld'
   option innodb_options
   action :add
-  notifies :create, 'ruby_block[restart_mysql]', :immediately unless no_mysql_restart_rc
+  notifies :run, 'ruby_block[restart_mysql]', :immediately unless no_mysql_restart_rc
 end
 
 replication_opts = {}
@@ -122,5 +122,5 @@ mariadb_configuration '30-replication' do
   section 'mysqld'
   option replication_opts
   action :add
-  notifies :create, 'ruby_block[restart_mysql]', :immediately unless no_mysql_restart_rc
+  notifies :run, 'ruby_block[restart_mysql]', :immediately unless no_mysql_restart_rc
 end
