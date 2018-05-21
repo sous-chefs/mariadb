@@ -75,7 +75,7 @@ env:
 
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
-  - eval "$(/opt/chefdk/bin/chef shell-init bash)" && chef gem install berkshelf
+  - eval "$(/opt/chefdk/bin/chef shell-init bash)" && chef gem install chef-dk
   - /opt/chefdk/embedded/bin/chef --version
   - /opt/chefdk/embedded/bin/cookstyle --version
   - /opt/chefdk/embedded/bin/foodcritic --version
