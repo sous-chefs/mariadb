@@ -190,11 +190,8 @@ if node['mariadb']['galera'].attribute?('wsrep_sst_auth')
 end
 galera_options['wsrep_provider'] = \
   node['mariadb']['galera']['wsrep_provider']
-galera_options['wsrep_slave_threads'] = if node['mariadb']['galera'].attribute?('wsrep_slave_threads')
-                                          node['mariadb']['galera']['wsrep_slave_threads']
-                                        else
-                                          node['cpu']['total'] * 4
-                                        end
+galera_options['wsrep_slave_threads'] = \
+  format(node['mariadb']['galera']['wsrep_slave_threads'].to_s, auto: node['cpu']['total'] * 4)
 
 ipaddress = ''
 iface = if node['mariadb']['galera']['wsrep_node_address_interface'].empty?
@@ -222,7 +219,6 @@ unless node['mariadb']['galera']['wsrep_node_incoming_address_interface'].empty?
   galera_options['wsrep_node_incoming_address'] = ipaddress_inc unless ipaddress_inc.empty?
 end
 
-galera_options['wsrep_slave_threads'] = node['cpu']['total'] * 4
 node['mariadb']['galera']['options'].each do |key, value|
   galera_options[key] = value
 end
