@@ -17,7 +17,8 @@ Requirements
 
 #### packages
 - `percona-xtrabackup` - if you want to use the xtrabckup SST Auth for galera cluster.
-- `socat` - if you want to use the xtrabckup SST Auth for galera cluster.
+- `mariadb-backup` - if you want to use the mariabackup SST Auth for galera cluster.
+- `socat` - if you want to use the xtrabckup or mariabackup SST Auth for galera cluster.
 - `rsync` - if you want to use the rsync SST Auth for galera cluster.
 - `debconf-utils` - if you use debian platform family.
 

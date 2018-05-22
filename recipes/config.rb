@@ -41,12 +41,12 @@ template node['mariadb']['configuration']['path'] + '/my.cnf' do
   notifies :run, 'ruby_block[restart_mysql]', :immediately unless no_mysql_restart_rc
 end
 
-directory '/etc/my.cnf.d/' do
+directory node['mariadb']['configuration']['includedir'] do
   owner 'root'
   group 'root'
   mode '0755'
   action :create
-  not_if { ::Dir.exist?('/etc/my.cnf.d/') }
+  not_if { ::Dir.exist?(node['mariadb']['configuration']['includedir']) }
 end
 
 innodb_options = {}

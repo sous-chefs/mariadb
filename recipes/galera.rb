@@ -79,6 +79,15 @@ if node['mariadb']['install']['extra_packages']
         action :install
       end
     end
+  elsif node['mariadb']['galera']['wsrep_sst_method'] == 'mariabackup'
+    package 'mariadb-backup-' + node['mariadb']['install']['version'] do
+      action :install
+    end
+    %w(socat pv).each do |pkg|
+      package pkg do
+        action :install
+      end
+    end
   end
 end
 
@@ -279,10 +288,10 @@ if platform?('debian', 'ubuntu')
 end
 
 #
-# Galera SST method xtrabackup will need a seperated mysql sstuser as root
+# Galera SST method xtrabackup (or mariabackup) will need a seperated mysql sstuser as root
 # should not be used.
 #
-if node['mariadb']['galera']['wsrep_sst_method'] =~ /^xtrabackup(-v2)?/
+if node['mariadb']['galera']['wsrep_sst_method'] =~ /^(maria|xtra)backup(-v2)?/
 
   sstuser, sstpassword = node['mariadb']['galera']['wsrep_sst_auth'].split(/:/)
 

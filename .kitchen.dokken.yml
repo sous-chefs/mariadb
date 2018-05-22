@@ -43,6 +43,18 @@ platforms:
       - RUN /usr/bin/apt-get update
       - RUN /usr/bin/apt-get install lsb-release net-tools sudo -y
 
+- name: debian-9
+  attributes:
+    mariadb:
+     install:
+       version: '10.2'
+  driver:
+    image: debian:9
+    pid_one_command: /bin/systemd
+    intermediate_instructions:
+      - RUN /usr/bin/apt-get update
+      - RUN /usr/bin/apt-get install lsb-release net-tools sudo -y
+
 - name: ubuntu-14.04
   driver:
     image: ubuntu-upstart:14.04
@@ -112,6 +124,21 @@ suites:
     attributes:
       mariadb:
         use_default_repository: true
+
+  #
+  # galera with mariabackup as SST method
+  #
+  - name: galera-mariabackup
+    run_list:
+      - recipe[mariadb::galera]
+    attributes:
+      mariadb:
+        use_default_repository: true
+        galera:
+          wsrep_sst_method: 'mariabackup'
+    includes:
+      - debian-9
+
   #
   # datadir_changed
   #

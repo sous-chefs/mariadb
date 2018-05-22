@@ -168,9 +168,15 @@ module MariaDB
     # @param [String] version Indicate requested version of mariadb
     def mariadb_packages_names(os_platform, version)
       if %w(debian ubuntu).include?(os_platform)
-        { 'devel' => 'libmariadbclient-dev',
-          'client' => "mariadb-client-#{version}",
-          'server' => "mariadb-server-#{version}" }
+        if version.to_f >= 10.2
+          { 'devel' => 'libmariadb-dev',
+            'client' => "mariadb-client-#{version}",
+            'server' => "mariadb-server-#{version}" }
+        else
+          { 'devel' => 'libmariadbclient-dev',
+            'client' => "mariadb-client-#{version}",
+            'server' => "mariadb-server-#{version}" }
+        end
       else
         { 'devel' => 'MariaDB-devel',
           'client' => 'MariaDB-client',
