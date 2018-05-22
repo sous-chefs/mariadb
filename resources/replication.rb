@@ -25,23 +25,23 @@ action_class do
   include MariaDB::Connection::Helper
 
   def replication_query(query)
-    socket = if node['mariadb']['client']['socket'] && host == 'localhost'
+    socket = if node['mariadb']['client']['socket'] && new_resource.host == 'localhost'
                node['mariadb']['client']['socket']
              end
-    connect(host: host, port: port, username: user, password: password, socket: socket) unless connected?(host, user)
+    connect(host: new_resource.host, port: new_resource.port, username: new_resource.user, password: new_resource.password, socket: socket) unless connected?(new_resource.host, new_resource.user)
     unless server_older_than?('10.0')
-      default_master_connection = connection_name == 'default' ? '' : connection_name
-      query(host, user, "SET @@default_master_connection='#{default_master_connection}'")
+      default_master_connection = new_resource.connection_name == 'default' ? '' : new_resource.connection_name
+      query(new_resource.host, new_resource.user, "SET @@default_master_connection='#{default_master_connection}'")
     end
-    query(host, user, query)
+    query(new_resource.host, new_resource.user, query)
   end
 
   def mariadb_version
-    socket = if node['mariadb']['client']['socket'] && host == 'localhost'
+    socket = if node['mariadb']['client']['socket'] && new_resource.host == 'localhost'
                node['mariadb']['client']['socket']
              end
-    connect(host: host, port: port, username: user, password: password, socket: socket) unless connected?(host, user)
-    query(host, user,
+    connect(host: new_resource.host, port: new_resource.port, username: new_resource.user, password: new_resource.password, socket: socket) unless connected?(new_resource.host, new_resource.user)
+    query(new_resource.host, new_resource.user,
           'SELECT VERSION()').each { |row| return row['VERSION()'][/([\d\.]+)-MariaDB.*/, 1] }
   end
 
@@ -61,10 +61,10 @@ action_class do
   end
 
   def change_master_to(master_attrs)
-    change_query = if server_older_than?('10.0') || connection_name == 'default'
+    change_query = if server_older_than?('10.0') || new_resource.connection_name == 'default'
                      'CHANGE MASTER TO '
                    else
-                     "CHANGE MASTER '#{connection_name}' TO "
+                     "CHANGE MASTER '#{new_resource.connection_name}' TO "
                    end
     master_settings = []
     master_attrs.each_pair do |attribute, value|
@@ -74,10 +74,10 @@ action_class do
   end
 
   def slave_status?
-    status_query = if server_older_than?('10.0') || connection_name == 'default'
+    status_query = if server_older_than?('10.0') || new_resource.connection_name == 'default'
                      'SHOW SLAVE STATUS'
                    else
-                     "SHOW SLAVE '#{connection_name}' STATUS"
+                     "SHOW SLAVE '#{new_resource.connection_name}' STATUS"
                    end
     replication_query(status_query)
   rescue Mysql2::Error => mysql_exception
@@ -85,18 +85,18 @@ action_class do
   end
 
   def start_slave
-    if server_older_than?('10.0') || connection_name == 'default'
+    if server_older_than?('10.0') || new_resource.connection_name == 'default'
       replication_query('START SLAVE')
     else
-      replication_quesry("START SLAVE'#{connection_name}'")
+      replication_quesry("START SLAVE'#{new_resource.connection_name}'")
     end
   end
 
   def stop_slave
-    if server_older_than?('10.0') || connection_name == 'default'
+    if server_older_than?('10.0') || new_resource.connection_name == 'default'
       replication_query('STOP SLAVE')
     else
-      replication_quesry("STOP SLAVE'#{connection_name}'")
+      replication_quesry("STOP SLAVE'#{new_resource.connection_name}'")
     end
   end
 end
@@ -149,24 +149,24 @@ load_current_value do
 end
 
 action :add do
-  if change_master_while_running || !slave_running?
+  if new_resource.change_master_while_running || !slave_running?
     converge_if_changed :master_host, :master_port, :master_user, :master_password, :master_use_gtid do
-      if master_host.nil? || master_user.nil? || master_password.nil? || master_port.nil?
+      if new_resource.master_host.nil? || new_resource.master_user.nil? || new_resource.master_password.nil? || new_resource.master_port.nil?
         raise '[ERROR] When adding a slave, you have to define master_host' \
               ' master_user and master_password and master_port!'
       end
-      master_config = { MASTER_HOST: "'#{master_host}'", MASTER_PORT: master_port,
-                        MASTER_USER: "'#{master_user}'", MASTER_PASSWORD: "'#{master_password}'" }
-      if master_use_gtid.casecmp('no') == 0 || server_older_than?('10.0.2')
-        Chef::Log.warn('use_gtid requires MariaDB 10.0 or older. Falling back to bin-log.') unless master_use_gtid.casecmp('no') == 0
+      master_config = { MASTER_HOST: "'#{new_resource.master_host}'", MASTER_PORT: new_resource.master_port,
+                        MASTER_USER: "'#{new_resource.master_user}'", MASTER_PASSWORD: "'#{new_resource.master_password}'" }
+      if new_resource.master_use_gtid.casecmp('no') == 0 || server_older_than?('10.0.2')
+        Chef::Log.warn('use_gtid requires MariaDB 10.0 or older. Falling back to bin-log.') unless new_resource.master_use_gtid.casecmp('no') == 0
         if master_log_name.nil? || master_log_pos.nil?
           raise '[ERROR] When adding a slave without GTID, you have to' \
                 'define master_log_file and master_log_pos !'
         end
-        master_config[:MASTER_LOG_FILE] = "'#{master_log_file}'"
-        master_config[:MASTER_LOG_POS] = master_log_pos
+        master_config[:MASTER_LOG_FILE] = "'#{new_resource.master_log_file}'"
+        master_config[:MASTER_LOG_POS] = new_resource.master_log_pos
       else
-        master_config[:MASTER_USE_GTID] = master_use_gtid
+        master_config[:MASTER_USE_GTID] = new_resource.master_use_gtid
       end
       slave_was_running = slave_running?
       stop_slave if slave_running?
