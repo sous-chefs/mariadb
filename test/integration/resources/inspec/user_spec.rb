@@ -31,6 +31,10 @@ control 'mariadb_user' do
     its(:stdout) { should contain '*2027D9391E714343187E07ACB41AE8925F30737E' }
   end
 
+  describe sql.query('select Host from mysql.user where User like \'gonzo\'') do
+    its(:stdout) { should contain '10.10.10.%' }
+  end
+
   describe sql.query('select Password from mysql.user where User like \'rizzo\'') do
     its(:stdout) { should contain '*125EA03B506F7C876D9321E9055F37601461E970' }
   end

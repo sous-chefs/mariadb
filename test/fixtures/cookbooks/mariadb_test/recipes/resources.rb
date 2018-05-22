@@ -84,6 +84,19 @@ mariadb_user 'rowlf' do
   action :create
 end
 
+mariadb_user 'gonzo' do
+  password 'abcdef'
+  host '10.10.10.%'
+  action :create
+end
+
+# create gonzo again to ensure the create action is idempotent
+mariadb_user 'gonzo' do
+  password 'abcdef'
+  host '10.10.10.%'
+  action :create
+end
+
 hash = hashed_password('*2027D9391E714343187E07ACB41AE8925F30737E'); # 'l33t'
 
 mariadb_user 'statler' do
