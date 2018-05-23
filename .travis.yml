@@ -19,6 +19,8 @@ services: docker
 
 env:
   matrix:
+  - INSTANCE=devel-ubuntu-1604
+  - INSTANCE=devel-ubuntu-1604 CHEF_VERSION=12.19.36
   - INSTANCE=default-centos-7
   - INSTANCE=default-centos-7 CHEF_VERSION=12.19.36
   - INSTANCE=default-debian-8
