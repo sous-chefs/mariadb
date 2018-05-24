@@ -27,6 +27,10 @@ Requirements
 - `ubuntu` - this cookbook is fully tested on ubuntu
 - `centos` - this cookbook is fully tested on centos
 
+#### Chef version
+Since version 1.5.4 of this cookbook, the chef 12 support is dropped (chef 12 has reached end of life). Now chef 13 is the minimum version tested.
+If you can't upgrade your chef 12, please use the version 1.5.3 or earlier of this cookbook.
+
 Attributes
 ----------
 
