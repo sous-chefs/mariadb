@@ -154,7 +154,7 @@ module MariaDB
           'client' => 'mariadb-client',
           'server' => 'mariadb-server' }
       when 'ubuntu'
-	if node['platform_version'].to_i >= 16
+        if node['platform_version'].to_i >= 16
           { 'devel' => 'libmariadb-client-lgpl-dev',
             'client' => 'mariadb-client',
             'server' => 'mariadb-server' }
