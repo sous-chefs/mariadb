@@ -4,10 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.5.4 (2018-05-25)
+
 ### Added
 
 - Added resource `mariadb_database` to manage databases ([#187](https://github.com/sous-chefs/mariadb/pull/187))
 - Added resource `mariadb_user` to manage users and privileges ([#187](https://github.com/sous-chefs/mariadb/pull/187))
+- Added support for MariaDB galera 10.2 ([#197](https://github.com/sous-chefs/mariadb/pull/197))
+- Added support for Debian 9 ([#193](https://github.com/sous-chefs/mariadb/issue/193),[#194](https://github.com/sous-chefs/mariadb/issue/194),[#198](https://github.com/sous-chefs/mariadb/issue/198),[#202](https://github.com/sous-chefs/mariadb/issue/202))
+- Added the new SST method mariabackup ([#192](https://github.com/sous-chefs/mariadb/issue/192))
+
+### Fixed
+
+- Fixed a libssl conflict when using resources based on mysql2 gem ([#193](https://github.com/sous-chefs/mariadb/pull/193))
+- Fixed lack of libmariadbclient-dev on Ubuntu 16.04 when using native package ([#186](https://github.com/sous-chefs/mariadb/issues/186))
+
+### Removed
+
+- Removed support for Chef 12 ([#203](https://github.com/sous-chefs/mariadb/issues/203))
 
 ## 1.5.3 (2017-10-13)
 
