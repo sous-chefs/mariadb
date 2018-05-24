@@ -4,6 +4,7 @@ driver:
 
 provisioner:
   name: chef_zero
+  require_chef_omnibus: "13.9.1"
 
 verifier:
   name: inspec
@@ -25,6 +26,19 @@ platforms:
   - name: ubuntu-16.04
 
 suites:
+  #
+  # devel
+  #
+  - name: devel
+    run_list:
+      - recipe[mariadb::devel]
+    attributes:
+      mariadb:
+        use_default_repository: false
+        install:
+          prefer_os_package: true
+    includes:
+      - ubuntu-16.04
   #
   # default
   #

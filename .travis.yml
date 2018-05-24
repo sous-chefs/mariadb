@@ -19,58 +19,60 @@ services: docker
 
 env:
   matrix:
+  - INSTANCE=devel-ubuntu-1604
+  - INSTANCE=devel-ubuntu-1604 CHEF_VERSION=13.9.1
   - INSTANCE=default-centos-7
-  - INSTANCE=default-centos-7 CHEF_VERSION=12.19.36
+  - INSTANCE=default-centos-7 CHEF_VERSION=13.9.1
   - INSTANCE=default-debian-8
-  - INSTANCE=default-debian-8 CHEF_VERSION=12.19.36
+  - INSTANCE=default-debian-8 CHEF_VERSION=13.9.1
   - INSTANCE=default-ubuntu-1604
-  - INSTANCE=default-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=default-ubuntu-1604 CHEF_VERSION=13.9.1
   - INSTANCE=native-centos-7
-  - INSTANCE=native-centos-7 CHEF_VERSION=12.19.36
+  - INSTANCE=native-centos-7 CHEF_VERSION=13.9.1
   - INSTANCE=scl-centos-7
-  - INSTANCE=scl-centos-7 CHEF_VERSION=12.19.36
+  - INSTANCE=scl-centos-7 CHEF_VERSION=13.9.1
   - INSTANCE=replication-centos-7
-  - INSTANCE=replication-centos-7 CHEF_VERSION=12.19.36
+  - INSTANCE=replication-centos-7 CHEF_VERSION=13.9.1
   - INSTANCE=replication-debian-8
-  - INSTANCE=replication-debian-8 CHEF_VERSION=12.19.36
+  - INSTANCE=replication-debian-8 CHEF_VERSION=13.9.1
   - INSTANCE=replication-ubuntu-1604
-  - INSTANCE=replication-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=replication-ubuntu-1604 CHEF_VERSION=13.9.1
   - INSTANCE=galera-centos-7
-  - INSTANCE=galera-centos-7 CHEF_VERSION=12.19.36
+  - INSTANCE=galera-centos-7 CHEF_VERSION=13.9.1
   - INSTANCE=galera-debian-8
-  - INSTANCE=galera-debian-8 CHEF_VERSION=12.19.36
+  - INSTANCE=galera-debian-8 CHEF_VERSION=13.9.1
   - INSTANCE=galera-ubuntu-1604
-  - INSTANCE=galera-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=galera-ubuntu-1604 CHEF_VERSION=13.9.1
   - INSTANCE=datadir-changed-centos-7
-  - INSTANCE=datadir-changed-centos-7 CHEF_VERSION=12.19.36
+  - INSTANCE=datadir-changed-centos-7 CHEF_VERSION=13.9.1
   - INSTANCE=datadir-changed-debian-8
-  - INSTANCE=datadir-changed-debian-8 CHEF_VERSION=12.19.36
+  - INSTANCE=datadir-changed-debian-8 CHEF_VERSION=13.9.1
   - INSTANCE=datadir-changed-ubuntu-1604
-  - INSTANCE=datadir-changed-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=datadir-changed-ubuntu-1604 CHEF_VERSION=13.9.1
   - INSTANCE=port-changed-centos-7
-  - INSTANCE=port-changed-centos-7 CHEF_VERSION=12.19.36
+  - INSTANCE=port-changed-centos-7 CHEF_VERSION=13.9.1
   - INSTANCE=port-changed-debian-8
-  - INSTANCE=port-changed-debian-8 CHEF_VERSION=12.19.36
+  - INSTANCE=port-changed-debian-8 CHEF_VERSION=13.9.1
   - INSTANCE=port-changed-ubuntu-1604
-  - INSTANCE=port-changed-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=port-changed-ubuntu-1604 CHEF_VERSION=13.9.1
   - INSTANCE=plugins-centos-7
-  - INSTANCE=plugins-centos-7 CHEF_VERSION=12.19.36
+  - INSTANCE=plugins-centos-7 CHEF_VERSION=13.9.1
   - INSTANCE=plugins-debian-8
-  - INSTANCE=plugins-debian-8 CHEF_VERSION=12.19.36
+  - INSTANCE=plugins-debian-8 CHEF_VERSION=13.9.1
   - INSTANCE=plugins-ubuntu-1604
-  - INSTANCE=plugins-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=plugins-ubuntu-1604 CHEF_VERSION=13.9.1
   - INSTANCE=no-binlog-centos-7
-  - INSTANCE=no-binlog-centos-7 CHEF_VERSION=12.19.36
+  - INSTANCE=no-binlog-centos-7 CHEF_VERSION=13.9.1
   - INSTANCE=no-binlog-debian-8
-  - INSTANCE=no-binlog-debian-8 CHEF_VERSION=12.19.36
+  - INSTANCE=no-binlog-debian-8 CHEF_VERSION=13.9.1
   - INSTANCE=no-binlog-ubuntu-1604
-  - INSTANCE=no-binlog-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=no-binlog-ubuntu-1604 CHEF_VERSION=13.9.1
   - INSTANCE=resources-centos-7
-  - INSTANCE=resources-centos-7 CHEF_VERSION=12.19.36
+  - INSTANCE=resources-centos-7 CHEF_VERSION=13.9.1
   - INSTANCE=resources-debian-8
-  - INSTANCE=resources-debian-8 CHEF_VERSION=12.19.36
+  - INSTANCE=resources-debian-8 CHEF_VERSION=13.9.1
   - INSTANCE=resources-ubuntu-1604
-  - INSTANCE=resources-ubuntu-1604 CHEF_VERSION=12.19.36
+  - INSTANCE=resources-ubuntu-1604 CHEF_VERSION=13.9.1
 
 
 before_script:

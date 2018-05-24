@@ -40,6 +40,10 @@ module MariaDB
       case os_platform
       when 'centos', 'redhat'
         package_provided = true if os_version.to_i == 7
+      when 'ubuntu'
+        package_provided = true if os_version.to_i >= 16
+      when 'debian'
+        package_provided = true if os_version.to_i >= 9
       end
       package_provided
     end
@@ -145,10 +149,20 @@ module MariaDB
         { 'devel' => 'libmariadbclient-devel',
           'client' => 'mariadb-community-server-client',
           'server' => 'mariadb-community-server' }
-      when 'debian', 'ubuntu'
+      when 'debian'
         { 'devel' => 'libmariadbclient-dev',
           'client' => 'mariadb-client',
           'server' => 'mariadb-server' }
+      when 'ubuntu'
+        if node['platform_version'].to_i >= 16
+          { 'devel' => 'libmariadb-client-lgpl-dev',
+            'client' => 'mariadb-client',
+            'server' => 'mariadb-server' }
+        else
+          { 'devel' => 'libmariadbclient-dev',
+            'client' => 'mariadb-client',
+            'server' => 'mariadb-server' }
+        end
       end
     end
 
