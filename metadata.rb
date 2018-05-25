@@ -7,7 +7,7 @@ long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 source_url       'https://github.com/sous-chefs/mariadb'
 issues_url       'https://github.com/sous-chefs/mariadb/issues'
 chef_version     '>= 13'
-version          '1.5.3'
+version          '1.5.4'
 
 supports 'ubuntu'
 supports 'debian', '>= 7.0'
