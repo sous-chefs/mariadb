@@ -96,28 +96,28 @@ module MariaDBCookbook
       !(execute_sql(query, new_resource.database) =~ /^installed$/).nil?
     end
 
-    def data_dir(version = node.run_state['mariadb']['version'])
+    def data_dir(_version = node.run_state['mariadb']['version'])
       '/var/lib/mysql/'
     end
 
-    def conf_dir(version = node.run_state['mariadb']['version'])
+    def conf_dir(_version = node.run_state['mariadb']['version'])
       case node['platform_family']
       when 'rhel', 'fedora'
-        "/etc/mariadb/"
+        '/etc/mariadb/'
       when 'amazon'
         if node['virtualization']['system'] == 'docker'
-          "/etc/mariadb"
+          '/etc/mysql'
         else
-          "/etc/mariadb"
+          '/etc/mariadb'
         end
       when 'debian'
-        "/etc/mysql/"
+        '/etc/mysql/'
       end
     end
 
     # determine the platform specific service name
-    def platform_service_name(version = node.run_state['mariadb']['version'])
-      "mysql"
+    def platform_service_name(_version = node.run_state['mariadb']['version'])
+      'mysql'
     end
 
     def mysql_command_string(database, query)
@@ -141,7 +141,7 @@ module MariaDBCookbook
 
     # determine the platform specific server package name
     def server_pkg_name
-      platform_family?('debian') ? "mariadb-server-#{new_resource.version}" : "MariaDB-server"
+      platform_family?('debian') ? "mariadb-server-#{new_resource.version}" : 'MariaDB-server'
     end
 
     # given the base URL build the complete URL string for a yum repo
@@ -152,8 +152,7 @@ module MariaDBCookbook
     # build the platform string that makes up the final component of the yum repo URL
     def yum_repo_platform_string
       release = yum_releasever
-      
-      "#{node['platform']}#{release}-#{ node['kernel']['machine'] == 'x86_64' ? 'amd64' : '$basearch' }"
+      "#{node['platform']}#{release}-#{node['kernel']['machine'] == 'x86_64' ? 'amd64' : '$basearch'}"
     end
 
     # on amazon use the RHEL 6 packages. Otherwise use the releasever yum variable

@@ -40,7 +40,6 @@ action :install do
 end
 
 action :create do
-
   find_resource(:service, 'mysql') do
     service_name lazy { platform_service_name }
     supports restart: true, status: true, reload: true

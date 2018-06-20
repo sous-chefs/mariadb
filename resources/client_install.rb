@@ -29,6 +29,6 @@ action :install do
   when 'debian'
     package "mariadb-client-#{new_resource.version}"
   when 'rhel', 'fedora', 'amazon'
-    package "MariaDB-client"
+    package 'MariaDB-client'
   end
 end

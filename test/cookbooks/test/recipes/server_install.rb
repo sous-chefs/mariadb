@@ -11,7 +11,3 @@ find_resource(:service, 'mariadb') do
   supports restart: true, status: true, reload: true
   action [:enable, :start]
 end
-
-#mariadb_server_conf 'PostgreSQL Config' do
-#  notifies :reload, 'service[mariadb]'
-#end
