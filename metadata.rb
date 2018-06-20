@@ -13,7 +13,4 @@ supports 'ubuntu'
 supports 'debian', '>= 7.0'
 supports 'centos', '>= 6.4'
 
-depends 'build-essential'
 depends 'selinux_policy', '~> 2.0'
-depends 'yum-epel'
-depends 'yum-scl'
