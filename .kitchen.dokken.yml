@@ -29,14 +29,6 @@ platforms:
     intermediate_instructions:
       - RUN yum -y install lsof which initscripts net-tools sudo
 
-- name: debian-7
-  driver:
-    image: debian:7
-    pid_one_command: /bin/init
-    intermediate_instructions:
-      - RUN /usr/bin/apt-get update
-      - RUN /usr/bin/apt-get install lsb-release net-tools sudo -y
-
 - name: debian-8
   driver:
     image: debian:8
@@ -57,6 +49,14 @@ platforms:
 - name: ubuntu-16.04
   driver:
     image: ubuntu:16.04
+    pid_one_command: /bin/systemd
+    intermediate_instructions:
+      - RUN /usr/bin/apt-get update
+      - RUN /usr/bin/apt-get install net-tools sudo -y
+
+- name: ubuntu-18.04
+  driver:
+    image: ubuntu:18.04
     pid_one_command: /bin/systemd
     intermediate_instructions:
       - RUN /usr/bin/apt-get update

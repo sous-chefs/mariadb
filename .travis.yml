@@ -23,8 +23,6 @@ env:
   - INSTANCE=repository-centos-6 CHEF_VERSION=14.2.0
   - INSTANCE=repository-centos-7
   - INSTANCE=repository-centos-7 CHEF_VERSION=14.2.0
-  - INSTANCE=repository-debian-7
-  - INSTANCE=repository-debian-7 CHEF_VERSION=14.2.0
   - INSTANCE=repository-debian-8
   - INSTANCE=repository-debian-8 CHEF_VERSION=14.2.0
   - INSTANCE=repository-debian-9
@@ -37,8 +35,6 @@ env:
   - INSTANCE=client-install-centos-6 CHEF_VERSION=14.2.0
   - INSTANCE=client-install-centos-7
   - INSTANCE=client-install-centos-7 CHEF_VERSION=14.2.0
-  - INSTANCE=client-install-debian-7
-  - INSTANCE=client-install-debian-7 CHEF_VERSION=14.2.0
   - INSTANCE=client-install-debian-8
   - INSTANCE=client-install-debian-8 CHEF_VERSION=14.2.0
   - INSTANCE=client-install-debian-9
@@ -51,8 +47,6 @@ env:
   - INSTANCE=server-install-centos-6 CHEF_VERSION=14.2.0
   - INSTANCE=server-install-centos-7
   - INSTANCE=server-install-centos-7 CHEF_VERSION=14.2.0
-  - INSTANCE=server-install-debian-7
-  - INSTANCE=server-install-debian-7 CHEF_VERSION=14.2.0
   - INSTANCE=server-install-debian-8
   - INSTANCE=server-install-debian-8 CHEF_VERSION=14.2.0
   - INSTANCE=server-install-debian-9
@@ -73,12 +67,8 @@ script: KITCHEN_LOCAL_YAML=.kitchen.dokken.yml /opt/chefdk/embedded/bin/kitchen 
 
 matrix:
   allow_failures:
-    - env: INSTANCE=repository-debian-7
-    - env: INSTANCE=repository-debian-7 CHEF_VERSION=14.2.0
-    - env: INSTANCE=client-install-debian-7
-    - env: INSTANCE=client-install-debian-7 CHEF_VERSION=14.2.0
-    - env: INSTANCE=server-install-debian-7
-    - env: INSTANCE=server-install-debian-7 CHEF_VERSION=14.2.0
+  - env: INSTANCE=server-install-ubuntu-1804
+  - env: INSTANCE=server-install-ubuntu-1804 CHEF_VERSION=14.2.0
   include:
     - script:
       - /opt/chefdk/bin/chef exec rake
