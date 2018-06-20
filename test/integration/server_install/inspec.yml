@@ -1,0 +1,13 @@
+name: server_install
+title: MariaDB Server Install
+maintainer: Nicolas Blanc
+copyright_email: sinfomicien@gmail.com
+license: Apache
+summary: Verify the correct installation of the mariadb server
+version: 0.0.1
+supports:
+  - os-family: unix
+inspec_version: '~> 2.0'
+depends:
+    - name: client_install
+      path: ./test/integration/client_install

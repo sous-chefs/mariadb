@@ -4,7 +4,8 @@ driver:
 
 provisioner:
   name: chef_zero
-  require_chef_omnibus: "13.9.1"
+  product_name: chef
+  product_version: <%= ENV['CHEF_VERSION'] || 'current' %>
 
 verifier:
   name: inspec
@@ -13,149 +14,27 @@ platforms:
   - name: centos-6.8
   - name: centos-7.3
   - name: debian-7.11
-    provisioner:
-          name: chef_zero
-          require_chef_omnibus: 12
   - name: debian-8.7
   - name: debian-9.4
-    attributes:
-      mariadb:
-        install:
-          version: '10.2'
-  - name: ubuntu-14.04
   - name: ubuntu-16.04
+  - name: ubuntu-18.04
 
 suites:
   #
-  # devel
+  # repository
   #
-  - name: devel
+  - name: repository
     run_list:
-      - recipe[mariadb::devel]
-    attributes:
-      mariadb:
-        use_default_repository: false
-        install:
-          prefer_os_package: true
-    includes:
-      - ubuntu-16.04
+      - recipe[test::repository]
   #
-  # default
+  # client_install
   #
-  - name: default
+  - name: client_install
     run_list:
-      - recipe[mariadb::default]
-    attributes:
-      mariadb:
-        use_default_repository: true
+      - recipe[test::client_install]
   #
-  # native
+  # server_install
   #
-  - name: native
+  - name: server_install
     run_list:
-      - recipe[mariadb::default]
-    attributes:
-      mariadb:
-        install:
-          prefer_os_package: true
-    includes:
-      - centos-7.3
-  #
-  # scl
-  #
-  - name: scl
-    run_list:
-      - recipe[mariadb::default]
-    attributes:
-      mariadb:
-        install:
-          prefer_scl_package: true
-    includes:
-      - centos-7.3
-      - centos-6.8
-  #
-  # replication
-  #
-  - name: replication
-    run_list:
-      - recipe[mariadb_test::replication]
-    attributes:
-      mariadb:
-        use_default_repository: true
-  #
-  # galera
-  #
-  - name: galera
-    run_list:
-      - recipe[mariadb::galera]
-    attributes:
-      mariadb:
-        use_default_repository: true
-  #
-  # galera with mariabackup as SST method
-  #
-  - name: galera-mariabackup
-    run_list:
-      - recipe[mariadb::galera]
-    attributes:
-      mariadb:
-        use_default_repository: true
-        galera:
-          wsrep_sst_method: 'mariabackup'
-    includes:
-      - debian-9.4
-  #
-  # datadir_changed
-  #
-  - name: datadir_changed
-    run_list:
-      - recipe[mariadb::default]
-    attributes:
-      mariadb:
-        use_default_repository: true
-        mysqld:
-          datadir: /home/mysql
-  #
-  # port_changed
-  #
-  - name: port_changed
-    run_list:
-      - recipe[mariadb::default]
-    attributes:
-      mariadb:
-        server_root_password: gsql
-        use_default_repository: true
-        mysqld:
-          port: 3307
-  #
-  # plugins
-  #
-  - name: plugins
-    run_list:
-      - recipe[mariadb::default]
-    attributes:
-      mariadb:
-        use_default_repository: true
-        plugins:
-          audit: true
-  #
-  # no_binlog
-  #
-  - name: no_binlog
-    run_list:
-      - recipe[mariadb::default]
-    attributes:
-      mariadb:
-        use_default_repository: true
-        replication:
-          log_bin: false
-  #
-  # resources to manage databases and users
-  #
-  - name: resources
-    run_list:
-      - recipe[mariadb_test::resources]
-    attributes:
-      mariadb:
-        server_root_password: gsql
-        use_default_repository: true
+      - recipe[test::server_install]
