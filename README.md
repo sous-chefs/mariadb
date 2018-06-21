@@ -91,6 +91,7 @@ This resource installs mariadb server packages.
 #### Actions
 
 - `install` - (default) Install server packages
+- `create`  - Start the service, change the user root password
 
 #### Properties
 
@@ -119,7 +120,24 @@ end
 Mainly use for internal purpose. You can use it to create a new configuration file into configuration dir. You have to define 2 variables `section` and `option`.
 Where `section` is the configuration section, and `option` is a hash of key/value. The name of the resource is used as base for the filename.
 
-Example:
+#### Actions
+
+- `add` - (default) Install the extra configuration file
+- `remove`  - Remove the extra configuration file
+
+#### Properties
+
+Name                | Types             | Description                                                   | Default                                   | Required?
+------------------- | ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
+`name`              | String            | Name of the extra conf file, used for .cnf filename           |                                           | yes
+`section`           | String            |                                                               |                                           | yes
+`option`            | Hash              | All option to write in the configuration file                 | {}                                        | yes
+`cookbook`          | String            | The cookbook to look in for the template source               | 'mariadb'                                 | yes
+`extconf_directory` | String            | An additional directory from which Mysql read extra cnf       | "#{conf_dir}/mariadb.d"                   | yes
+
+#### Examples
+
+This example:
 ```ruby
 mariadb_configuration 'fake' do
   section 'mysqld'
@@ -132,9 +150,7 @@ will become the file fake.cnf in the include dir (depend on your platform), whic
 foo=bar
 ```
 
-If the value start with a '#', then it's considered as a comment, and the value is printed as is (without the key)
-
-Example:
+In another example, if the value start with a '#', then it's considered as a comment, and the value is printed as is (without the key):
 ```ruby
 mariadb_configuration 'fake' do
   section 'mysqld'
