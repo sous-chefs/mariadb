@@ -81,3 +81,9 @@ suites:
   - name: server_install
     run_list:
       - recipe[test::server_install]
+  #
+  # server_configuration
+  #
+  - name: server_configuration
+    run_list:
+      - recipe[test::server_configuration]

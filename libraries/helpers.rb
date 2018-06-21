@@ -102,16 +102,19 @@ module MariaDBCookbook
 
     def conf_dir(_version = node.run_state['mariadb']['version'])
       case node['platform_family']
-      when 'rhel', 'fedora'
-        '/etc/mariadb/'
-      when 'amazon'
-        if node['virtualization']['system'] == 'docker'
-          '/etc/mysql'
-        else
-          '/etc/mariadb'
-        end
+      when 'rhel', 'fedora', 'amazon'
+        '/etc/'
       when 'debian'
         '/etc/mysql/'
+      end
+    end
+
+    def ext_conf_dir(_version = node.run_state['mariadb']['version'])
+      case node['platform_family']
+      when 'rhel', 'fedora', 'amazon'
+        "#{conf_dir}my.cnf.d"
+      when 'debian'
+        "#{conf_dir}conf.d"
       end
     end
 
@@ -158,6 +161,24 @@ module MariaDBCookbook
     # on amazon use the RHEL 6 packages. Otherwise use the releasever yum variable
     def yum_releasever
       platform?('amazon') ? '6' : '$releasever'
+    end
+
+    def default_socket
+      case node['platform_family']
+      when 'rhel', 'fedora', 'amazon'
+        '/var/lib/mysql/mysql.sock'
+      when 'debian'
+        '/var/run/mysqld/mysqld.sock'
+      end
+    end
+
+    def default_pid_file
+      case node['platform_family']
+      when 'rhel', 'fedora', 'amazon'
+        nil
+      when 'debian'
+        '/var/run/mysqld/mysqld.pid'
+      end
     end
   end
 end

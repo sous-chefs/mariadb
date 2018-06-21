@@ -21,7 +21,7 @@ include MariaDBCookbook::Helpers
 property :version,           String, default: '10.3'
 property :setup_repo,        [true, false], default: true
 property :mycnf_file,        String, default: lazy { "#{conf_dir}/my.cnf" }
-property :extconf_directory, String, default: lazy { "#{conf_dir}/mariadb.d" }
+property :extconf_directory, String, default: lazy { ext_conf_dir }
 property :external_pid_file, String, default: lazy { "/var/run/mysql/#{version}-main.pid" }
 property :password,          [String, nil], default: 'generate'
 property :port,              [String, Integer], default: 3306
@@ -48,7 +48,7 @@ action :create do
 
   log 'Enable and start MariaDB service' do
     notifies :enable, "service[#{platform_service_name}]", :immediately
-    notifies :start, 'service[#{platform_service_name}]', :immediately
+    notifies :start, "service[#{platform_service_name}]", :immediately
   end
 
   mariadb_root_password = new_resource.password == 'generate' || new_resource.password.nil? ? secure_random : new_resource.password
