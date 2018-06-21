@@ -3,14 +3,12 @@ MariaDB Cookbook
 
 [![Build Status](https://travis-ci.org/sous-chefs/mariadb.svg?branch=master)](https://travis-ci.org/sous-chefs/mariadb) [![Cookbook Version](https://img.shields.io/cookbook/v/mariadb.svg)](https://supermarket.chef.io/cookbooks/mariadb)
 
-Description
------------
+## Description
 
 This cookbook contains all the stuffs to install and configure and manage a mariadb server on a dpkg/apt compliant system (typically debian), or a rpm/yum compliant system (typically centos)
 
 
-Requirements
-------------
+## Requirements
 
 #### repository
 - `mariadb` - This cookbook need that you have a valid apt repository installed with the mariadb official packages
@@ -28,115 +26,95 @@ Requirements
 - `centos` - this cookbook is fully tested on centos
 
 #### Chef version
-Since version 1.5.4 of this cookbook, the chef 12 support is dropped (chef 12 has reached end of life). Now chef 13 is the minimum version tested.
-If you can't upgrade your chef 12, please use the version 1.5.3 or earlier of this cookbook.
+Since version 2.0.0 of this cookbook, chef 13 support is dropped. New chef 14 is the minimum version tested.
+If you can't upgrade your chef 13, please user the version 1.5.4 or earlier of this cookbook.
 
-Attributes
-----------
+## Upgrading
 
-#### mariadb::default
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['install']['version']</tt></td>
-    <td>String</td>
-    <td>Version to install (currently 10.0 et 5.5)</td>
-    <td><tt>10.0</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['use_default_repository']</tt></td>
-    <td>Boolean</td>
-    <td>Whether to install MariaDB default repository or not. If you don't have a local repo containing packages, put it to true</td>
-    <td><tt>false</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['server_root_password']</tt></td>
-    <td>String</td>
-    <td>local root password</td>
-    <td><tt></tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['forbid_remote_root']</tt></td>
-    <td>Boolean</td>
-    <td>Whether to activate root remote access</td>
-    <td><tt>true</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['allow_root_pass_change']</tt></td>
-    <td>Boolean</td>
-    <td>Whether to allow the recipe to change root password after the first install</td>
-    <td><tt>false</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['client']['development_files']</tt></td>
-    <td>Boolean</td>
-    <td>Whether to install development files in client recipe</td>
-    <td><tt>true</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['apt_repository']['base_url']</tt></td>
-    <td>String</td>
-    <td>The http base url to use when installing from default repository</td>
-    <td><tt>'ftp.igh.cnrs.fr/pub/mariadb/repo'</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['install']['prefer_os_package']</tt></td>
-    <td>Boolean</td>
-    <td>Indicator for preferring use packages shipped by running os</td>
-    <td><tt>false</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['install']['prefer_scl_package']</tt></td>
-    <td>Boolean</td>
-    <td>Indicator for preferring packages from software collections repository</td>
-    <td><tt>false</tt></td>
-  </tr>
-</table>
+If you are wondering where all the recipes went in v2.0+, or how on earth I use this new cookbook please see upgrading.md for a full description.
 
-Usage
------
+## Resources
 
-To install a default server for mariadb choose the version you want (MariaDB 5.5 or 10, galera or not), then call the recipe accordingly.
+### mariadb_repository
 
-List of availables recipes:
+It installs the mariadb.org apt or yum repository
 
-- mariadb::default (just call server recipe with default options)
-- mariadb::server
-- mariadb::galera
-- mariadb::client
-- mariadb::devel
+#### Actions
 
-Please be ware that by default, the root password is empty! If you want have changed it use the `node['mariadb']['server_root_password']` attribute to put a correct value. And by default the remote root access is not activated. Use `node['mariadb']['forbid_remote_root']` attribute to change it.
+- `install` - (default) Install mariadb.org apt or yum repository
 
-Sometimes, the default apt repository used for apt does not work (see issue #6). In this case, you need to choose another mirror which worki (pick it from mariadb website), and put the http base url in the attribute `node['mariadb']['apt_repository']['base_url']`.
+#### Properties
 
-#### mariadb::galera
+Name                | Types             | Description                                                   | Default                                   | Required?
+------------------- | ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
+`version`           | String            | Version of MariaDB to install                                 | '10.3'                                    | no
 
-When installing the mariadb::galera on debian recipe, You have to take care of one specific attribute:
-`node['mariadb']['debian']['password']` which default to 'please-change-me'
-As wee need to have the same password for this user on the whole cluster nodes... We will change the default install one by the content of this attribute.
+#### Examples
 
-#### mariadb::client
+To install '10.3' version:
 
-By default this recipe installs the client, and all needed packages to develop client application. If you do not want to install development files when installing client package,
-set the attribute `node['mariadb']['client']['development_files']` to false. 
+```ruby
+mariadb_repository 'MariaDB 10.3 Repository' do
+  version '10.3'
+end
+```
 
-#### mariadb::devel
+### mariadb_client_install
 
-By default this recipe installs all needed packages to develop client application.
+This resource installs mariadb client packages.
 
-Resources/Providers
-----------
+#### Actions
 
-This recipe define several custom resources and providers:
-- `Chef::Provider::Mariadb::Configuration` shortcut resource `mariadb_configuration`
+- `install` - (default) Install client packages
 
-#### mariadb_configuration
+#### Properties
+
+Name                | Types             | Description                                                   | Default                                   | Required?
+------------------- | ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
+`version`           | String            | Version of MariaDB to install                                 | '10.3'                                    | no
+`setup_repo`        | Boolean           | Define if you want to add the MariaDB repository              | true                                      | no
+
+#### Examples
+
+To install '10.3' version:
+
+```ruby
+mariadb_client_install 'MariaDB Client install' do
+  version '10.3'
+end
+```
+
+### mariadb_server_install
+
+This resource installs mariadb server packages.
+
+#### Actions
+
+- `install` - (default) Install server packages
+
+#### Properties
+
+Name                | Types             | Description                                                   | Default                                   | Required?
+------------------- | ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
+`version`           | String            | Version of MariaDB to install                                 | '10.3'                                    | no
+`setup_repo`        | Boolean           | Define if you want to add the MariaDB repository              | true                                      | no
+`mycnf_file`        | String            |                                                               | "#{conf_dir}/my.cnf"                      | no
+`extconf_directory` | String            |                                                               | "#{conf_dir}/mariadb.d"                   | no
+`external_pid_file` | String            |                                                               | "/var/run/mysql/#{version}-main.pid" }    | no
+`password`          | String, nil       | Pass in a password, or have the cookbook generate one for you | 'generate'                                | no
+`port`              | String, Integer   | Database listen port                                          | 3306                                      | no
+
+#### Examples
+
+To install '10.3' version:
+
+```ruby
+mariadb_server_install 'MariaDB Server install' do
+  version '10.3'
+end
+```
+
+### mariadb_configuration
 
 Mainly use for internal purpose. You can use it to create a new configuration file into configuration dir. You have to define 2 variables `section` and `option`.
 Where `section` is the configuration section, and `option` is a hash of key/value. The name of the resource is used as base for the filename.
@@ -145,8 +123,7 @@ Example:
 ```ruby
 mariadb_configuration 'fake' do
   section 'mysqld'
-  option :innodb_buffer_pool_size => node['mysql']['innodb_buffer_pool_size'],
-    :innodb_flush_method => node['mysql']['innodb_flush_method']
+  option :foo => 'bar'
 end
 ```
 will become the file fake.cnf in the include dir (depend on your platform), which contain:
@@ -172,7 +149,7 @@ will become the file fake.cnf in the include dir (depend on your platform), whic
 foo=bar
 ```
 
-#### mariadb_replication
+### mariadb_replication
 
 This LWRP is used to manage replication setup on a host. To use this LWRP, the node need to have the mysql binary installed (via the mariadb::client or mariadb::server or mariadb::galera recipe).
 It have 4 actions:
