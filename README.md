@@ -175,11 +175,11 @@ foo=bar
 
 Name                            | Types             | Description                                                   | Default                                   | Required?
 ------------------------------- | ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
-`version`                       | String            |                                                               | '10.3'                                    | no
+`version`                       | String            | Version of MariaDB installed                                  | '10.3'                                    | no
 `cookbook`                      | String            |                                                               | 'mariadb'                                 | no
 `mycnf_file`                    | String            |                                                               | "#{conf_dir}my.cnf"                       | no
 `extra_configuration_directory` | String,           |                                                               | ext_conf_dir                              | no
-`client_port`                   | String,Integer    |                                                               | 3306                                      | no
+`client_port`                   | String, Integer   |                                                               | 3306                                      | no
 `client_socket`                 | String            |                                                               | default_socket                            | no
 `client_host`                   | String, nil       |                                                               | nil                                       | no
 `client_options`                | Hash              |                                                               | {}                                        | no
@@ -210,7 +210,7 @@ Name                            | Types             | Description               
 `mysqld_max_heap_table_size`    | String            |                                                               | '32M'                                     | no
 `mysqld_myisam_recover`         | String            |                                                               | 'BACKUP'                                  | no
 `mysqld_key_buffer_size`        | String            |                                                               | '128M'                                    | no
-`mysqld_open_files_limit`       | Integer,nil       |                                                               | nil                                       | no
+`mysqld_open_files_limit`       | Integer, nil      |                                                               | nil                                       | no
 `mysqld_table_open_cache`       | Integer           |                                                               | 400                                       | no
 `mysqld_myisam_sort_buffer_size`| String            |                                                               | '512M'                                    | no
 `mysqld_concurrent_insert`      | Integer           |                                                               | 2                                         | no
@@ -218,7 +218,7 @@ Name                            | Types             | Description               
 `mysqld_read_rnd_buffer_size`   | String            |                                                               | '1M'                                      | no
 `mysqld_query_cache_limit`      | String            |                                                               | '128K'                                    | no
 `mysqld_query_cache_size`       | String            |                                                               | '64M'                                     | no
-`mysqld_query_cache_type`       | String,nil        |                                                               | nil                                       | no
+`mysqld_query_cache_type`       | String, nil       |                                                               | nil                                       | no
 `mysqld_default_storage_engine` | String            |                                                               | 'InnoDB'                                  | no
 `mysqld_general_log_file`       | String            |                                                               | '/var/log/mysql/mysql.log'                | no
 `mysqld_general_log`            | Integer           |                                                               | 0                                         | no
