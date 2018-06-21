@@ -47,8 +47,8 @@ action :create do
   end
 
   log 'Enable and start MariaDB service' do
-    notifies :enable, 'service[mysql]', :immediately
-    notifies :start, 'service[mysql]', :immediately
+    notifies :enable, "service[#{platform_service_name}]", :immediately
+    notifies :start, 'service[#{platform_service_name}]', :immediately
   end
 
   mariadb_root_password = new_resource.password == 'generate' || new_resource.password.nil? ? secure_random : new_resource.password
