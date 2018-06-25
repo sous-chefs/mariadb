@@ -85,7 +85,7 @@ module MariaDBCookbook
         if index == 0
           titles = row.split("\t")
         else
-          return_array[index-1] = parse_one_row(row, titles)
+          return_array[index - 1] = parse_one_row(row, titles)
         end
         index += 1
       end

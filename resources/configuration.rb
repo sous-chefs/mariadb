@@ -17,18 +17,18 @@
 #
 
 # name of the extra conf file, used for .cnf filename
-property :name,              String, required: true, name_property: true
-property :section,           String, required: true
-property :option,            Hash,   required: true, default: {}
-property :cookbook,          String,                 default: 'mariadb'
-property :extconf_directory, String,                 default: lazy { ext_conf_dir }
+property :configuration_name, String, name_property: true
+property :section,            String, required: true
+property :option,             Hash,   required: true, default: {}
+property :cookbook,           String,                 default: 'mariadb'
+property :extconf_directory,  String,                 default: lazy { ext_conf_dir }
 
 action :add do
   variables_hash = {
     section: new_resource.section,
     options: new_resource.option,
   }
-  template ::File.join(new_resource.extconf_directory, new_resource.name + '.cnf') do
+  template ::File.join(new_resource.extconf_directory, new_resource.configuration_name + '.cnf') do
     source 'conf.d.generic.erb'
     owner 'root'
     group 'mysql'
@@ -40,9 +40,9 @@ action :add do
 end
 
 action :remove do
-  if ::File.exist?(::File.join(new_resource.extconf_directory, new_resource.name + '.cnf'))
-    Chef::Log.info "Removing #{new_resource.name} configuration from #{new_resource.extconf_directory}/#{new_resource.name}.cnf"
-    file ::File.join(new_resource.extconf_directory, new_resource.name + '.cnf') do
+  if ::File.exist?(::File.join(new_resource.extconf_directory, new_resource.configuration_name + '.cnf'))
+    Chef::Log.info "Removing #{new_resource.configuration_name} configuration from #{new_resource.extconf_directory}/#{new_resource.configuration_name}.cnf"
+    file ::File.join(new_resource.extconf_directory, new_resource.configuration_name + '.cnf') do
       action :delete
     end
   end
