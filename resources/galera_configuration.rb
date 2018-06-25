@@ -22,7 +22,7 @@ property :cookbook,                              String,              default: '
 property :extra_configuration_directory,         String,              default: lazy { ext_conf_dir }
 property :cluster_name,                          String,              default: 'galera_cluster'
 property :cluster_search_query,                  [String, NilClass],  default: nil
-property :gcomm_address,                         String,              default: nil
+property :gcomm_address,                         [String, NilClass],  default: nil
 property :server_id,                             Integer,             default: 100
 property :wsrep_sst_method,                      String,              default: 'rsync'
 property :wsrep_sst_auth,                        String,              default: 'sstuser:some_secret_password'
