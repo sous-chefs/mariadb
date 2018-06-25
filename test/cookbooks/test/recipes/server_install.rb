@@ -2,6 +2,7 @@ mariadb_repository 'install'
 
 mariadb_server_install 'package' do
   action [:install, :create]
+  password 'gsql'
 end
 
 # Using this to generate a service resource to control

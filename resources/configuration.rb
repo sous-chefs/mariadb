@@ -26,9 +26,9 @@ property :extconf_directory, String,                 default: lazy { ext_conf_di
 action :add do
   variables_hash = {
     section: new_resource.section,
-    options: new_resource.option
+    options: new_resource.option,
   }
-  template ::File.join( new_resource.extconf_directory, new_resource.name + '.cnf' ) do
+  template ::File.join(new_resource.extconf_directory, new_resource.name + '.cnf') do
     source 'conf.d.generic.erb'
     owner 'root'
     group 'mysql'
@@ -42,9 +42,8 @@ end
 action :remove do
   if ::File.exist?(::File.join(new_resource.extconf_directory, new_resource.name + '.cnf'))
     Chef::Log.info "Removing #{new_resource.name} configuration from #{new_resource.extconf_directory}/#{new_resource.name}.cnf"
-    file ::File.join( new_resource.extconf_directory, new_resource.name + '.cnf') do
+    file ::File.join(new_resource.extconf_directory, new_resource.name + '.cnf') do
       action :delete
     end
   end
 end
-

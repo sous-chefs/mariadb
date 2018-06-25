@@ -11,6 +11,7 @@ provisioner:
   product_name: chef
   product_version: <%= ENV['CHEF_VERSION'] || 'current' %>
   deprecations_as_errors: true
+  log_level: <%= ENV['CHEF_LOG_LEVEL'] || "auto" %>
 
 platforms:
 - name: centos-6
@@ -87,3 +88,14 @@ suites:
   - name: server_configuration
     run_list:
       - recipe[test::server_configuration]
+  #
+  # resources
+  #
+  - name: resources
+    run_list:
+      - recipe[test::user_database]
+    attributes:
+      chef_client:
+        config:
+          log_level: ":debug"
+

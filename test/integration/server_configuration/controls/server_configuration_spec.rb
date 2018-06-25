@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-includedir = '/etc/mysql/conf.d'
+# includedir = '/etc/mysql/conf.d'
 mysql_config_file = '/etc/mysql/my.cnf'
 case os[:family]
 when 'centos', 'redhat', 'amazon'
-  includedir = '/etc/my.cnf.d'
+  # includedir = '/etc/my.cnf.d'
   mysql_config_file = '/etc/my.cnf'
 end
 
@@ -20,7 +20,7 @@ end
   key_buffer_size: '128M',
   max_allowed_packet: '16M',
   sort_buffer_size: '4M',
-  myisam_sort_buffer_size: '512M'
+  myisam_sort_buffer_size: '512M',
 }.each do |attribute, value|
   describe command("grep -E \"^#{attribute}\\s+\" #{mysql_config_file}") do
     its(:stdout) { should match(/#{value}/) }

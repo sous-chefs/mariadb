@@ -6,6 +6,7 @@ provisioner:
   name: chef_zero
   product_name: chef
   product_version: <%= ENV['CHEF_VERSION'] || 'current' %>
+  log_level: <%= ENV['CHEF_LOG_LEVEL'] || "auto" %>
 
 verifier:
   name: inspec
@@ -43,3 +44,9 @@ suites:
   - name: server_configuration
     run_list:
       - recipe[test::server_configuration]
+  #
+  # resources
+  #
+  - name: resources
+    run_list:
+      - recipe[test::user_database]

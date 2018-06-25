@@ -7,5 +7,3 @@ description 'Installs/Configures test'
 version '0.1.0'
 
 depends 'mariadb'
-depends 'ruby_rbenv'
-depends 'locale'
