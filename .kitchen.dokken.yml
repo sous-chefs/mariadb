@@ -94,8 +94,4 @@ suites:
   - name: resources
     run_list:
       - recipe[test::user_database]
-    attributes:
-      chef_client:
-        config:
-          log_level: ":debug"
 

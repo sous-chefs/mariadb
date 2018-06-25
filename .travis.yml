@@ -55,6 +55,30 @@ env:
   - INSTANCE=server-install-ubuntu-1604 CHEF_VERSION=14.2.0
   - INSTANCE=server-install-ubuntu-1804
   - INSTANCE=server-install-ubuntu-1804 CHEF_VERSION=14.2.0
+  - INSTANCE=server-configuration-centos-6
+  - INSTANCE=server-configuration-centos-6 CHEF_VERSION=14.2.0
+  - INSTANCE=server-configuration-centos-7
+  - INSTANCE=server-configuration-centos-7 CHEF_VERSION=14.2.0
+  - INSTANCE=server-configuration-debian-8
+  - INSTANCE=server-configuration-debian-8 CHEF_VERSION=14.2.0
+  - INSTANCE=server-configuration-debian-9
+  - INSTANCE=server-configuration-debian-9 CHEF_VERSION=14.2.0
+  - INSTANCE=server-configuration-ubuntu-1604
+  - INSTANCE=server-configuration-ubuntu-1604 CHEF_VERSION=14.2.0
+  - INSTANCE=server-configuration-ubuntu-1804
+  - INSTANCE=server-configuration-ubuntu-1804 CHEF_VERSION=14.2.0
+  - INSTANCE=resources-centos-6
+  - INSTANCE=resources-centos-6 CHEF_VERSION=14.2.0
+  - INSTANCE=resources-centos-7
+  - INSTANCE=resources-centos-7 CHEF_VERSION=14.2.0
+  - INSTANCE=resources-debian-8
+  - INSTANCE=resources-debian-8 CHEF_VERSION=14.2.0
+  - INSTANCE=resources-debian-9
+  - INSTANCE=resources-debian-9 CHEF_VERSION=14.2.0
+  - INSTANCE=resources-ubuntu-1604
+  - INSTANCE=resources-ubuntu-1604 CHEF_VERSION=14.2.0
+  - INSTANCE=resources-ubuntu-1804
+  - INSTANCE=resources-ubuntu-1804 CHEF_VERSION=14.2.0
 
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
