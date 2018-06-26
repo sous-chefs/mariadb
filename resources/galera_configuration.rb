@@ -21,17 +21,17 @@ property :version,                               String,              default: '
 property :cookbook,                              String,              default: 'mariadb'
 property :extra_configuration_directory,         String,              default: lazy { ext_conf_dir }
 property :cluster_name,                          String,              default: 'galera_cluster'
-property :cluster_search_query,                  [String, NilClass],  default: nil
-property :gcomm_address,                         [String, NilClass],  default: nil
+property :cluster_search_query,                  [String, nil],       default: nil
+property :gcomm_address,                         [String, nil],       default: nil
 property :server_id,                             Integer,             default: 100
 property :wsrep_sst_method,                      String,              default: 'rsync'
 property :wsrep_sst_auth,                        String,              default: 'sstuser:some_secret_password'
 property :wsrep_provider,                        String,              default: '/usr/lib/galera/libgalera_smm.so'
 property :wsrep_slave_threads,                   String,              default: '%{auto}'
 property :innodb_flush_log_at_trx_commit,        Integer,             default: 2
-property :wsrep_node_address_interface,          [String, NilClass],  default: nil
-property :wsrep_node_port,                       [Integer, NilClass], default: nil
-property :wsrep_node_incoming_address_interface, [String, NilClass],  default: nil
+property :wsrep_node_address_interface,          [String, nil],       default: nil
+property :wsrep_node_port,                       [Integer, nil],      default: nil
+property :wsrep_node_incoming_address_interface, [String, nil],       default: nil
 property :wsrep_provider_options,                Hash,                default: { 'gcache.size': '512M' }
 property :options,                               Hash,                default: {}
 property :cluster_nodes,                         Array,               default: []
@@ -68,15 +68,16 @@ action :create do
   if new_resource.gcomm_address.nil?
     galera_cluster_nodes = []
     if new_resource.cluster_search_query.nil?
+      # Let this fallback search here, but old style will work, but it's deprecated...
+      # Better use a custom search query if you do not set gcomm by hand
       galera_cluster_nodes = search(
         :node, \
-        "mariadb_galera_cluster_name:#{node['mariadb']['galera']['cluster_name']}"
+        "mariadb_galera_cluster_name:#{new_resource.cluster_name}"
       )
     else
       galera_cluster_nodes = search 'node', new_resource.cluster_search_query
       log 'Chef search results' do
-        message "Searching for \"#{new_resource.cluster_search_query}\" \
-          resulted in \"#{galera_cluster_nodes}\" ..."
+        message "Searching for [#{new_resource.cluster_search_query}] resulted in [#{galera_cluster_nodes}]"
         level :debug
       end
     end
@@ -87,8 +88,8 @@ action :create do
     gcomm = 'gcomm://'
     galera_cluster_nodes.each do |lnode|
       next unless lnode.name != node.name
-      gcomm += ',' unless first
-      gcomm += if new_resource.wsrep_node_port.nil?
+      gcomm << ',' unless first
+      gcomm << if new_resource.wsrep_node_port.nil?
                  lnode['fqdn']
                else
                  "#{lnode['fqdn']}:#{new_resource.wsrep_node_port}"
@@ -112,11 +113,11 @@ action :create do
     first = true
     wsrep_prov_opt = '"'
     new_resource.wsrep_provider_options.each do |opt, val|
-      wsrep_prov_opt += ';' unless first
-      wsrep_prov_opt += opt + '=' + val
+      wsrep_prov_opt << ';' unless first
+      wsrep_prov_opt << opt + '=' + val
       first = false
     end
-    wsrep_prov_opt += '"'
+    wsrep_prov_opt << '"'
     galera_options['wsrep_provider_options'] = wsrep_prov_opt
   end
   galera_options['wsrep_cluster_address'] = gcomm
