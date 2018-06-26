@@ -1,42 +1,82 @@
 #
-# Cookbook Name:: mariadb
+# Cookbook:: mariadb
 # Resource:: user
 #
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 
-default_action :create
+include MariaDBCookbook::Helpers
 
-property :username, kind_of: String, name_attribute: true
-property :password, kind_of: [String, HashedPassword], sensitive: true
-property :host, kind_of: String, default: 'localhost', desired_state: false
+property :username,      String,                             name_property: true
+property :password,      [String, HashedPassword, NilClass], default: nil,  sensitive: true
+property :host,          String,                             default: 'localhost', desired_state: false
 property :database_name, String
-property :table, String
-property :privileges, Array, default: [:all]
-property :grant_option, [TrueClass, FalseClass], default: false
-property :require_ssl, [TrueClass, FalseClass], default: false
-property :require_x509, [TrueClass, FalseClass], default: false
+property :table,         String
+property :privileges,    Array,                              default: [:all]
+property :grant_option,  [TrueClass, FalseClass],            default: false
+property :require_ssl,   [TrueClass, FalseClass],            default: false
+property :require_x509,  [TrueClass, FalseClass],            default: false
 # Credentials used for control connection
-property :ctrl_user, kind_of: [String, NilClass], default: 'root', desired_state: false
-property :ctrl_password, kind_of: [String, NilClass], default: node['mariadb']['server_root_password'], sensitive: true, desired_state: false
-property :ctrl_host, kind_of: [String, NilClass], default: 'localhost', desired_state: false
-property :ctrl_port, kind_of: [String, NilClass], default: node['mariadb']['mysqld']['port'].to_s, desired_state: false
+property :ctrl_user,     [String, NilClass],                 default: 'root', desired_state: false
+property :ctrl_password, [String, NilClass],                 default: nil, sensitive: true, desired_state: false
+property :ctrl_host,     [String, NilClass],                 default: 'localhost', desired_state: false
+property :ctrl_port,     [Integer, NilClass],                default: 3306, desired_state: false
+
+action :create do
+  if current_resource.nil?
+    converge_by "Creating user '#{new_resource.username}'@'#{new_resource.host}'" do
+      create_sql = "CREATE USER '#{new_resource.username}'@'#{new_resource.host}'"
+      if new_resource.password
+        create_sql << ' IDENTIFIED BY '
+        create_sql << if new_resource.password.is_a?(HashedPassword)
+                        " PASSWORD '#{new_resource.password}'"
+                      else
+                        " '#{new_resource.password}'"
+                      end
+      end
+      run_query create_sql
+    end
+  elsif !test_user_password
+    update_user_password
+  end
+end
+
+load_current_value do
+  socket = ctrl_host == 'localhost' ? default_socket : nil
+  ctrl = { user: ctrl_user, password: ctrl_password
+         }.merge!(socket.nil? ? { host: ctrl_host, port: ctrl_port.to_s } : { socket: socket })
+  query = "SELECT User,Host FROM mysql.user WHERE User='#{username}' AND Host='#{host}';"
+  results = execute_sql(query, nil, ctrl)
+  current_value_does_not_exist! if results.split("\n").count <= 1
+end
 
 action_class do
-  include MariaDB::Connection::Helper
+  include MariaDBCookbook::Helpers
 
   def run_query(query)
-    socket = if node['mariadb']['client']['socket'] && new_resource.ctrl_host == 'localhost'
-               node['mariadb']['client']['socket']
-             end
-    unless connected?(new_resource.ctrl_host, new_resource.ctrl_user)
-      connect(host: new_resource.ctrl_host, port: new_resource.ctrl_port, username: new_resource.ctrl_user, password: new_resource.ctrl_password, socket: socket)
-    end
-    raw_query = query.is_a?(Proc) ? query.call : query
-    Chef::Log.debug("#{@new_resource}: Performing query [#{raw_query}]")
-    query(new_resource.ctrl_host, new_resource.ctrl_user, raw_query)
+    socket = new_resource.ctrl_host == 'localhost' ? default_socket : nil
+    ctrl_hash = { host: new_resource.ctrl_host, port: new_resource.ctrl_port, username: new_resource.ctrl_user, password: new_resource.ctrl_password, socket: socket }
+    Chef::Log.debug("#{@new_resource}: Performing query [#{query}]")
+    execute_sql(query, nil, ctrl_hash)
   end
 
   def database_has_password_column
-    run_query('SHOW COLUMNS FROM mysql.user WHERE Field="Password"').count > 0
+    begin
+      result = run_query('SHOW COLUMNS FROM mysql.user WHERE Field="Password"')
+    rescue
+      return false
+    end
+    result.split("\n").count > 1
   end
 
   def redact_password(query, password)
@@ -51,7 +91,7 @@ action_class do
     if database_has_password_column
       test_sql = 'SELECT User,Host,Password FROM mysql.user ' \
                        "WHERE User='#{new_resource.username}' AND Host='#{new_resource.host}' "
-      test_sql += if new_resource.password.is_a? HashedPassword
+      test_sql << if new_resource.password.is_a? HashedPassword
                     "AND Password='#{new_resource.password}'"
                   else
                     "AND Password=PASSWORD('#{new_resource.password}')"
@@ -60,20 +100,20 @@ action_class do
       test_sql = 'SELECT User,Host,authentication_string FROM mysql.user ' \
                        "WHERE User='#{new_resource.username}' AND Host='#{new_resource.host}' " \
                        "AND plugin='mysql_native_password' "
-      test_sql += if new_resource.password.is_a? HashedPassword
+      test_sql << if new_resource.password.is_a? HashedPassword
                     "AND authentication_string='#{new_resource.password}'"
                   else
                     "AND authentication_string=PASSWORD('#{new_resource.password}')"
                   end
     end
-    run_query(test_sql).count > 0
+    run_query(test_sql).split("\n").count > 1
   end
 
   def update_user_password
     converge_by "Update password for user '#{new_resource.username}'@'#{new_resource.host}'" do
       if database_has_password_column
         password_sql = "SET PASSWORD FOR '#{new_resource.username}'@'#{new_resource.host}' = "
-        password_sql += if new_resource.password.is_a? HashedPassword
+        password_sql << if new_resource.password.is_a? HashedPassword
                           "'#{new_resource.password}'"
                         else
                           " PASSWORD('#{new_resource.password}')"
@@ -82,7 +122,7 @@ action_class do
         # "ALTER USER is now the preferred statement for assigning passwords."
         # http://dev.mysql.com/doc/refman/5.7/en/set-password.html
         password_sql = "ALTER USER '#{new_resource.username}'@'#{new_resource.host}' "
-        password_sql += if new_resource.password.is_a? HashedPassword
+        password_sql << if new_resource.password.is_a? HashedPassword
                           "IDENTIFIED WITH mysql_native_password AS '#{new_resource.password}'"
                         else
                           "IDENTIFIED BY '#{new_resource.password}'"
@@ -165,72 +205,39 @@ action_class do
   end
 end
 
-load_current_value do
-  require 'mysql2'
-  socket = if node['mariadb']['client']['socket'] && ctrl_host == 'localhost'
-             node['mariadb']['client']['socket']
-           end
-  conn_options = { username: ctrl_user,
-                   password: ctrl_password,
-                   port: ctrl_port.to_s,
-                 }.merge!(socket.nil? ? { host: ctrl_host } : { socket: socket })
-  begin
-    mysql_connection = Mysql2::Client.new(conn_options)
-    results = mysql_connection.query("SELECT User,Host FROM mysql.user WHERE User='#{username}' AND Host='#{host}';")
-    current_value_does_not_exist! if results.count == 0
-  ensure
-    mysql_connection.close
-  end
-end
-
-action :create do
-  if current_resource.nil?
-    converge_by "Creating user '#{new_resource.username}'@'#{new_resource.host}'" do
-      create_sql = "CREATE USER '#{new_resource.username}'@'#{new_resource.host}'"
-      if new_resource.password
-        create_sql += ' IDENTIFIED BY '
-        create_sql += if new_resource.password.is_a?(HashedPassword)
-                        " PASSWORD '#{new_resource.password}'"
-                      else
-                        " '#{new_resource.password}'"
-                      end
-      end
-      run_query create_sql
-    end
-  elsif !test_user_password
-    update_user_password
-  end
-end
-
 action :drop do
   return if current_resource.nil?
   converge_by "Dropping user '#{new_resource.username}'@'#{new_resource.host}'" do
     drop_sql = 'DROP USER'
-    drop_sql += " '#{new_resource.username}'@'#{new_resource.host}'"
+    drop_sql << " '#{new_resource.username}'@'#{new_resource.host}'"
     run_query drop_sql
   end
 end
 
 action :grant do
-  db_name = new_resource.database_name ? "`#{new_resource.database_name}`" : '*'
+  db_name = new_resource.database_name ? "\\`#{new_resource.database_name}\\`" : '*'
   tbl_name = new_resource.table ? new_resource.table : '*'
   test_table = new_resource.database_name ? 'mysql.db' : 'mysql.user'
 
   # Test
   incorrect_privs = nil
   test_sql = "SELECT * from #{test_table}"
-  test_sql += " WHERE User='#{new_resource.username}'"
-  test_sql += " AND Host='#{new_resource.host}'"
-  test_sql += " AND Db='#{new_resource.database_name}'" if new_resource.database_name
+  test_sql << " WHERE User='#{new_resource.username}'"
+  test_sql << " AND Host='#{new_resource.host}'"
+  test_sql << " AND Db='#{new_resource.database_name}'" if new_resource.database_name
   test_sql_results = run_query test_sql
 
-  incorrect_privs = true if test_sql_results.count == 0
+  incorrect_privs = true if test_sql_results.split("\n").count == 0
   # These should all be 'Y'
-  test_sql_results.each do |r|
-    desired_privs.each do |p|
-      key = p.to_s.capitalize.tr(' ', '_').gsub('Replication_', 'Repl_').gsub('Create_temporary_tables', 'Create_tmp_table').gsub('Show_databases', 'Show_db')
-      key = "#{key}_priv"
-      incorrect_privs = true if r[key] != 'Y'
+  unless test_sql_results.split("\n").count <= 1
+    parsed_result = parse_mysql_batch_result(test_sql_results)
+    Chef::Log.debug(parsed_result)
+    parsed_result.each do |r|
+      desired_privs.each do |p|
+        key = p.to_s.capitalize.tr(' ', '_').gsub('Replication_', 'Repl_').gsub('Create_temporary_tables', 'Create_tmp_table').gsub('Show_databases', 'Show_db')
+        key = "#{key}_priv"
+        incorrect_privs = true if r[key] != 'Y'
+      end
     end
   end
 
@@ -240,16 +247,16 @@ action :grant do
   if incorrect_privs
     converge_by "Granting privs for '#{new_resource.username}'@'#{new_resource.host}'" do
       repair_sql = "GRANT #{new_resource.privileges.join(',')}"
-      repair_sql += " ON #{db_name}.#{tbl_name}"
-      repair_sql += " TO '#{new_resource.username}'@'#{new_resource.host}' IDENTIFIED BY"
-      repair_sql += if new_resource.password.is_a?(HashedPassword)
+      repair_sql << " ON #{db_name}.#{tbl_name}"
+      repair_sql << " TO '#{new_resource.username}'@'#{new_resource.host}' IDENTIFIED BY"
+      repair_sql << if new_resource.password.is_a?(HashedPassword)
                       " PASSWORD '#{new_resource.password}'"
                     else
                       " '#{new_resource.password}'"
                     end
-      repair_sql += ' REQUIRE SSL' if new_resource.require_ssl
-      repair_sql += ' REQUIRE X509' if new_resource.require_x509
-      repair_sql += ' WITH GRANT OPTION' if new_resource.grant_option
+      repair_sql << ' REQUIRE SSL' if new_resource.require_ssl
+      repair_sql << ' REQUIRE X509' if new_resource.require_x509
+      repair_sql << ' WITH GRANT OPTION' if new_resource.grant_option
 
       redacted_sql = redact_password(repair_sql, new_resource.password)
       Chef::Log.debug("#{@new_resource}: granting with sql [#{redacted_sql}]")
@@ -263,15 +270,15 @@ action :grant do
 end
 
 action :revoke do
-  db_name = new_resource.database_name ? "`#{new_resource.database_name}`" : '*'
+  db_name = new_resource.database_name ? "\\`#{new_resource.database_name}\\`" : '*'
   tbl_name = new_resource.table ? new_resource.table : '*'
   test_table = new_resource.database_name ? 'mysql.db' : 'mysql.user'
 
   privs_to_revoke = []
   test_sql = "SELECT * from #{test_table}"
-  test_sql += " WHERE User='#{new_resource.username}'"
-  test_sql += " AND Host='#{new_resource.host}'"
-  test_sql += " AND Db='#{new_resource.database_name}'" if new_resource.database_name
+  test_sql << " WHERE User='#{new_resource.username}'"
+  test_sql << " AND Host='#{new_resource.host}'"
+  test_sql << " AND Db='#{new_resource.database_name}'" if new_resource.database_name
   test_sql_results = run_query test_sql
 
   # These should all be 'N'
@@ -287,8 +294,8 @@ action :revoke do
   unless privs_to_revoke.empty?
     converge_by "Revoking privs for '#{new_resource.username}'@'#{new_resource.host}'" do
       revoke_statement = "REVOKE #{privs_to_revoke.join(',')}"
-      revoke_statement += " ON #{db_name}.#{tbl_name}"
-      revoke_statement += " FROM `#{new_resource.username}`@`#{new_resource.host}` "
+      revoke_statement << " ON #{db_name}.#{tbl_name}"
+      revoke_statement << " FROM \\`#{new_resource.username}\\`@\\`#{new_resource.host}\\` "
 
       Chef::Log.debug("#{@new_resource}: revoking access with statement [#{revoke_statement}]")
       run_query revoke_statement

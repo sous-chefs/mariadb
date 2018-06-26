@@ -19,61 +19,66 @@ services: docker
 
 env:
   matrix:
-  - INSTANCE=devel-ubuntu-1604
-  - INSTANCE=devel-ubuntu-1604 CHEF_VERSION=13.9.1
-  - INSTANCE=default-centos-7
-  - INSTANCE=default-centos-7 CHEF_VERSION=13.9.1
-  - INSTANCE=default-debian-8
-  - INSTANCE=default-debian-8 CHEF_VERSION=13.9.1
-  - INSTANCE=default-ubuntu-1604
-  - INSTANCE=default-ubuntu-1604 CHEF_VERSION=13.9.1
-  - INSTANCE=native-centos-7
-  - INSTANCE=native-centos-7 CHEF_VERSION=13.9.1
-  - INSTANCE=scl-centos-7
-  - INSTANCE=scl-centos-7 CHEF_VERSION=13.9.1
-  - INSTANCE=replication-centos-7
-  - INSTANCE=replication-centos-7 CHEF_VERSION=13.9.1
-  - INSTANCE=replication-debian-8
-  - INSTANCE=replication-debian-8 CHEF_VERSION=13.9.1
-  - INSTANCE=replication-ubuntu-1604
-  - INSTANCE=replication-ubuntu-1604 CHEF_VERSION=13.9.1
-  - INSTANCE=galera-centos-7
-  - INSTANCE=galera-centos-7 CHEF_VERSION=13.9.1
-  - INSTANCE=galera-debian-8
-  - INSTANCE=galera-debian-8 CHEF_VERSION=13.9.1
-  - INSTANCE=galera-ubuntu-1604
-  - INSTANCE=galera-ubuntu-1604 CHEF_VERSION=13.9.1
-  - INSTANCE=datadir-changed-centos-7
-  - INSTANCE=datadir-changed-centos-7 CHEF_VERSION=13.9.1
-  - INSTANCE=datadir-changed-debian-8
-  - INSTANCE=datadir-changed-debian-8 CHEF_VERSION=13.9.1
-  - INSTANCE=datadir-changed-ubuntu-1604
-  - INSTANCE=datadir-changed-ubuntu-1604 CHEF_VERSION=13.9.1
-  - INSTANCE=port-changed-centos-7
-  - INSTANCE=port-changed-centos-7 CHEF_VERSION=13.9.1
-  - INSTANCE=port-changed-debian-8
-  - INSTANCE=port-changed-debian-8 CHEF_VERSION=13.9.1
-  - INSTANCE=port-changed-ubuntu-1604
-  - INSTANCE=port-changed-ubuntu-1604 CHEF_VERSION=13.9.1
-  - INSTANCE=plugins-centos-7
-  - INSTANCE=plugins-centos-7 CHEF_VERSION=13.9.1
-  - INSTANCE=plugins-debian-8
-  - INSTANCE=plugins-debian-8 CHEF_VERSION=13.9.1
-  - INSTANCE=plugins-ubuntu-1604
-  - INSTANCE=plugins-ubuntu-1604 CHEF_VERSION=13.9.1
-  - INSTANCE=no-binlog-centos-7
-  - INSTANCE=no-binlog-centos-7 CHEF_VERSION=13.9.1
-  - INSTANCE=no-binlog-debian-8
-  - INSTANCE=no-binlog-debian-8 CHEF_VERSION=13.9.1
-  - INSTANCE=no-binlog-ubuntu-1604
-  - INSTANCE=no-binlog-ubuntu-1604 CHEF_VERSION=13.9.1
+  - INSTANCE=repository-centos-6
+  - INSTANCE=repository-centos-6 CHEF_VERSION=14.2.0
+  - INSTANCE=repository-centos-7
+  - INSTANCE=repository-centos-7 CHEF_VERSION=14.2.0
+  - INSTANCE=repository-debian-8
+  - INSTANCE=repository-debian-8 CHEF_VERSION=14.2.0
+  - INSTANCE=repository-debian-9
+  - INSTANCE=repository-debian-9 CHEF_VERSION=14.2.0
+  - INSTANCE=repository-ubuntu-1604
+  - INSTANCE=repository-ubuntu-1604 CHEF_VERSION=14.2.0
+  - INSTANCE=repository-ubuntu-1804
+  - INSTANCE=repository-ubuntu-1804 CHEF_VERSION=14.2.0
+  - INSTANCE=client-install-centos-6
+  - INSTANCE=client-install-centos-6 CHEF_VERSION=14.2.0
+  - INSTANCE=client-install-centos-7
+  - INSTANCE=client-install-centos-7 CHEF_VERSION=14.2.0
+  - INSTANCE=client-install-debian-8
+  - INSTANCE=client-install-debian-8 CHEF_VERSION=14.2.0
+  - INSTANCE=client-install-debian-9
+  - INSTANCE=client-install-debian-9 CHEF_VERSION=14.2.0
+  - INSTANCE=client-install-ubuntu-1604
+  - INSTANCE=client-install-ubuntu-1604 CHEF_VERSION=14.2.0
+  - INSTANCE=client-install-ubuntu-1804
+  - INSTANCE=client-install-ubuntu-1804 CHEF_VERSION=14.2.0
+  - INSTANCE=server-install-centos-6
+  - INSTANCE=server-install-centos-6 CHEF_VERSION=14.2.0
+  - INSTANCE=server-install-centos-7
+  - INSTANCE=server-install-centos-7 CHEF_VERSION=14.2.0
+  - INSTANCE=server-install-debian-8
+  - INSTANCE=server-install-debian-8 CHEF_VERSION=14.2.0
+  - INSTANCE=server-install-debian-9
+  - INSTANCE=server-install-debian-9 CHEF_VERSION=14.2.0
+  - INSTANCE=server-install-ubuntu-1604
+  - INSTANCE=server-install-ubuntu-1604 CHEF_VERSION=14.2.0
+  - INSTANCE=server-install-ubuntu-1804
+  - INSTANCE=server-install-ubuntu-1804 CHEF_VERSION=14.2.0
+  - INSTANCE=server-configuration-centos-6
+  - INSTANCE=server-configuration-centos-6 CHEF_VERSION=14.2.0
+  - INSTANCE=server-configuration-centos-7
+  - INSTANCE=server-configuration-centos-7 CHEF_VERSION=14.2.0
+  - INSTANCE=server-configuration-debian-8
+  - INSTANCE=server-configuration-debian-8 CHEF_VERSION=14.2.0
+  - INSTANCE=server-configuration-debian-9
+  - INSTANCE=server-configuration-debian-9 CHEF_VERSION=14.2.0
+  - INSTANCE=server-configuration-ubuntu-1604
+  - INSTANCE=server-configuration-ubuntu-1604 CHEF_VERSION=14.2.0
+  - INSTANCE=server-configuration-ubuntu-1804
+  - INSTANCE=server-configuration-ubuntu-1804 CHEF_VERSION=14.2.0
+  - INSTANCE=resources-centos-6
+  - INSTANCE=resources-centos-6 CHEF_VERSION=14.2.0
   - INSTANCE=resources-centos-7
-  - INSTANCE=resources-centos-7 CHEF_VERSION=13.9.1
+  - INSTANCE=resources-centos-7 CHEF_VERSION=14.2.0
   - INSTANCE=resources-debian-8
-  - INSTANCE=resources-debian-8 CHEF_VERSION=13.9.1
+  - INSTANCE=resources-debian-8 CHEF_VERSION=14.2.0
+  - INSTANCE=resources-debian-9
+  - INSTANCE=resources-debian-9 CHEF_VERSION=14.2.0
   - INSTANCE=resources-ubuntu-1604
-  - INSTANCE=resources-ubuntu-1604 CHEF_VERSION=13.9.1
-
+  - INSTANCE=resources-ubuntu-1604 CHEF_VERSION=14.2.0
+  - INSTANCE=resources-ubuntu-1804
+  - INSTANCE=resources-ubuntu-1804 CHEF_VERSION=14.2.0
 
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
@@ -86,32 +91,8 @@ script: KITCHEN_LOCAL_YAML=.kitchen.dokken.yml /opt/chefdk/embedded/bin/kitchen 
 
 matrix:
   allow_failures:
-    - env: INSTANCE=default-centos-7
-    - env: INSTANCE=default-debian-8
-    - env: INSTANCE=default-ubuntu-1604
-    - env: INSTANCE=native-centos-7
-    - env: INSTANCE=scl-centos-7
-    - env: INSTANCE=replication-centos-7
-    - env: INSTANCE=replication-debian-8
-    - env: INSTANCE=replication-ubuntu-1604
-    - env: INSTANCE=galera-centos-7
-    - env: INSTANCE=galera-debian-8
-    - env: INSTANCE=galera-ubuntu-1604
-    - env: INSTANCE=datadir-changed-centos-7
-    - env: INSTANCE=datadir-changed-debian-8
-    - env: INSTANCE=datadir-changed-ubuntu-1604
-    - env: INSTANCE=port-changed-centos-7
-    - env: INSTANCE=port-changed-debian-8
-    - env: INSTANCE=port-changed-ubuntu-1604
-    - env: INSTANCE=plugins-centos-7
-    - env: INSTANCE=plugins-debian-8
-    - env: INSTANCE=plugins-ubuntu-1604
-    - env: INSTANCE=no-binlog-centos-7
-    - env: INSTANCE=no-binlog-debian-8
-    - env: INSTANCE=no-binlog-ubuntu-1604
-    - env: INSTANCE=resources-centos-7
-    - env: INSTANCE=resources-debian-8
-    - env: INSTANCE=resources-ubuntu-1604
+  - env: INSTANCE=server-install-ubuntu-1804
+  - env: INSTANCE=server-install-ubuntu-1804 CHEF_VERSION=14.2.0
   include:
     - script:
       - /opt/chefdk/bin/chef exec rake

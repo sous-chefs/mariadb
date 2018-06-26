@@ -2,13 +2,16 @@
 driver:
   name: dokken
   privileged: true # because Docker and SystemD/Upstart
-  chef_version: <%= ENV['CHEF_VERSION'] || 'current' %>
 
 transport:
   name: dokken
 
 provisioner:
   name: dokken
+  product_name: chef
+  product_version: <%= ENV['CHEF_VERSION'] || 'current' %>
+  deprecations_as_errors: true
+  log_level: <%= ENV['CHEF_LOG_LEVEL'] || "auto" %>
 
 platforms:
 - name: centos-6
@@ -27,14 +30,6 @@ platforms:
     intermediate_instructions:
       - RUN yum -y install lsof which initscripts net-tools sudo
 
-- name: debian-7
-  driver:
-    image: debian:7
-    pid_one_command: /sbin/init
-    intermediate_instructions:
-      - RUN /usr/bin/apt-get update
-      - RUN /usr/bin/apt-get install lsb-release net-tools sudo -y
-
 - name: debian-8
   driver:
     image: debian:8
@@ -44,24 +39,13 @@ platforms:
       - RUN /usr/bin/apt-get install lsb-release net-tools sudo -y
 
 - name: debian-9
-  attributes:
-    mariadb:
-     install:
-       version: '10.2'
   driver:
     image: debian:9
     pid_one_command: /bin/systemd
     intermediate_instructions:
       - RUN /usr/bin/apt-get update
+      - RUN /usr/bin/apt-get install systemd -y
       - RUN /usr/bin/apt-get install lsb-release net-tools sudo -y
-
-- name: ubuntu-14.04
-  driver:
-    image: ubuntu-upstart:14.04
-    pid_one_command: /sbin/init
-    intermediate_instructions:
-      - RUN /usr/bin/apt-get update
-      - RUN /usr/bin/apt-get install net-tools sudo -y
 
 - name: ubuntu-16.04
   driver:
@@ -71,140 +55,44 @@ platforms:
       - RUN /usr/bin/apt-get update
       - RUN /usr/bin/apt-get install net-tools sudo -y
 
+- name: ubuntu-18.04
+  driver:
+    image: ubuntu:18.04
+    pid_one_command: /bin/systemd
+    intermediate_instructions:
+      - RUN /usr/bin/apt-get update
+      - RUN /usr/bin/apt-get install systemd -y
+      - RUN /usr/bin/apt-get install net-tools sudo -y
+
 suites:
   #
-  # devel
+  # repository
   #
-  - name: devel
+  - name: repository
     run_list:
-      - recipe[mariadb::devel]
-    attributes:
-      mariadb:
-        use_default_repository: false
-        install:
-          prefer_os_package: true
-    includes:
-      - ubuntu-16.04
+      - recipe[test::repository]
   #
-  # default
+  # client_install
   #
-  - name: default
+  - name: client_install
     run_list:
-      - recipe[mariadb::default]
-    attributes:
-      mariadb:
-        use_default_repository: true
+      - recipe[test::client_install]
   #
-  # native
+  # server_install
   #
-  - name: native
+  - name: server_install
     run_list:
-      - recipe[mariadb::default]
-    attributes:
-      mariadb:
-        install:
-          prefer_os_package: true
-    includes:
-      - centos-7
+      - recipe[test::server_install]
   #
-  # scl
+  # server_configuration
   #
-  - name: scl
+  - name: server_configuration
     run_list:
-      - recipe[mariadb::default]
-    attributes:
-      mariadb:
-        install:
-          prefer_scl_package: true
-    includes:
-      - centos-7
-      - centos-6
+      - recipe[test::server_configuration]
   #
-  # replication
-  #
-  - name: replication
-    run_list:
-      - recipe[mariadb_test::replication]
-    attributes:
-      mariadb:
-        use_default_repository: true
-  #
-  # galera
-  #
-  - name: galera
-    run_list:
-      - recipe[mariadb::galera]
-    attributes:
-      mariadb:
-        use_default_repository: true
-
-  #
-  # galera with mariabackup as SST method
-  #
-  - name: galera-mariabackup
-    run_list:
-      - recipe[mariadb::galera]
-    attributes:
-      mariadb:
-        use_default_repository: true
-        galera:
-          wsrep_sst_method: 'mariabackup'
-    includes:
-      - debian-9
-
-  #
-  # datadir_changed
-  #
-  - name: datadir_changed
-    run_list:
-      - recipe[mariadb::default]
-    attributes:
-      mariadb:
-        use_default_repository: true
-        mysqld:
-          datadir: /home/mysql
-  #
-  # port_changed
-  #
-  - name: port_changed
-    run_list:
-      - recipe[mariadb::default]
-    attributes:
-      mariadb:
-        server_root_password: gsql
-        use_default_repository: true
-        mysqld:
-          port: 3307
-  #
-  # plugins
-  #
-  - name: plugins
-    run_list:
-      - recipe[mariadb::default]
-    attributes:
-      mariadb:
-        use_default_repository: true
-        plugins:
-          audit: true
-  #
-  # no_binlog
-  #
-  - name: no_binlog
-    run_list:
-      - recipe[mariadb::default]
-    attributes:
-      mariadb:
-        use_default_repository: true
-        replication:
-          log_bin: false
-
-  #
-  # resources to manage databases and users
+  # resources
   #
   - name: resources
     run_list:
-      - recipe[mariadb_test::resources]
-    attributes:
-      mariadb:
-        server_root_password: gsql
-        use_default_repository: true
+      - recipe[test::user_database]
+

@@ -6,16 +6,11 @@ description      'Installs/Configures MariaDB'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 source_url       'https://github.com/sous-chefs/mariadb'
 issues_url       'https://github.com/sous-chefs/mariadb/issues'
-chef_version     '>= 13'
-version          '1.5.4'
+chef_version     '>= 14'
+version          '2.0.0'
 
 supports 'ubuntu'
 supports 'debian', '>= 7.0'
 supports 'centos', '>= 6.4'
 
-depends 'apt'
-depends 'build-essential'
 depends 'selinux_policy', '~> 2.0'
-depends 'yum'
-depends 'yum-epel'
-depends 'yum-scl'

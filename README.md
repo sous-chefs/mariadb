@@ -3,14 +3,12 @@ MariaDB Cookbook
 
 [![Build Status](https://travis-ci.org/sous-chefs/mariadb.svg?branch=master)](https://travis-ci.org/sous-chefs/mariadb) [![Cookbook Version](https://img.shields.io/cookbook/v/mariadb.svg)](https://supermarket.chef.io/cookbooks/mariadb)
 
-Description
------------
+## Description
 
 This cookbook contains all the stuffs to install and configure and manage a mariadb server on a dpkg/apt compliant system (typically debian), or a rpm/yum compliant system (typically centos)
 
 
-Requirements
-------------
+## Requirements
 
 #### repository
 - `mariadb` - This cookbook need that you have a valid apt repository installed with the mariadb official packages
@@ -28,125 +26,123 @@ Requirements
 - `centos` - this cookbook is fully tested on centos
 
 #### Chef version
-Since version 1.5.4 of this cookbook, the chef 12 support is dropped (chef 12 has reached end of life). Now chef 13 is the minimum version tested.
-If you can't upgrade your chef 12, please use the version 1.5.3 or earlier of this cookbook.
+Since version 2.0.0 of this cookbook, chef 13 support is dropped. New chef 14 is the minimum version tested.
+If you can't upgrade your chef 13, please user the version 1.5.4 or earlier of this cookbook.
 
-Attributes
-----------
+## Upgrading
 
-#### mariadb::default
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['install']['version']</tt></td>
-    <td>String</td>
-    <td>Version to install (currently 10.0 et 5.5)</td>
-    <td><tt>10.0</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['use_default_repository']</tt></td>
-    <td>Boolean</td>
-    <td>Whether to install MariaDB default repository or not. If you don't have a local repo containing packages, put it to true</td>
-    <td><tt>false</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['server_root_password']</tt></td>
-    <td>String</td>
-    <td>local root password</td>
-    <td><tt></tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['forbid_remote_root']</tt></td>
-    <td>Boolean</td>
-    <td>Whether to activate root remote access</td>
-    <td><tt>true</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['allow_root_pass_change']</tt></td>
-    <td>Boolean</td>
-    <td>Whether to allow the recipe to change root password after the first install</td>
-    <td><tt>false</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['client']['development_files']</tt></td>
-    <td>Boolean</td>
-    <td>Whether to install development files in client recipe</td>
-    <td><tt>true</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['apt_repository']['base_url']</tt></td>
-    <td>String</td>
-    <td>The http base url to use when installing from default repository</td>
-    <td><tt>'ftp.igh.cnrs.fr/pub/mariadb/repo'</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['install']['prefer_os_package']</tt></td>
-    <td>Boolean</td>
-    <td>Indicator for preferring use packages shipped by running os</td>
-    <td><tt>false</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['mariadb']['install']['prefer_scl_package']</tt></td>
-    <td>Boolean</td>
-    <td>Indicator for preferring packages from software collections repository</td>
-    <td><tt>false</tt></td>
-  </tr>
-</table>
+If you are wondering where all the recipes went in v2.0+, or how on earth I use this new cookbook please see upgrading.md for a full description.
 
-Usage
------
+## Resources
 
-To install a default server for mariadb choose the version you want (MariaDB 5.5 or 10, galera or not), then call the recipe accordingly.
+### mariadb_repository
 
-List of availables recipes:
+It installs the mariadb.org apt or yum repository
 
-- mariadb::default (just call server recipe with default options)
-- mariadb::server
-- mariadb::galera
-- mariadb::client
-- mariadb::devel
+#### Actions
 
-Please be ware that by default, the root password is empty! If you want have changed it use the `node['mariadb']['server_root_password']` attribute to put a correct value. And by default the remote root access is not activated. Use `node['mariadb']['forbid_remote_root']` attribute to change it.
+- `install` - (default) Install mariadb.org apt or yum repository
 
-Sometimes, the default apt repository used for apt does not work (see issue #6). In this case, you need to choose another mirror which worki (pick it from mariadb website), and put the http base url in the attribute `node['mariadb']['apt_repository']['base_url']`.
+#### Properties
 
-#### mariadb::galera
+Name                | Types             | Description                                                   | Default                                   | Required?
+------------------- | ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
+`version`           | String            | Version of MariaDB to install                                 | '10.3'                                    | no
 
-When installing the mariadb::galera on debian recipe, You have to take care of one specific attribute:
-`node['mariadb']['debian']['password']` which default to 'please-change-me'
-As wee need to have the same password for this user on the whole cluster nodes... We will change the default install one by the content of this attribute.
+#### Examples
 
-#### mariadb::client
+To install '10.3' version:
 
-By default this recipe installs the client, and all needed packages to develop client application. If you do not want to install development files when installing client package,
-set the attribute `node['mariadb']['client']['development_files']` to false. 
+```ruby
+mariadb_repository 'MariaDB 10.3 Repository' do
+  version '10.3'
+end
+```
 
-#### mariadb::devel
+### mariadb_client_install
 
-By default this recipe installs all needed packages to develop client application.
+This resource installs mariadb client packages.
 
-Resources/Providers
-----------
+#### Actions
 
-This recipe define several custom resources and providers:
-- `Chef::Provider::Mariadb::Configuration` shortcut resource `mariadb_configuration`
+- `install` - (default) Install client packages
 
-#### mariadb_configuration
+#### Properties
+
+Name                | Types             | Description                                                   | Default                                   | Required?
+------------------- | ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
+`version`           | String            | Version of MariaDB to install                                 | '10.3'                                    | no
+`setup_repo`        | Boolean           | Define if you want to add the MariaDB repository              | true                                      | no
+
+#### Examples
+
+To install '10.3' version:
+
+```ruby
+mariadb_client_install 'MariaDB Client install' do
+  version '10.3'
+end
+```
+
+### mariadb_server_install
+
+This resource installs mariadb server packages.
+
+#### Actions
+
+- `install` - (default) Install server packages
+- `create`  - Start the service, change the user root password
+
+#### Properties
+
+Name                            | Types             | Description                                                   | Default                                   | Required?
+------------------------------- | ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
+`version`                       | String            | Version of MariaDB to install                                 | '10.3'                                    | no
+`setup_repo`                    | Boolean           | Define if you want to add the MariaDB repository              | true                                      | no
+`mycnf_file`                    | String            |                                                               | "#{conf_dir}/my.cnf"                      | no
+`extra_configuration_directory` | String            |                                                               | ext_conf_dir                              | no
+`external_pid_file`             | String            |                                                               | default_pid_file                          | no
+`cookbook`                      | String            | The cookbook to look in for the template source               | 'mariadb'                                 | yes
+`password`                      | String, nil       | Pass in a password, or have the cookbook generate one for you | 'generate'                                | no
+`port`                          | String, Integer   | Database listen port                                          | 3306                                      | no
+
+#### Examples
+
+To install '10.3' version:
+
+```ruby
+mariadb_server_install 'MariaDB Server install' do
+  version '10.3'
+end
+```
+
+### mariadb_configuration
 
 Mainly use for internal purpose. You can use it to create a new configuration file into configuration dir. You have to define 2 variables `section` and `option`.
 Where `section` is the configuration section, and `option` is a hash of key/value. The name of the resource is used as base for the filename.
 
-Example:
+#### Actions
+
+- `add` - (default) Install the extra configuration file
+- `remove`  - Remove the extra configuration file
+
+#### Properties
+
+Name                | Types             | Description                                                   | Default                                   | Required?
+------------------- | ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
+`configuration_name`| String            | Name of the extra conf file, used for .cnf filename           |                                           | yes
+`section`           | String            |                                                               |                                           | yes
+`option`            | Hash              | All option to write in the configuration file                 | {}                                        | yes
+`cookbook`          | String            | The cookbook to look in for the template source               | 'mariadb'                                 | yes
+`extconf_directory` | String            | An additional directory from which Mysql read extra cnf       | "ext_conf_dir                             | yes
+
+#### Examples
+
+This example:
 ```ruby
 mariadb_configuration 'fake' do
   section 'mysqld'
-  option :innodb_buffer_pool_size => node['mysql']['innodb_buffer_pool_size'],
-    :innodb_flush_method => node['mysql']['innodb_flush_method']
+  option :foo => 'bar'
 end
 ```
 will become the file fake.cnf in the include dir (depend on your platform), which contain:
@@ -155,9 +151,7 @@ will become the file fake.cnf in the include dir (depend on your platform), whic
 foo=bar
 ```
 
-If the value start with a '#', then it's considered as a comment, and the value is printed as is (without the key)
-
-Example:
+In another example, if the value start with a '#', then it's considered as a comment, and the value is printed as is (without the key):
 ```ruby
 mariadb_configuration 'fake' do
   section 'mysqld'
@@ -171,8 +165,164 @@ will become the file fake.cnf in the include dir (depend on your platform), whic
 # Here i am
 foo=bar
 ```
+### mariadb_server_configuration
 
-#### mariadb_replication
+#### Actions
+
+- `modify` - (default) Maintain the configuration file
+
+#### Properties
+
+Name                            | Types             | Description                                                   | Default                                   | Required?
+------------------------------- | ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
+`version`                       | String            | Version of MariaDB installed                                  | '10.3'                                    | no
+`cookbook`                      | String            |                                                               | 'mariadb'                                 | no
+`mycnf_file`                    | String            |                                                               | "#{conf_dir}my.cnf"                       | no
+`extra_configuration_directory` | String,           |                                                               | ext_conf_dir                              | no
+`client_port`                   | String, Integer   |                                                               | 3306                                      | no
+`client_socket`                 | String            |                                                               | default_socket                            | no
+`client_host`                   | String, nil       |                                                               | nil                                       | no
+`client_options`                | Hash              |                                                               | {}                                        | no
+`mysqld_safe_socket`            | String            |                                                               | default_socket                            | no
+`mysqld_safe_nice`              | String, Integer   |                                                               | 0                                         | no
+`mysqld_safe_options`           | Hash              |                                                               | {}                                        | no
+`mysqld_user`                   | String            |                                                               | 'mysql'                                   | no
+`mysqld_pid_file`               | String, nil       |                                                               | default_pid_file                          | no
+`mysqld_socket`                 | String            |                                                               | default_socket                            | no
+`mysqld_basedir`                | String            |                                                               | '/usr'                                    | no
+`mysqld_datadir`                | String            |                                                               | '/var/lib/mysql'                          | no
+`mysqld_tmpdir`                 | String            |                                                               | '/var/tmp'                                | no
+`mysqld_lc_messages_dir`        | String            |                                                               | '/usr/share/mysql'                        | no
+`mysqld_lc_messages`            | String            |                                                               | 'en_US'                                   | no
+`mysqld_skip_external_locking`  | Boolean           |                                                               | true                                      | no
+`mysqld_skip_log_bin`           | Boolean           |                                                               | false                                     | no
+`mysqld_skip_name_resolve`      | Boolean           |                                                               | false                                     | no
+`mysqld_bind_address`           | String            |                                                               | '127.0.0.1'                               | no
+`mysqld_max_connections`        | Integer           |                                                               | 100                                       | no
+`mysqld_max_statement_time`     | Integer, nil      |                                                               | nil                                       | no
+`mysqld_connect_timeout`        | Integer           |                                                               | 5                                         | no
+`mysqld_wait_timeout`           | Integer           |                                                               | 600                                       | no
+`mysqld_max_allowed_packet`     | String            |                                                               | '16M'                                     | no
+`mysqld_thread_cache_sizer`     | Integer           |                                                               | 128                                       | no
+`mysqld_sort_buffer_size`       | String            |                                                               | '4M'                                      | no
+`mysqld_bulk_insert_buffer_size`| String            |                                                               | '16M'                                     | no
+`mysqld_tmp_table_size`         | String            |                                                               | '32M'                                     | no
+`mysqld_max_heap_table_size`    | String            |                                                               | '32M'                                     | no
+`mysqld_myisam_recover`         | String            |                                                               | 'BACKUP'                                  | no
+`mysqld_key_buffer_size`        | String            |                                                               | '128M'                                    | no
+`mysqld_open_files_limit`       | Integer, nil      |                                                               | nil                                       | no
+`mysqld_table_open_cache`       | Integer           |                                                               | 400                                       | no
+`mysqld_myisam_sort_buffer_size`| String            |                                                               | '512M'                                    | no
+`mysqld_concurrent_insert`      | Integer           |                                                               | 2                                         | no
+`mysqld_read_buffer_size`       | String            |                                                               | '2M'                                      | no
+`mysqld_read_rnd_buffer_size`   | String            |                                                               | '1M'                                      | no
+`mysqld_query_cache_limit`      | String            |                                                               | '128K'                                    | no
+`mysqld_query_cache_size`       | String            |                                                               | '64M'                                     | no
+`mysqld_query_cache_type`       | String, nil       |                                                               | nil                                       | no
+`mysqld_default_storage_engine` | String            |                                                               | 'InnoDB'                                  | no
+`mysqld_general_log_file`       | String            |                                                               | '/var/log/mysql/mysql.log'                | no
+`mysqld_general_log`            | Integer           |                                                               | 0                                         | no
+`mysqld_log_warnings`           | Integer           |                                                               | 2                                         | no
+`mysqld_slow_query_log`         | Integer           |                                                               | 0                                         | no
+`mysqld_slow_query_log_file`    | String            |                                                               | '/var/log/mysql/mariadb-slow.log'         | no
+`mysqld_long_query_time`        | Integer           |                                                               | 10                                        | no
+`mysqld_log_slow_rate_limit`    | Integer           |                                                               | 1000                                      | no
+`mysqld_log_slow_verbosity`     | String            |                                                               | 'query_plan'                              | no
+`mysqld_log_output`             | String            |                                                               | 'FILE'                                    | no
+`mysqld_options`                | Hash              |                                                               | {}                                        | no
+`mysqldump_quick`               | Boolean           |                                                               | true                                      | no
+`mysqldump_quote_names`         | Boolean           |                                                               | true                                      | no
+`mysqldump_max_allowed_packet`  | String            |                                                               | '16M'                                     | no
+`mysqldump_options`             | Hash              |                                                               | {}                                        | no
+`isamchk_key_buffer`            | String            |                                                               | '16M'                                     | no
+`isamchk_options`               | Hash              |                                                               | {}                                        | no
+`innodb_log_file_size`          | String            |                                                               | '50M'                                     | no
+`innodb_bps_percentage_memory`  | Boolean           |                                                               | false                                     | no
+`innodb_buffer_pool_size`       | String            |                                                               | '50M'                                     | no
+`innodb_log_buffer_size`        | String            |                                                               | '8M'                                      | no
+`innodb_file_per_table`         | Integer           |                                                               | 1                                         | no
+`innodb_open_files`             | Integer           |                                                               | 400                                       | no
+`innodb_io_capacity`            | Integer           |                                                               | 400                                       | no
+`innodb_flush_method`           | String            |                                                               | 'O_DIRECT'                                | no
+`innodb_options`                | Hash              |                                                               | {}                                        | no
+`replication_server_id`         | String, nil       |                                                               | nil                                       | no
+`replication_log_bin`           | String            |                                                               | '/var/log/mysql/mariadb-bin'              | no
+`replication_log_bin_index`     | String            |                                                               | '/var/log/mysql/mariadb-bin.index'        | no
+`replication_sync_binlog`       | String, Integer   |                                                               | 0                                         | no
+`replication_expire_logs_days`  | Integer           |                                                               | 10                                        | no
+`replication_max_binlog_size`   | String            |                                                               | '100M'                                    | no
+`replication_options`           | Hash              |                                                               | {}                                        | no
+
+#### Examples
+
+```ruby
+mariadb_server_configuration 'MariaDB Server Configuration' do
+  version '10.3'
+  client_host 'localhost'
+end
+```
+
+### mariadb_galera_configuration
+
+Do all configuration to have a working Galera Cluster
+
+#### Actions
+
+- `create` - (default) Create & Maintain the configuration file
+- `remove` - Remove the galera configuration file
+
+#### Properties
+
+Name                                   | Types             | Description                                                   | Default                                   | Required?
+---------------------------------------| ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
+`version`                              | String            | Version of MariaDB installed                                  | '10.3'                                    | no
+`cookbook`                             | String            |                                                               | 'mariadb'                                 | no
+`extra_configuration_directory`        | String            |                                                               | ext_conf_dir                              | no
+`cluster_name`                         | String            |                                                               | 'galera_cluster'                          | no
+`cluster_search_query`                 | String, NilClass  |                                                               | nil                                       | no
+`gcomm_address`                        | String            |                                                               | nil                                       | no
+`server_id`                            | Integer           |                                                               | 100                                       | no
+`wsrep_sst_method`                     | String            | Can be 'rsync', 'xtrabackup' or 'mariabackup'                 | 'rsync'                                   | no
+`wsrep_sst_auth`                       | String            |                                                               | 'sstuser:some_secret_password'            | no
+`wsrep_provider`                       | String            |                                                               | '/usr/lib/galera/libgalera_smm.so'        | no
+`wsrep_slave_threads`                  | String            | By default the MariaDB recommended value is set (nb_cpu * 4)  | '%{auto}'                                 | no
+`innodb_flush_log_at_trx_commit`       | Integer           |                                                               | 2                                         | no
+`wsrep_node_address_interface`         | String, NilClass  |                                                               | nil                                       | no
+`wsrep_node_port`                      | Integer, NilClass |                                                               | nil                                       | no
+`wsrep_node_incoming_address_interface`| String, NilClass  |                                                               | nil                                       | no
+`wsrep_provider_options`               | Hash              |                                                               | {'gcache.size': '512M'}                   | no
+`options`                              | Hash              |                                                               | {}                                        | no
+`cluster_nodes`                        ï Array             |                                                               | []                                        | no
+
+#### Examples
+
+If you use a chef-server, set an attribute within your cookbook to determine which nodes belong to the cluster. If your cookbook is 'mycookbook' set:
+
+```ruby
+default['mycookbook']['galera']['cluster_name'] = 'my_functionnal_cluster_name'
+```
+
+Then all nodes to add to gcomm will choosen with a search based on this attribute:
+
+```ruby
+mariadb_galera_configuration 'MariaDB Galera Server Configuration' do
+  version '10.3'
+  cluster_name 'my_functionnal_cluster_name'
+  cluster_search_query "mycookbook_galera_cluster_name:my_functionnal_cluster_name"
+end
+```
+
+If you don't want to have a dynamic node galera node management, set manually the gcomm_address with all nodes you want in it:
+
+```ruby
+mariadb_galera_configuration 'MariaDB Galera Server Configuration' do
+  version '10.3'
+  cluster_name 'my_functionnal_cluster_name'
+  gcomm_address 'gcomm://node1.fqdn,node2.fqdn'
+end
+```
+
+### mariadb_replication
 
 This LWRP is used to manage replication setup on a host. To use this LWRP, the node need to have the mysql binary installed (via the mariadb::client or mariadb::server or mariadb::galera recipe).
 It have 4 actions:

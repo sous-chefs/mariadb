@@ -2,6 +2,3 @@ AllCops:
   TargetRubyVersion: 2.2
   Exclude:
     - '**/Vagrantfile'
-
-# Cookstyle todo
-inherit_from: .rubocop_todo.yml
