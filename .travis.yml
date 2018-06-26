@@ -79,6 +79,18 @@ env:
   - INSTANCE=resources-ubuntu-1604 CHEF_VERSION=14.2.0
   - INSTANCE=resources-ubuntu-1804
   - INSTANCE=resources-ubuntu-1804 CHEF_VERSION=14.2.0
+  - INSTANCE=replication-centos-6
+  - INSTANCE=replication-centos-6 CHEF_VERSION=14.2.0
+  - INSTANCE=replication-centos-7
+  - INSTANCE=replication-centos-7 CHEF_VERSION=14.2.0
+  - INSTANCE=replication-debian-8
+  - INSTANCE=replication-debian-8 CHEF_VERSION=14.2.0
+  - INSTANCE=replication-debian-9
+  - INSTANCE=replication-debian-9 CHEF_VERSION=14.2.0
+  - INSTANCE=replication-ubuntu-1604
+  - INSTANCE=replication-ubuntu-1604 CHEF_VERSION=14.2.0
+  - INSTANCE=replication-ubuntu-1804
+  - INSTANCE=replication-ubuntu-1804 CHEF_VERSION=14.2.0
 
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )

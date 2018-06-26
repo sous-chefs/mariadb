@@ -17,14 +17,14 @@
 
 include MariaDBCookbook::Helpers
 
-property :database_name, String,              name_property: true
+property :database_name, String,         name_property: true
 property :host,          [String, nil],  default: 'localhost', desired_state: false
 property :port,          [Integer, nil], default: 3306, desired_state: false
 property :user,          [String, nil],  default: 'root', desired_state: false
 property :socket,        [String, nil],  default: nil, desired_state: false
 property :password,      [String, nil],  default: nil, sensitive: true, desired_state: false
-property :encoding,      String,              default: 'utf8'
-property :collation,     String,              default: 'utf8_general_ci'
+property :encoding,      String,         default: 'utf8'
+property :collation,     String,         default: 'utf8_general_ci'
 property :sql,           String
 
 action :create do
