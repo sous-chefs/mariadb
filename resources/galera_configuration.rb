@@ -17,24 +17,24 @@
 
 include MariaDBCookbook::Helpers
 
-property :version,                               String,              default: '10.3'
-property :cookbook,                              String,              default: 'mariadb'
-property :extra_configuration_directory,         String,              default: lazy { ext_conf_dir }
-property :cluster_name,                          String,              default: 'galera_cluster'
-property :cluster_search_query,                  [String, nil],       default: nil
-property :gcomm_address,                         [String, nil],       default: nil
-property :server_id,                             Integer,             default: 100
-property :wsrep_sst_method,                      String,              default: 'rsync'
-property :wsrep_sst_auth,                        String,              default: 'sstuser:some_secret_password'
-property :wsrep_provider,                        String,              default: '/usr/lib/galera/libgalera_smm.so'
-property :wsrep_slave_threads,                   String,              default: '%{auto}'
-property :innodb_flush_log_at_trx_commit,        Integer,             default: 2
-property :wsrep_node_address_interface,          [String, nil],       default: nil
-property :wsrep_node_port,                       [Integer, nil],      default: nil
-property :wsrep_node_incoming_address_interface, [String, nil],       default: nil
-property :wsrep_provider_options,                Hash,                default: { 'gcache.size': '512M' }
-property :options,                               Hash,                default: {}
-property :cluster_nodes,                         Array,               default: []
+property :version,                               String,         default: '10.3'
+property :cookbook,                              String,         default: 'mariadb'
+property :extra_configuration_directory,         String,         default: lazy { ext_conf_dir }
+property :cluster_name,                          String,         default: 'galera_cluster'
+property :cluster_search_query,                  [String, nil],  default: nil
+property :gcomm_address,                         [String, nil],  default: nil
+property :server_id,                             Integer,        default: 100
+property :wsrep_sst_method,                      String,         default: 'rsync'
+property :wsrep_sst_auth,                        String,         default: 'sstuser:some_secret_password'
+property :wsrep_provider,                        String,         default: '/usr/lib/galera/libgalera_smm.so'
+property :wsrep_slave_threads,                   String,         default: '%{auto}'
+property :innodb_flush_log_at_trx_commit,        Integer,        default: 2
+property :wsrep_node_address_interface,          [String, nil],  default: nil
+property :wsrep_node_port,                       [Integer, nil], default: nil
+property :wsrep_node_incoming_address_interface, String
+property :wsrep_provider_options,                Hash,           default: { 'gcache.size': '512M' }
+property :options,                               Hash,           default: {}
+property :cluster_nodes,                         Array,          default: []
 
 action :create do
   case new_resource.wsrep_sst_method
@@ -117,11 +117,12 @@ action :create do
   galera_options['wsrep_slave_threads'] = format(new_resource.wsrep_slave_threads.to_s, auto: node['cpu']['total'] * 4)
 
   ipaddress = ''
-  iface = if new_resource.wsrep_node_address_interface.nil?
-            node['network']['interfaces'].reject { |_k, v| v['flags'].include?('LOOPBACK') }.keys.first
-          else
+  iface = if new_resource.wsrep_node_address_interface?
             new_resource.wsrep_node_address_interface
+          else
+            node['network']['interfaces'].reject { |_k, v| v['flags'].include?('LOOPBACK') }.keys.first
           end
+
   node['network']['interfaces'][iface]['addresses'].each do |ip, params|
     params['family'] == 'inet' && ipaddress = ip
   end
