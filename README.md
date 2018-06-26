@@ -302,7 +302,7 @@ If you use a chef-server, set an attribute within your cookbook to determine whi
 default['mycookbook']['galera']['cluster_name'] = 'my_functionnal_cluster_name'
 ```
 
-Then all nodes to add to gcomm will choosen with a search based on this attribute:
+Then all nodes to add to gcomm will be choosen with a search based on this attribute:
 
 ```ruby
 mariadb_galera_configuration 'MariaDB Galera Server Configuration' do
@@ -324,16 +324,39 @@ end
 
 ### mariadb_replication
 
-This LWRP is used to manage replication setup on a host. To use this LWRP, the node need to have the mysql binary installed (via the mariadb::client or mariadb::server or mariadb::galera recipe).
-It have 4 actions:
+It's used to manage replication setup on a host. To use it, the node need to have the mysql binary installed (via the mariadb_server_install or mariadb_client_install resource).
+
+#### Actions
+
 - add - to add a new replication setup (become a slave)
 - stop - to stop the slave replication
 - start - to start the slave replication
 - remove - to remove the slave replication configuration
 
+#### Properties
+
 The resource name need to be 'default' if your don't want to use a named connection (multi source replication in MariaDB 10).
 
-So by default the provider try to use the local instance of mysql, with the current root and password set in attribute node['mariadb']['server_root_password']. If you want to change, you have to define `host`, `port`, `user` or `password`
+Name                                   | Types             | Description                                                   | Default                                   | Required?
+---------------------------------------| ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
+`version`                              | String            | Version of MariaDB installed                                  | '10.3'                                    | no
+`cookbook`                             | String            |                                                               | 'mariadb'                                 | no
+`connection_name`                      | String            | The resource name                                             |                                           | yes
+`host`                                 | String, nil       |                                                               | 'localhost'                               | no
+`port`                                 | Integer, nil      |                                                               | 3306                                      | no 
+`user`                                 | String, nil       |                                                               | 'root'                                    | no 
+`password`                             | String, nil       |                                                               | nil                                       | no 
+`change_master_while_running`          | true, false       |                                                               | false                                     | no 
+`master_password`                      | String            |                                                               |                                           | yes 
+`master_port`                          | Integer           |                                                               | 3306                                      | no 
+`master_use_gtid`                      | String            |                                                               | 'No'                                      | no 
+`master_host`                          | String            |                                                               |                                           | yes
+`master_user`                          | String            |                                                               |                                           | yes
+`master_connect_retry`                 | String            |                                                               |                                           | no
+`master_log_pos`                       | Integer           |                                                               |                                           | no
+`master_log_file`                      | String            |                                                               |                                           | no
+
+#### Examples
 
 ```ruby
 mariadb_replication 'default' do
@@ -347,7 +370,6 @@ will stop the replication on the host `fakehost` using the user `root` and passw
 
 When you add a replication configuration, you have to define at least 4 values `master_host`, `master_user`, `master_password` and `master_use_gtid`. And if you don't want the GTID support, you have to define also `master_log_file` and `master_log_pos`
 
-Example:
 ```ruby
 mariadb_replication 'usefull_conn_name' do
   master_host 'server1'

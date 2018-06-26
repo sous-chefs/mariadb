@@ -50,3 +50,9 @@ suites:
   - name: resources
     run_list:
       - recipe[test::user_database]
+  #
+  # replication
+  #
+  - name: replication
+    run_list:
+      - recipe[test::replication]
