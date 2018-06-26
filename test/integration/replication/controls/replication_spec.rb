@@ -11,10 +11,9 @@ control 'mariadb_replication' do
     it { should be_listening }
   end
 
-  %w(1 2 3).each do |i|
-    describe command('/usr/bin/mysql -r -B -N -e "SHOW ALL SLAVES STATUS;"' \
-                     ' | cut -f 1 | head -n ' + i + ' | tail -n 1') do
-      its(:stdout) { should match 'server' + i }
+  %w(1 2 3).each do |index|
+    describe command('/usr/bin/mysql -r -B -N -e "SHOW ALL SLAVES STATUS;" -pgsql | cut -f 1 | head -n ' + (index.to_i + 1).to_s + ' | tail -n 1') do
+      its(:stdout) { should match 'server' + index }
     end
   end
 end

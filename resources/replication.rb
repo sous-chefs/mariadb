@@ -34,7 +34,7 @@ property :master_log_pos,              Integer
 property :master_log_file,             String
 
 action :add do
-  if change_master_while_running || !slave_running?
+  if new_resource.change_master_while_running || !slave_running?
     converge_if_changed :master_host, :master_port, :master_user, :master_password, :master_use_gtid do
       if new_resource.master_host.nil? || new_resource.master_user.nil? || new_resource.master_password.nil? || new_resource.master_port.nil?
         raise '[ERROR] When adding a slave, you have to define master_host' \
@@ -87,7 +87,11 @@ load_current_value do
                  else
                    "SHOW SLAVE '#{master_connection}' STATUS"
                  end
-  raw_slave_status = execute_sql(status_query, nil, conn_options)
+  begin
+    raw_slave_status = execute_sql(status_query, nil, conn_options)
+  rescue
+    current_value_does_not_exist!
+  end
   current_value_does_not_exist! if raw_slave_status.split("\n").count <= 1
   slave_status = parse_mysql_batch_result(raw_slave_status)
   slave_status.each do |row|
@@ -110,11 +114,11 @@ action_class do
   include MariaDBCookbook::Helpers
 
   def replication_query(query)
-    ctrl = { user: new_resource.user, password: new_resource.password, host: new_resource.host, port: new_resource.port, socket: new_resource.socket }
+    ctrl = { user: new_resource.user, password: new_resource.password, host: new_resource.host, port: new_resource.port, socket: default_socket }
     if server_older_than?('10.0')
       raw_query = query
     else
-      default_master_connection = connection_name == 'default' ? '' : connection_name
+      default_master_connection = new_resource.connection_name == 'default' ? '' : new_resource.connection_name
       raw_query = "SET @@default_master_connection='#{default_master_connection}';"
       raw_query << query
     end
@@ -122,7 +126,7 @@ action_class do
   end
 
   def mariadb_version
-    ctrl = { user: new_resource.user, password: new_resource.password, host: new_resource.host, port: new_resource.port, socket: new_resource.socket }
+    ctrl = { user: new_resource.user, password: new_resource.password, host: new_resource.host, port: new_resource.port, socket: default_socket }
     parse_mysql_batch_result(execute_sql('SELECT VERSION()', nil, ctrl)).each do |row|
       return row['VERSION()'][/([\d\.]+)-MariaDB.*/, 1]
     end
@@ -144,10 +148,10 @@ action_class do
   end
 
   def change_master_to(master_attrs)
-    change_query = if server_older_than?('10.0') || connection_name == 'default'
+    change_query = if server_older_than?('10.0') || new_resource.connection_name == 'default'
                      'CHANGE MASTER TO '
                    else
-                     "CHANGE MASTER '#{connection_name}' TO "
+                     "CHANGE MASTER '#{new_resource.connection_name}' TO "
                    end
     master_settings = []
     master_attrs.each_pair do |attribute, value|
@@ -157,27 +161,32 @@ action_class do
   end
 
   def slave_status?
-    status_query = if server_older_than?('10.0') || connection_name == 'default'
+    status_query = if server_older_than?('10.0') || new_resource.connection_name == 'default'
                      'SHOW SLAVE STATUS'
                    else
-                     "SHOW SLAVE '#{connection_name}' STATUS"
+                     "SHOW SLAVE '#{new_resource.connection_name}' STATUS"
                    end
-    parse_mysql_batch_result(replication_query(status_query))
+    begin
+      slave_status_parsed = parse_mysql_batch_result(replication_query(status_query))
+    rescue
+      return false
+    end
+    slave_status_parsed
   end
 
   def start_slave
-    if server_older_than?('10.0') || connection_name == 'default'
+    if server_older_than?('10.0') || new_resource.connection_name == 'default'
       replication_query('START SLAVE')
     else
-      replication_query("START SLAVE'#{connection_name}'")
+      replication_query("START SLAVE'#{new_resource.connection_name}'")
     end
   end
 
   def stop_slave
-    if server_older_than?('10.0') || connection_name == 'default'
+    if server_older_than?('10.0') || new_resource.connection_name == 'default'
       replication_query('STOP SLAVE')
     else
-      replication_query("STOP SLAVE'#{connection_name}'")
+      replication_query("STOP SLAVE'#{new_resource.connection_name}'")
     end
   end
 end
