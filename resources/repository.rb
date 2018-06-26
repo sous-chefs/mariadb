@@ -45,7 +45,7 @@ action :add do
     apt_key = new_resource.apt_gpg_key == 'F1656F24C74CD1D8' && node['platform'] == 'debian' && node['platform_version'].split('.')[0].to_i < 9 ? 'CBCB082A1BB943DB' : new_resource.apt_gpg_key
 
     apt_repository 'mariadb_org_repository' do
-      uri          "http://mariadb.mirrors.ovh.net/MariaDB/repo/10.3/#{node['platform']}"
+      uri          "http://mariadb.mirrors.ovh.net/MariaDB/repo/#{new_resource.version}/#{node['platform']}"
       components   ['main']
       distribution node['lsb']['codename']
       keyserver new_resource.apt_gpg_keyserver

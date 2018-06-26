@@ -37,32 +37,15 @@ property :options,                               Hash,                default: {
 property :cluster_nodes,                         Array,               default: []
 
 action :create do
-  # first install needed dependencies to sync nodes
-  if new_resource.wsrep_sst_method == 'rsync'
-    package 'rsync' do
-      action :install
-    end
-  elsif new_resource.wsrep_sst_method =~ /^xtrabackup(-v2)?$/
-    %w(percona-xtrabackup socat pv).each do |pkg|
-      package pkg do
-        action :install
-      end
-    end
-  elsif new_resource.wsrep_sst_method == 'xtrabackup-v24'
-    %w(percona-xtrabackup-24 socat pv).each do |pkg|
-      package pkg do
-        action :install
-      end
-    end
-  elsif new_resource.wsrep_sst_method == 'mariabackup'
-    package 'mariadb-backup-' + new_resource.version do
-      action :install
-    end
-    %w(socat pv).each do |pkg|
-      package pkg do
-        action :install
-      end
-    end
+  case new_resource.wsrep_sst_method
+  when 'rsync'
+    package 'rsync'
+  when /^xtrabackup(-v2)?$/
+    package %w(percona-xtrabackup socat pv)
+  when 'xtrabackup-v24'
+    package %w(percona-xtrabackup-24 socat pv)
+  when 'mariabackup'
+    package %W(socat pv mariadb-backup-#{new_resource.version})
   end
 
   if new_resource.gcomm_address.nil?
