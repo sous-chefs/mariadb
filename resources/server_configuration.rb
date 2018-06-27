@@ -20,7 +20,7 @@ include MariaDBCookbook::Helpers
 
 property :version,                        String,            default: '10.3'
 property :cookbook,                       String,            default: 'mariadb'
-property :mycnf_file,                     String,            default: lazy { "#{conf_dir}my.cnf" }
+property :mycnf_file,                     String,            default: lazy { "#{conf_dir}/my.cnf" }
 property :extra_configuration_directory,  String,            default: lazy { ext_conf_dir }
 property :client_port,                    [String, Integer], default: 3306
 property :client_socket,                  String,            default: lazy { default_socket }
@@ -171,61 +171,98 @@ action :modify do
     action :create
   end
 
-  innodb_options = {}
-  innodb_options['comment1']                      = '#'
-  innodb_options['comment2']                      = '# * InnoDB'
-  innodb_options['comment3']                      = '#'
-  innodb_options['comment4']                      = '# InnoDB is enabled by default with a 10MB datafile in /var/lib/mysql/.'
-  innodb_options['comment5']                      = '# Read the manual for more InnoDB related options. There are many!'
-  innodb_options['innodb_log_file_size_comment1'] = '# you can\'t just change log file size, it requires special procedure'
-  innodb_options['innodb_log_file_size']   = new_resource.innodb_log_file_size
-  innodb_options['innodb_log_buffer_size'] = new_resource.innodb_log_buffer_size
-  innodb_options['innodb_file_per_table']  = new_resource.innodb_file_per_table
-  innodb_options['innodb_open_files']      = new_resource.innodb_open_files
-  innodb_options['innodb_io_capacity']     = new_resource.innodb_io_capacity
-  innodb_options['innodb_flush_method']    = new_resource.innodb_flush_method
-  innodb_options['innodb_buffer_pool_size'] = if new_resource.innodb_bps_percentage_memory
-                                                (
-                                                  new_resource.innodb_buffer_pool_size.to_f *
-                                                  (node['memory']['total'][0..-3].to_i / 1024)
-                                                ).round.to_s + 'M'
-                                              else
-                                                new_resource.innodb_buffer_pool_size
-                                              end
-  new_resource.innodb_options.each do |key, value|
-    innodb_options[key] = value
-  end
-
   mariadb_configuration '20-innodb' do
     section 'mysqld'
     cookbook new_resource.cookbook
-    option innodb_options
+    option build_innodb_options
     action :add
-  end
-
-  replication_opts = {}
-  unless new_resource.replication_log_bin.nil?
-    replication_opts['log_bin']          = new_resource.replication_log_bin
-    replication_opts['sync_binlog']      = new_resource.replication_sync_binlog
-    replication_opts['log_bin_index']    = new_resource.replication_log_bin_index
-    replication_opts['expire_logs_days'] = new_resource.replication_expire_logs_days
-    replication_opts['max_binlog_size']  = new_resource.replication_max_binlog_size
-  end
-  unless new_resource.replication_server_id.nil?
-    replication_opts['server_id'] = new_resource.replication_server_id
-  end
-  new_resource.replication_options.each do |key, value|
-    replication_opts[key] = value
   end
 
   mariadb_configuration '30-replication' do
     section 'mysqld'
     cookbook new_resource.cookbook
-    option replication_opts
+    option build_replication_options
     action :add
   end
+
+  move_data_dir if new_resource.mysqld_datadir != data_dir
 end
 
 action_class do
   include MariaDBCookbook::Helpers
+
+  def build_innodb_options
+    innodb_options = {}
+    innodb_options['comment1']                      = '#'
+    innodb_options['comment2']                      = '# * InnoDB'
+    innodb_options['comment3']                      = '#'
+    innodb_options['comment4']                      = '# InnoDB is enabled by default with a 10MB datafile in /var/lib/mysql/.'
+    innodb_options['comment5']                      = '# Read the manual for more InnoDB related options. There are many!'
+    innodb_options['innodb_log_file_size_comment1'] = '# you can\'t just change log file size, it requires special procedure'
+    innodb_options['innodb_log_file_size']   = new_resource.innodb_log_file_size
+    innodb_options['innodb_log_buffer_size'] = new_resource.innodb_log_buffer_size
+    innodb_options['innodb_file_per_table']  = new_resource.innodb_file_per_table
+    innodb_options['innodb_open_files']      = new_resource.innodb_open_files
+    innodb_options['innodb_io_capacity']     = new_resource.innodb_io_capacity
+    innodb_options['innodb_flush_method']    = new_resource.innodb_flush_method
+    innodb_options['innodb_buffer_pool_size'] = if new_resource.innodb_bps_percentage_memory
+                                                  (
+                                                    new_resource.innodb_buffer_pool_size.to_f *
+                                                    (node['memory']['total'][0..-3].to_i / 1024)
+                                                  ).round.to_s + 'M'
+                                                else
+                                                  new_resource.innodb_buffer_pool_size
+                                                end
+    new_resource.innodb_options.each do |key, value|
+      innodb_options[key] = value
+    end
+    innodb_options
+  end
+
+  def build_replication_options
+    replication_opts = {}
+    unless new_resource.replication_log_bin.nil?
+      replication_opts['log_bin']          = new_resource.replication_log_bin
+      replication_opts['sync_binlog']      = new_resource.replication_sync_binlog
+      replication_opts['log_bin_index']    = new_resource.replication_log_bin_index
+      replication_opts['expire_logs_days'] = new_resource.replication_expire_logs_days
+      replication_opts['max_binlog_size']  = new_resource.replication_max_binlog_size
+    end
+    unless new_resource.replication_server_id.nil?
+      replication_opts['server_id'] = new_resource.replication_server_id
+    end
+    new_resource.replication_options.each do |key, value|
+      replication_opts[key] = value
+    end
+    replication_opts
+  end
+
+  def move_data_dir
+    bash 'move-datadir' do
+      user 'root'
+      code <<-EOH
+      /bin/cp -a #{data_dir}/* #{new_resource.mysqld_datadir} &&
+      /bin/rm -rf #{data_dir} &&
+      /bin/ln -s #{new_resource.mysqld_datadir} #{data_dir}
+      EOH
+      action :nothing
+    end
+
+    # Using this to generate a service resource to control
+    service platform_service_name do
+      supports restart: true, status: true, reload: true
+      action :nothing
+    end
+
+    directory new_resource.mysqld_datadir do
+      owner 'mysql'
+      group 'mysql'
+      mode '0750'
+      action :create
+      notifies :stop, "service[#{platform_service_name}]", :immediately
+      notifies :run, 'bash[move-datadir]', :immediately
+      notifies :start, "service[#{platform_service_name}]", :immediately
+      only_if { !::File.symlink?(data_dir) }
+    end
+  end
 end

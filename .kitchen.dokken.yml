@@ -101,3 +101,9 @@ suites:
   - name: replication
     run_list:
       - recipe[test::replication]
+  #
+  # datadir_changed
+  #
+  - name: datadir_changed
+    run_list:
+      - recipe[test::datadir_changed]

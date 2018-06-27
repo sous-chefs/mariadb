@@ -91,6 +91,18 @@ env:
   - INSTANCE=replication-ubuntu-1604 CHEF_VERSION=14.2.0
   - INSTANCE=replication-ubuntu-1804
   - INSTANCE=replication-ubuntu-1804 CHEF_VERSION=14.2.0
+  - INSTANCE=datadir-changed-centos-6
+  - INSTANCE=datadir-changed-centos-6 CHEF_VERSION=14.2.0
+  - INSTANCE=datadir-changed-centos-7
+  - INSTANCE=datadir-changed-centos-7 CHEF_VERSION=14.2.0
+  - INSTANCE=datadir-changed-debian-8
+  - INSTANCE=datadir-changed-debian-8 CHEF_VERSION=14.2.0
+  - INSTANCE=datadir-changed-debian-9
+  - INSTANCE=datadir-changed-debian-9 CHEF_VERSION=14.2.0
+  - INSTANCE=datadir-changed-ubuntu-1604
+  - INSTANCE=datadir-changed-ubuntu-1604 CHEF_VERSION=14.2.0
+  - INSTANCE=datadir-changed-ubuntu-1804
+  - INSTANCE=datadir-changed-ubuntu-1804 CHEF_VERSION=14.2.0
 
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
