@@ -45,3 +45,6 @@ suites:
   - name: datadir_changed
     run_list:
       - recipe[test::datadir_changed]
+  - name: port_changed
+    run_list:
+      - recipe[test::port_changed]
