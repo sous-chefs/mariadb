@@ -18,7 +18,7 @@ RSpec.describe MariaDBCookbook::Helpers do
       let(:platform_family) { 'rhel' }
 
       it 'returns the correct path' do
-        expect(subject.data_dir(version)).to eq '/var/lib/mysql/'
+        expect(subject.data_dir(version)).to eq '/var/lib/mysql'
       end
     end
 
@@ -26,7 +26,7 @@ RSpec.describe MariaDBCookbook::Helpers do
       let(:platform_family) { 'debian' }
 
       it 'returns the correct path' do
-        expect(subject.data_dir(version)).to eq '/var/lib/mysql/'
+        expect(subject.data_dir(version)).to eq '/var/lib/mysql'
       end
     end
   end

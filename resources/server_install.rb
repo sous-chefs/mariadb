@@ -18,14 +18,15 @@
 
 include MariaDBCookbook::Helpers
 
-property :version,           String, default: '10.3'
+property :version,           String,        default: '10.3'
 property :setup_repo,        [true, false], default: true
-property :mycnf_file,        String, default: lazy { "#{conf_dir}/my.cnf" }
-property :extconf_directory, String, default: lazy { ext_conf_dir }
-property :external_pid_file, String, default: lazy { "/var/run/mysql/#{version}-main.pid" }
+property :mycnf_file,        String,        default: lazy { "#{conf_dir}/my.cnf" }
+property :extconf_directory, String,        default: lazy { ext_conf_dir }
+property :data_directory,    String,        default: lazy { data_dir }
+property :external_pid_file, String,        default: lazy { "/var/run/mysql/#{version}-main.pid" }
 property :password,          [String, nil], default: 'generate'
-property :port,              [String, Integer], default: 3306
-property :initdb_locale,     String, default: 'UTF-8'
+property :port,              Integer,       default: 3306
+property :initdb_locale,     String,        default: 'UTF-8'
 
 action :install do
   node.run_state['mariadb'] ||= {}
