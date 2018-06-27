@@ -9,7 +9,7 @@ transport:
 provisioner:
   name: dokken
   product_name: chef
-  product_version: <%= ENV['CHEF_VERSION'] || 'current' %>
+  product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
   deprecations_as_errors: true
   log_level: <%= ENV['CHEF_LOG_LEVEL'] || "auto" %>
 
@@ -107,3 +107,9 @@ suites:
   - name: datadir_changed
     run_list:
       - recipe[test::datadir_changed]
+  #
+  # port_changed
+  #
+  - name: port_changed
+    run_list:
+      - recipe[test::port_changed]

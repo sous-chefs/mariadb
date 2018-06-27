@@ -141,6 +141,27 @@ module MariaDBCookbook
     #      !(execute_sql(query, new_resource.database) =~ /^installed$/).nil?
     #    end
 
+    def do_port_connect(ip, port)
+      Chef::Log.fatal "Opening port [#{port.to_s}] on IP [#{ip}]"
+      s = TCPSocket.new(ip, port)
+      s.close
+      true
+    rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+      false
+    end
+
+    def port_open?(ip, port)
+      Chef::Log.fatal "Testing to open port [#{port.to_s}] on IP [#{ip}]"
+      begin
+        Timeout.timeout(5) do
+          return do_port_connect(ip, port)
+        end
+      rescue Timeout::Error
+        false
+      end
+      false
+    end
+
     def data_dir(_version = node.run_state['mariadb']['version'])
       '/var/lib/mysql'
     end
@@ -168,8 +189,13 @@ module MariaDBCookbook
       'mysql'
     end
 
-    def mysql_command_string(database, query)
-      "psql -d #{database} <<< '#{query};'"
+    def restart_mariadb_service
+      # Using this to generate a service resource to control
+      service 'mariadb' do
+        service_name platform_service_name
+        supports restart: true, status: true, reload: true
+        action :restart
+      end
     end
 
     def slave?

@@ -197,6 +197,7 @@ Name                            | Types             | Description               
 `mysqld_skip_external_locking`  | Boolean           |                                                               | true                                       | no
 `mysqld_skip_log_bin`           | Boolean           |                                                               | false                                      | no
 `mysqld_skip_name_resolve`      | Boolean           |                                                               | false                                      | no
+`mysqld_port`                   | Integer           |                                                               | 3306                                       | no
 `mysqld_bind_address`           | String            |                                                               | '127.0.0.1'                                | no
 `mysqld_max_connections`        | Integer           |                                                               | 100                                        | no
 `mysqld_max_statement_time`     | Integer, nil      |                                                               | nil                                        | no

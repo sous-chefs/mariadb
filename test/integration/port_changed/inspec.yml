@@ -1,0 +1,10 @@
+name: port_changed
+title: MariaDB Server port changed test scenario
+maintainer: Nicolas Blanc
+copyright_email: sinfomicien@gmail.com
+license: Apache
+summary: Check that verything is ok after a port change
+version: 0.0.1
+supports:
+  - os-family: unix
+inspec_version: '~> 2.0'
