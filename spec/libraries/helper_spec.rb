@@ -30,4 +30,13 @@ RSpec.describe MariaDBCookbook::Helpers do
       end
     end
   end
+
+  describe '#wsrep_node_address' do
+    it 'returns a node address with a port' do
+      new_resource = double(database: 'db_foo', wsrep_node_port: '1234')
+      ipaddress = '127.0.0.1'
+
+      expect(subject.wsrep_node_address(new_resource).to eq '127.0.0.1:1234')
+    end
+  end
 end

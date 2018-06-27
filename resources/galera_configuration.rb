@@ -126,13 +126,7 @@ action :create do
   node['network']['interfaces'][iface]['addresses'].each do |ip, params|
     params['family'] == 'inet' && ipaddress = ip
   end
-  galera_options['wsrep_node_address'] = unless ipaddress.empty?
-                                           if new_resource.wsrep_node_port.nil?
-                                             ipaddress
-                                           else
-                                             "#{ipaddress}:#{new_resource.wsrep_node_port}"
-                                           end
-                                         end
+  galera_options['wsrep_node_address'] = wsrep_node_address(new_resource)
 
   ipaddress_inc = ''
   unless new_resource.wsrep_node_incoming_address_interface.nil?

@@ -225,5 +225,12 @@ module MariaDBCookbook
         '/var/run/mysqld/mysqld.pid'
       end
     end
+
+    def ipaddress
+    end
+
+    def wsrep_node_address(new_resource)
+      new_resource.wsrep_node_port ? "#{ipaddress}:#{new_resource.wsrep_node_port}" : ipaddress
+    end
   end
 end
