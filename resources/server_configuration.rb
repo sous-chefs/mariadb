@@ -63,11 +63,12 @@ property :mysqld_query_cache_limit,       String,            default: '128K'
 property :mysqld_query_cache_size,        String,            default: '64M'
 property :mysqld_query_cache_type,        [String, nil],     default: nil
 property :mysqld_default_storage_engine,  String,            default: 'InnoDB'
-property :mysqld_general_log_file,        String,            default: '/var/log/mysql/mysql.log'
+property :mysqld_log_directory,           String,            default: '/var/log/mysql'
+property :mysqld_general_log_file,        String,            default: lazy { "#{mysqld_log_directory}/mysql.log" }
 property :mysqld_general_log,             Integer,           default: 0
 property :mysqld_log_warnings,            Integer,           default: 2
 property :mysqld_slow_query_log,          Integer,           default: 0
-property :mysqld_slow_query_log_file,     String,            default: '/var/log/mysql/mariadb-slow.log'
+property :mysqld_slow_query_log_file,     String,            default: lazy { "#{mysqld_log_directory}/mariadb-slow.log" }
 property :mysqld_long_query_time,         Integer,           default: 10
 property :mysqld_log_slow_rate_limit,     Integer,           default: 1000
 property :mysqld_log_slow_verbosity,      String,            default: 'query_plan'
@@ -89,8 +90,8 @@ property :innodb_io_capacity,             Integer,           default: 400
 property :innodb_flush_method,            String,            default: 'O_DIRECT'
 property :innodb_options,                 Hash,              default: {}
 property :replication_server_id,          [String, nil],     default: nil
-property :replication_log_bin,            String,            default: '/var/log/mysql/mariadb-bin'
-property :replication_log_bin_index,      String,            default: '/var/log/mysql/mariadb-bin.index'
+property :replication_log_bin,            String,            default: lazy { "#{mysqld_log_directory}/mariadb-bin" }
+property :replication_log_bin_index,      String,            default: lazy { "#{mysqld_log_directory}/mariadb-bin.index" }
 property :replication_sync_binlog,        [String, Integer], default: 0
 property :replication_expire_logs_days,   Integer,           default: 10
 property :replication_max_binlog_size,    String,            default: '100M'
@@ -168,6 +169,13 @@ action :modify do
     owner 'root'
     group 'root'
     mode '0755'
+    action :create
+  end
+
+  directory new_resource.mysqld_log_directory do
+    owner 'root'
+    group 'mysql'
+    mode '0770'
     action :create
   end
 
