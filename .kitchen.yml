@@ -48,3 +48,6 @@ suites:
   - name: port_changed
     run_list:
       - recipe[test::port_changed]
+  - name: galera_configuration
+    run_list:
+      - recipe[test::galera_configuration]

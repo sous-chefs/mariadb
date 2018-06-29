@@ -211,6 +211,14 @@ module MariaDBCookbook
       r
     end
 
+    def mariadbbackup_pkg_name
+      if new_resource.version == '10.3'
+        'mariadb-backup'
+      else
+        "mariadb-backup-#{new_resource.version}"
+      end
+    end
+
     # determine the platform specific server package name
     def server_pkg_name
       platform_family?('debian') ? "mariadb-server-#{new_resource.version}" : 'MariaDB-server'

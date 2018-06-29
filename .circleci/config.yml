@@ -121,3 +121,13 @@ workflows:
           platform: debian-9
           suite: datadir-changed
           requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-9-galera-configuration
+          platform: debian-9
+          suite: galera-configuration
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-9-port-changed
+          platform: debian-9
+          suite: port-changed
+          requires: [ lint, danger ]
