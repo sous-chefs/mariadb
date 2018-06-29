@@ -142,7 +142,6 @@ module MariaDBCookbook
     #    end
 
     def do_port_connect(ip, port)
-      Chef::Log.fatal "Opening port [#{port.to_s}] on IP [#{ip}]"
       s = TCPSocket.new(ip, port)
       s.close
       true
@@ -151,7 +150,6 @@ module MariaDBCookbook
     end
 
     def port_open?(ip, port)
-      Chef::Log.fatal "Testing to open port [#{port.to_s}] on IP [#{ip}]"
       begin
         Timeout.timeout(5) do
           return do_port_connect(ip, port)
