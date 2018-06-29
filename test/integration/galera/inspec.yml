@@ -1,9 +1,9 @@
-name: port_changed
-title: MariaDB Server port changed test scenario
+name: galera
+title: MariaDB Galera Resource tests
 maintainer: Nicolas Blanc
 copyright_email: sinfomicien@gmail.com
 license: Apache
-summary: Check that verything is ok after a port change
+summary: Check that the galera plugin is installed and working
 version: 0.0.1
 supports:
   - os-family: unix

@@ -40,8 +40,8 @@ property :mysqld_lc_messages,             String,            default: 'en_US'
 property :mysqld_skip_external_locking,   [true, false],     default: true
 property :mysqld_skip_log_bin,            [true, false],     default: false
 property :mysqld_skip_name_resolve,       [true, false],     default: false
-property :mysqld_port,                    Integer,           default: 3306
 property :mysqld_bind_address,            String,            default: '127.0.0.1'
+property :mysqld_port,                    [String, Integer], default: 3306
 property :mysqld_max_connections,         Integer,           default: 100
 property :mysqld_max_statement_time,      [Integer, nil],    default: nil
 property :mysqld_connect_timeout,         Integer,           default: 5
@@ -105,7 +105,66 @@ action :modify do
     group 'root'
     mode '0644'
     cookbook new_resource.cookbook
-    variables build_mycnf_variables_hash
+    variables(client_port: new_resource.client_port,
+              client_socket: new_resource.client_socket,
+              client_host: new_resource.client_host,
+              client_options: new_resource.client_options,
+              mysqld_safe_socket: new_resource.mysqld_safe_socket,
+              mysqld_safe_nice: new_resource.mysqld_safe_nice,
+              mysqld_safe_options: new_resource.mysqld_safe_options,
+              mysqld_user: new_resource.mysqld_user,
+              mysqld_pid_file: new_resource.mysqld_pid_file,
+              mysqld_socket: new_resource.mysqld_socket,
+              mysqld_port: new_resource.mysqld_port,
+              mysqld_basedir: new_resource.mysqld_basedir,
+              mysqld_datadir: new_resource.mysqld_datadir,
+              mysqld_tmpdir: new_resource.mysqld_tmpdir,
+              mysqld_lc_messages_dir: new_resource.mysqld_lc_messages_dir,
+              mysqld_lc_messages: new_resource.mysqld_lc_messages,
+              mysqld_skip_external_locking: new_resource.mysqld_skip_external_locking,
+              mysqld_skip_log_bin: new_resource.mysqld_skip_log_bin,
+              mysqld_skip_name_resolve: new_resource.mysqld_skip_name_resolve,
+              mysqld_bind_address: new_resource.mysqld_bind_address,
+              mysqld_max_connections: new_resource.mysqld_max_connections,
+              mysqld_max_statement_time: new_resource.mysqld_max_statement_time,
+              mysqld_connect_timeout: new_resource.mysqld_connect_timeout,
+              mysqld_wait_timeout: new_resource.mysqld_wait_timeout,
+              mysqld_max_allowed_packet: new_resource.mysqld_max_allowed_packet,
+              mysqld_thread_cache_size: new_resource.mysqld_thread_cache_size,
+              mysqld_sort_buffer_size: new_resource.mysqld_sort_buffer_size,
+              mysqld_bulk_insert_buffer_size: new_resource.mysqld_bulk_insert_buffer_size,
+              mysqld_tmp_table_size: new_resource.mysqld_tmp_table_size,
+              mysqld_max_heap_table_size: new_resource.mysqld_max_heap_table_size,
+              mysqld_myisam_recover: new_resource.mysqld_myisam_recover,
+              mysqld_key_buffer_size: new_resource.mysqld_key_buffer_size,
+              mysqld_open_files_limit: new_resource.mysqld_open_files_limit,
+              mysqld_table_open_cache: new_resource.mysqld_table_open_cache,
+              mysqld_myisam_sort_buffer_size: new_resource.mysqld_myisam_sort_buffer_size,
+              mysqld_concurrent_insert: new_resource.mysqld_concurrent_insert,
+              mysqld_read_buffer_size: new_resource.mysqld_read_buffer_size,
+              mysqld_read_rnd_buffer_size: new_resource.mysqld_read_rnd_buffer_size,
+              mysqld_query_cache_limit: new_resource.mysqld_query_cache_limit,
+              mysqld_query_cache_size: new_resource.mysqld_query_cache_size,
+              mysqld_query_cache_type: new_resource.mysqld_query_cache_type,
+              mysqld_default_storage_engine: new_resource.mysqld_default_storage_engine,
+              mysqld_general_log_file: new_resource.mysqld_general_log_file,
+              mysqld_general_log: new_resource.mysqld_general_log,
+              mysqld_log_warnings: new_resource.mysqld_log_warnings,
+              mysqld_slow_query_log: new_resource.mysqld_slow_query_log,
+              mysqld_slow_query_log_file: new_resource.mysqld_slow_query_log_file,
+              mysqld_long_query_time: new_resource.mysqld_long_query_time,
+              mysqld_log_slow_rate_limit: new_resource.mysqld_log_slow_rate_limit,
+              mysqld_log_slow_verbosity: new_resource.mysqld_log_slow_verbosity,
+              mysqld_log_output: new_resource.mysqld_log_output,
+              mysqld_options: new_resource.mysqld_options,
+              mysqldump_quick: new_resource.mysqldump_quick,
+              mysqldump_quote_names: new_resource.mysqldump_quote_names,
+              mysqldump_max_allowed_packet: new_resource.mysqldump_max_allowed_packet,
+              mysqldump_options: new_resource.mysqldump_options,
+              isamchk_key_buffer: new_resource.isamchk_key_buffer,
+              isamchk_options: new_resource.isamchk_options,
+              extra_configuration_directory: new_resource.extra_configuration_directory
+             )
   end
 
   directory ext_conf_dir do
@@ -115,7 +174,6 @@ action :modify do
     action :create
   end
 
-  # Needed otherwise it breaks on some platform after a restart
   directory new_resource.mysqld_log_directory do
     owner 'root'
     group 'mysql'
@@ -148,70 +206,6 @@ end
 
 action_class do
   include MariaDBCookbook::Helpers
-
-  def build_mycnf_variables_hash
-    hash = { client_port: new_resource.client_port,
-             client_socket: new_resource.client_socket,
-             client_host: new_resource.client_host,
-             client_options: new_resource.client_options,
-             mysqld_safe_socket: new_resource.mysqld_safe_socket,
-             mysqld_safe_nice: new_resource.mysqld_safe_nice,
-             mysqld_safe_options: new_resource.mysqld_safe_options,
-             mysqld_user: new_resource.mysqld_user,
-             mysqld_pid_file: new_resource.mysqld_pid_file,
-             mysqld_port: new_resource.mysqld_port,
-             mysqld_socket: new_resource.mysqld_socket,
-             mysqld_basedir: new_resource.mysqld_basedir,
-             mysqld_datadir: new_resource.mysqld_datadir,
-             mysqld_tmpdir: new_resource.mysqld_tmpdir,
-             mysqld_lc_messages_dir: new_resource.mysqld_lc_messages_dir,
-             mysqld_lc_messages: new_resource.mysqld_lc_messages,
-             mysqld_skip_external_locking: new_resource.mysqld_skip_external_locking,
-             mysqld_skip_log_bin: new_resource.mysqld_skip_log_bin,
-             mysqld_skip_name_resolve: new_resource.mysqld_skip_name_resolve,
-             mysqld_bind_address: new_resource.mysqld_bind_address,
-             mysqld_max_connections: new_resource.mysqld_max_connections,
-             mysqld_max_statement_time: new_resource.mysqld_max_statement_time,
-             mysqld_connect_timeout: new_resource.mysqld_connect_timeout,
-             mysqld_wait_timeout: new_resource.mysqld_wait_timeout,
-             mysqld_max_allowed_packet: new_resource.mysqld_max_allowed_packet,
-             mysqld_thread_cache_size: new_resource.mysqld_thread_cache_size,
-             mysqld_sort_buffer_size: new_resource.mysqld_sort_buffer_size,
-             mysqld_bulk_insert_buffer_size: new_resource.mysqld_bulk_insert_buffer_size,
-             mysqld_tmp_table_size: new_resource.mysqld_tmp_table_size,
-             mysqld_max_heap_table_size: new_resource.mysqld_max_heap_table_size,
-             mysqld_myisam_recover: new_resource.mysqld_myisam_recover,
-             mysqld_key_buffer_size: new_resource.mysqld_key_buffer_size,
-             mysqld_open_files_limit: new_resource.mysqld_open_files_limit,
-             mysqld_table_open_cache: new_resource.mysqld_table_open_cache,
-             mysqld_myisam_sort_buffer_size: new_resource.mysqld_myisam_sort_buffer_size,
-             mysqld_concurrent_insert: new_resource.mysqld_concurrent_insert,
-             mysqld_read_buffer_size: new_resource.mysqld_read_buffer_size,
-             mysqld_read_rnd_buffer_size: new_resource.mysqld_read_rnd_buffer_size,
-             mysqld_query_cache_limit: new_resource.mysqld_query_cache_limit,
-             mysqld_query_cache_size: new_resource.mysqld_query_cache_size,
-             mysqld_query_cache_type: new_resource.mysqld_query_cache_type,
-             mysqld_default_storage_engine: new_resource.mysqld_default_storage_engine,
-             mysqld_general_log_file: new_resource.mysqld_general_log_file,
-             mysqld_general_log: new_resource.mysqld_general_log,
-             mysqld_log_warnings: new_resource.mysqld_log_warnings,
-             mysqld_slow_query_log: new_resource.mysqld_slow_query_log,
-             mysqld_slow_query_log_file: new_resource.mysqld_slow_query_log_file,
-             mysqld_long_query_time: new_resource.mysqld_long_query_time,
-             mysqld_log_slow_rate_limit: new_resource.mysqld_log_slow_rate_limit,
-             mysqld_log_slow_verbosity: new_resource.mysqld_log_slow_verbosity,
-             mysqld_log_output: new_resource.mysqld_log_output,
-             mysqld_options: new_resource.mysqld_options,
-             mysqldump_quick: new_resource.mysqldump_quick,
-             mysqldump_quote_names: new_resource.mysqldump_quote_names,
-             mysqldump_max_allowed_packet: new_resource.mysqldump_max_allowed_packet,
-             mysqldump_options: new_resource.mysqldump_options,
-             isamchk_key_buffer: new_resource.isamchk_key_buffer,
-             isamchk_options: new_resource.isamchk_options,
-             extra_configuration_directory: new_resource.extra_configuration_directory,
-           }
-    hash
-  end
 
   def build_innodb_options
     innodb_options = {}
