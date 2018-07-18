@@ -13,9 +13,18 @@ if node['mariadb']['use_default_repository']
     apt_key = 'CBCB082A1BB943DB'
     apt_key = 'F1656F24C74CD1D8' if node['platform'] == 'ubuntu' && node['platform_version'].split('.')[0].to_i >= 16
 
-    apt_repository "mariadb-#{node['mariadb']['install']['version']}" do
-      uri 'http://' + node['mariadb']['apt_repository']['base_url'] + '/' + \
+    apt_uri = ( node['mariadb']['apt_repository']['minor_version'] != false ) \
+      ? \
+        'http://' + node['mariadb']['apt_repository']['base_url'] + '/mariadb-' + \
+        node['mariadb']['install']['version'] + '.' + \
+        node['mariadb']['apt_repository']['minor_version'] + \
+        '/repo/' + node['platform'] \
+      : \
+        'http://' + node['mariadb']['apt_repository']['base_url'] + '/mariadb/repo/' + \
         node['mariadb']['install']['version'] + '/' + node['platform']
+
+    apt_repository "mariadb-#{node['mariadb']['install']['version']}" do
+      uri apt_uri
       distribution node['lsb']['codename']
       components ['main']
       keyserver node['mariadb']['install']['keyserver']

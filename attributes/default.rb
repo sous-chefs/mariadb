@@ -179,6 +179,7 @@ default['mariadb']['install']['extra_packages'] = true
 # package(apt or yum) default configuration
 #
 default['mariadb']['use_default_repository'] = false
+default['mariadb']['apt_repository']['minor_version'] = false
 default['mariadb']['apt_repository']['base_url'] = \
   'ftp.igh.cnrs.fr/pub/mariadb/repo'
 

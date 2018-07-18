@@ -47,12 +47,6 @@ else
   end
 end
 
-package_type = if %w(5.5 10.0).include?(node['mariadb']['install']['version'])
-                 'galera'
-               else
-                 'server'
-               end
-
 case node['mariadb']['install']['type']
 when 'package'
   # include MariaDB repositories
@@ -60,9 +54,9 @@ when 'package'
 
   case node['platform']
   when 'debian', 'ubuntu'
-    include_recipe "#{cookbook_name}::_debian_#{package_type}"
+    include_recipe "#{cookbook_name}::_debian_galera"
   when 'redhat', 'centos', 'fedora', 'scientific', 'amazon'
-    include_recipe "#{cookbook_name}::_redhat_#{package_type}"
+    include_recipe "#{cookbook_name}::_redhat_galera"
   end
 when 'from_source'
   # To be filled as soon as possible
@@ -86,36 +80,38 @@ include_recipe "#{cookbook_name}::config"
 
 if node['mariadb']['galera']['gcomm_address'].nil?
   galera_cluster_nodes = []
-  if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo]
-    if node['mariadb']['galera']['cluster_nodes'].empty?
-      Chef::Log.warn('By default this recipe uses search (unsupported by Chef Solo).' \
-                     ' Nodes may manually be configured as attributes.')
+  if node['mariadb']['galera']['cluster_nodes'].empty?
+    if !node['mariadb'].attribute?('rspec') && Chef::Config[:solo]
+        Chef::Log.warn('By default this recipe uses search (unsupported by Chef Solo).' \
+                       ' Nodes may manually be configured as attributes.')
     else
-      galera_cluster_nodes = node['mariadb']['galera']['cluster_nodes']
+      if node['mariadb']['galera']['cluster_search_query'].empty?
+        galera_cluster_nodes = search(
+          :node, \
+          "mariadb_galera_cluster_name:#{node['mariadb']['galera']['cluster_name']}"
+        )
+      else
+        galera_cluster_nodes = search 'node', node['mariadb']['galera']['cluster_search_query']
+        log 'Chef search results' do
+          message "Searching for \"#{node['mariadb']['galera']['cluster_search_query']}\" \
+            resulted in \"#{galera_cluster_nodes}\" ..."
+          level :debug
+        end
+      end
+      # Sort Nodes by fqdn
+      galera_cluster_nodes.sort! { |x, y| x[:fqdn] <=> y[:fqdn] }
     end
   else
-    if node['mariadb']['galera']['cluster_search_query'].empty?
-      galera_cluster_nodes = search(
-        :node, \
-        "mariadb_galera_cluster_name:#{node['mariadb']['galera']['cluster_name']}"
-      )
-    else
-      galera_cluster_nodes = search 'node', node['mariadb']['galera']['cluster_search_query']
-      log 'Chef search results' do
-        message "Searching for \"#{node['mariadb']['galera']['cluster_search_query']}\" \
-          resulted in \"#{galera_cluster_nodes}\" ..."
-        level :debug
-      end
-    end
-    # Sort Nodes by fqdn
-    galera_cluster_nodes.sort! { |x, y| x[:fqdn] <=> y[:fqdn] }
+    galera_cluster_nodes = node['mariadb']['galera']['cluster_nodes']
   end
+  
   first = true
   gcomm = 'gcomm://'
+
   galera_cluster_nodes.each do |lnode|
     next unless lnode.name != node.name
     gcomm += ',' unless first
-    gcomm += if String(lnode['mariadb']['galera']['wsrep_node_port']).empty?
+    gcomm += if String(node['mariadb']['galera']['wsrep_node_port']).empty?
                lnode['fqdn']
              else
                "#{lnode['fqdn']}:#{lnode['mariadb']['galera']['wsrep_node_port']}"
