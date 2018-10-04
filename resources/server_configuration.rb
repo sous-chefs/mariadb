@@ -80,7 +80,7 @@ property :mysqldump_max_allowed_packet,   String,            default: '16M'
 property :mysqldump_options,              Hash,              default: {}
 property :isamchk_key_buffer,             String,            default: '16M'
 property :isamchk_options,                Hash,              default: {}
-property :innodb_log_file_size,           String,            defaut: '50M'
+property :innodb_log_file_size,           String,            default: '50M'
 property :innodb_bps_percentage_memory,   [true, false],     default: false
 property :innodb_buffer_pool_size,        String,            default: '50M'
 property :innodb_log_buffer_size,         String,            default: '8M'
