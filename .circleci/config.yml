@@ -36,6 +36,6 @@ workflows:
           suite: replication
           requires: [ lint, danger ]
       - kitchen/dokken:
-          name: datadir
-          suite: datadir
+          name: datadir-changed
+          suite: datadir-changed
           requires: [ lint, danger ]
