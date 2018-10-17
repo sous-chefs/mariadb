@@ -29,6 +29,8 @@ action :add do
     remote_file "/etc/pki/rpm-gpg/RPM-GPG-KEY-MariaDB-#{new_resource.version}" do
       source new_resource.yum_gpg_key_uri
     end
+    gpgkey = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-MariaDB-#{new_resource.version}"
+    gpgkey = new_resource.yum_gpg_key_uri if node['platform_family'] == 'fedora'
 
     yum_repository "MariaDB #{new_resource.version}" do
       repositoryid "mariadb#{new_resource.version}"
@@ -36,7 +38,7 @@ action :add do
       baseurl     yum_repo_url('http://yum.mariadb.org')
       enabled     new_resource.enable_mariadb_org
       gpgcheck    true
-      gpgkey      "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-MariaDB-#{new_resource.version}"
+      gpgkey      gpgkey
     end
 
   when 'debian', 'ubuntu'
