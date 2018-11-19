@@ -1,109 +1,68 @@
----
 driver:
   name: dokken
   privileged: true # because Docker and SystemD/Upstart
+  chef_version: <%= ENV['CHEF_VERSION'] || 'current' %>
 
 transport:
   name: dokken
 
 provisioner:
   name: dokken
-  product_name: chef
-  product_version: <%= ENV['CHEF_VERSION'] || 'current' %>
-  deprecations_as_errors: true
-  log_level: <%= ENV['CHEF_LOG_LEVEL'] || "auto" %>
 
 platforms:
-- name: centos-6
+- name: amazonlinux
   driver:
-    image: centos:6
-    platform: rhel
+    image: dokken/amazonlinux
     pid_one_command: /sbin/init
-    intermediate_instructions:
-      - RUN yum -y install which initscripts sudo
-
-- name: centos-7
-  driver:
-    image: centos:7
-    platform: rhel
-    pid_one_command: /usr/lib/systemd/systemd
-    intermediate_instructions:
-      - RUN yum -y install lsof which initscripts net-tools sudo
+    # intermediate_instructions:
+      # - RUN echo NETWORKING=yes > /etc/sysconfig/network
+    # Note for future cookbook contributors: faking out the network like we do above breaks the network
+    # e.g. `getaddrinfo: Temporary failure in name resolution`
 
 - name: debian-8
   driver:
-    image: debian:8
+    image: dokken/debian-8
     pid_one_command: /bin/systemd
     intermediate_instructions:
       - RUN /usr/bin/apt-get update
-      - RUN /usr/bin/apt-get install lsb-release net-tools sudo -y
 
 - name: debian-9
   driver:
-    image: debian:9
+    image: dokken/debian-9
     pid_one_command: /bin/systemd
     intermediate_instructions:
       - RUN /usr/bin/apt-get update
-      - RUN /usr/bin/apt-get install systemd -y
-      - RUN /usr/bin/apt-get install lsb-release net-tools sudo -y
+
+- name: centos-6
+  driver:
+    image: dokken/centos-6
+    pid_one_command: /sbin/init
+
+- name: centos-7
+  driver:
+    image: dokken/centos-7
+    pid_one_command: /usr/lib/systemd/systemd
+
+- name: fedora-latest
+  driver:
+    image: dokken/fedora-latest
+    pid_one_command: /usr/lib/systemd/systemd
 
 - name: ubuntu-16.04
   driver:
-    image: ubuntu:16.04
+    image: dokken/ubuntu-16.04
     pid_one_command: /bin/systemd
     intermediate_instructions:
       - RUN /usr/bin/apt-get update
-      - RUN /usr/bin/apt-get install net-tools sudo -y
 
 - name: ubuntu-18.04
   driver:
-    image: ubuntu:18.04
+    image: dokken/ubuntu-18.04
     pid_one_command: /bin/systemd
     intermediate_instructions:
       - RUN /usr/bin/apt-get update
-      - RUN /usr/bin/apt-get install systemd -y
-      - RUN /usr/bin/apt-get install net-tools sudo -y
 
-suites:
-  #
-  # repository
-  #
-  - name: repository
-    run_list:
-      - recipe[test::repository]
-  #
-  # client_install
-  #
-  - name: client_install
-    run_list:
-      - recipe[test::client_install]
-  #
-  # server_install
-  #
-  - name: server_install
-    run_list:
-      - recipe[test::server_install]
-  #
-  # server_configuration
-  #
-  - name: server_configuration
-    run_list:
-      - recipe[test::server_configuration]
-  #
-  # resources
-  #
-  - name: resources
-    run_list:
-      - recipe[test::user_database]
-  #
-  # replication
-  #
-  - name: replication
-    run_list:
-      - recipe[test::replication]
-  #
-  # datadir_changed
-  #
-  - name: datadir_changed
-    run_list:
-      - recipe[test::datadir_changed]
+- name: opensuse-leap
+  driver:
+    image: dokken/opensuse-leap
+    pid_one_command: /bin/systemd

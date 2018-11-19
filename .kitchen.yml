@@ -1,12 +1,14 @@
 ---
 driver:
-  name: vagrant
+   name: vagrant
 
 provisioner:
-  name: chef_zero
+  name: chef_solo
   product_name: chef
-  product_version: <%= ENV['CHEF_VERSION'] || 'current' %>
-  log_level: <%= ENV['CHEF_LOG_LEVEL'] || "auto" %>
+  enforce_idempotency: true
+  multiple_converge: 2
+  solo_rb:
+    treat_deprecation_warnings_as_errors: true
 
 verifier:
   name: inspec
@@ -20,45 +22,24 @@ platforms:
   - name: ubuntu-18.04
 
 suites:
-  #
-  # repository
-  #
   - name: repository
     run_list:
       - recipe[test::repository]
-  #
-  # client_install
-  #
   - name: client_install
     run_list:
       - recipe[test::client_install]
-  #
-  # server_install
-  #
   - name: server_install
     run_list:
       - recipe[test::server_install]
-  #
-  # server_configuration
-  #
   - name: server_configuration
     run_list:
       - recipe[test::server_configuration]
-  #
-  # resources
-  #
   - name: resources
     run_list:
       - recipe[test::user_database]
-  #
-  # replication
-  #
   - name: replication
     run_list:
       - recipe[test::replication]
-  #
-  # datadir_changed
-  #
   - name: datadir_changed
     run_list:
       - recipe[test::datadir_changed]
