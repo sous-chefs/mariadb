@@ -1,0 +1,41 @@
+version: 2.1
+
+orbs:
+  kitchen: sous-chefs/kitchen@1.0.0
+
+workflows:
+  kitchen:
+    jobs:
+      - kitchen/danger:
+          name: danger
+          context: Danger
+      - kitchen/lint:
+          name: lint
+      - kitchen/dokken:
+          name: repository
+          suite: repository
+          requires: [ lint, danger ]
+      - kitchen/dokken:
+          name: client-install
+          suite: client-install
+          requires: [ lint, danger ]
+      - kitchen/dokken:
+          name: server-install
+          suite: server-install
+          requires: [ lint, danger ]
+      - kitchen/dokken:
+          name: server-configuration
+          suite: server-configuration
+          requires: [ lint, danger ]
+      - kitchen/dokken:
+          name: resources
+          suite: resources
+          requires: [ lint, danger ]
+      - kitchen/dokken:
+          name: replication
+          suite: replication
+          requires: [ lint, danger ]
+      - kitchen/dokken:
+          name: datadir-changed
+          suite: datadir-changed
+          requires: [ lint, danger ]
