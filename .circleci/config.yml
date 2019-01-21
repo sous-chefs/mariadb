@@ -11,31 +11,143 @@ workflows:
           context: Danger
       - kitchen/lint:
           name: lint
-      - kitchen/dokken:
-          name: repository
+      - kitchen/dokken-single:
+          name: centos-6-repository
+          platform: centos-6
           suite: repository
           requires: [ lint, danger ]
-      - kitchen/dokken:
-          name: client-install
+      - kitchen/dokken-single:
+          name: centos-7-repository
+          platform: centos-7
+          suite: repository
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-8-repository
+          platform: debian-8
+          suite: repository
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-9-repository
+          platform: debian-9
+          suite: repository
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: centos-6-client-install
+          platform: centos-6
           suite: client-install
           requires: [ lint, danger ]
-      - kitchen/dokken:
-          name: server-install
+      - kitchen/dokken-single:
+          name: centos-7-client-install
+          platform: centos-7
+          suite: client-install
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-8-client-install
+          platform: debian-8
+          suite: client-install
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-9-client-install
+          platform: debian-9
+          suite: client-install
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: centos-6-server-install
+          platform: centos-6
           suite: server-install
           requires: [ lint, danger ]
-      - kitchen/dokken:
-          name: server-configuration
+      - kitchen/dokken-single:
+          name: centos-7-server-install
+          platform: centos-7
+          suite: server-install
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-8-server-install
+          platform: debian-8
+          suite: server-install
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-9-server-install
+          platform: debian-9
+          suite: server-install
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: centos-6-server-configuration
+          platform: centos-6
           suite: server-configuration
           requires: [ lint, danger ]
-      - kitchen/dokken:
-          name: resources
+      - kitchen/dokken-single:
+          name: centos-7-server-configuration
+          platform: centos-7
+          suite: server-configuration
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-8-server-configuration
+          platform: debian-8
+          suite: server-configuration
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-9-server-configuration
+          platform: debian-9
+          suite: server-configuration
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: centos-6-resources
+          platform: centos-6
           suite: resources
           requires: [ lint, danger ]
-      - kitchen/dokken:
-          name: replication
+      - kitchen/dokken-single:
+          name: centos-7-resources
+          platform: centos-7
+          suite: resources
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-8-resources
+          platform: debian-8
+          suite: resources
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-9-resources
+          platform: debian-9
+          suite: resources
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: centos-6-replication
+          platform: centos-6
           suite: replication
           requires: [ lint, danger ]
-      - kitchen/dokken:
-          name: datadir-changed
+      - kitchen/dokken-single:
+          name: centos-7-replication
+          platform: centos-7
+          suite: replication
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-8-replication
+          platform: debian-8
+          suite: replication
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-9-replication
+          platform: debian-9
+          suite: replication
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: centos-6-datadir-changed
+          platform: centos-6
+          suite: datadir-changed
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: centos-7-datadir-changed
+          platform: centos-7
+          suite: datadir-changed
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-8-datadir-changed
+          platform: debian-8
+          suite: datadir-changed
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-9-datadir-changed
+          platform: debian-9
           suite: datadir-changed
           requires: [ lint, danger ]

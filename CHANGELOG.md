@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 
 - Added all resources which replace the old recipes
+- Removed support for fedora
 
 ### Removed
 
