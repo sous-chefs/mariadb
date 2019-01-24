@@ -66,7 +66,6 @@ action :create do
     mode '600'
     sensitive true
     content "ALTER USER 'root'@'localhost' IDENTIFIED BY '#{mariadb_root_password}';"
-    action :create
     not_if { ::File.exist? "#{data_dir}/recovery.conf" }
   end
 
