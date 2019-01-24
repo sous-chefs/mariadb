@@ -49,6 +49,9 @@ action :create do
 
   log 'Enable and start MariaDB service' do
     notifies :enable, "service[#{platform_service_name}]", :immediately
+    notifies :stop, "service[#{platform_service_name}]", :immediately
+    notifies :run, 'file[generate-mariadb-root-password]', :immediately
+    notifies :run, 'execute[apply-mariadb-root-password]', :immediately
     notifies :start, "service[#{platform_service_name}]", :immediately
   end
 
@@ -57,11 +60,20 @@ action :create do
   # Generate a random password or set the a password defined with node['mariadb']['server_root_password'].
   # The password is set or change at each run. It is good for security if you choose to set a random password and
   # allow you to change the root password if needed.
-  execute 'generate-mariadb-root-password' do
-    user 'root'
-    command "/usr/bin/mysql -e \"ALTER USER 'root'@'localhost' IDENTIFIED BY '#{mariadb_root_password}';\""
+  file 'generate-mariadb-root-password' do
+    owner 'root'
+    group 'root'
+    mode '600'
+    sensitive true
+    content "ALTER USER 'root'@'localhost' IDENTIFIED BY '#{mariadb_root_password}';"
+    action :create
     not_if { ::File.exist? "#{data_dir}/recovery.conf" }
-    only_if { !new_resource.password.nil? }
+  end
+
+  execute 'apply-mariadb-root-password' do
+    user 'root'
+    command "/usr/sbin/mysqld --init-file=#{data_dir}/recovery.conf"
+    only_if { ::File.exist? "#{data_dir}/recovery.conf" }
   end
 end
 
