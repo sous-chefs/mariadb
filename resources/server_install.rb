@@ -61,6 +61,7 @@ action :create do
   # The password is set or change at each run. It is good for security if you choose to set a random password and
   # allow you to change the root password if needed.
   file 'generate-mariadb-root-password' do
+    path "#{data_dir}/recovery.conf"
     owner 'root'
     group 'root'
     mode '600'
