@@ -54,16 +54,14 @@ action :create do
 
   mariadb_root_password = new_resource.password == 'generate' || new_resource.password.nil? ? secure_random : new_resource.password
 
-  # Generate a ramdom password or set the a password defined with node['mariadb']['password']['root'].
+  # Generate a random password or set the a password defined with node['mariadb']['server_root_password'].
   # The password is set or change at each run. It is good for security if you choose to set a random password and
   # allow you to change the root password if needed.
-  bash 'generate-mariadb-root-password' do
+  execute 'generate-mariadb-root-password' do
     user 'root'
-    code <<-EOH
-    echo "ALTER USER 'root'@'localhost' IDENTIFIED BY \'#{mariadb_root_password}\';" | /usr/bin/mysql
-    EOH
+    command "/usr/bin/mysql -e \"ALTER USER 'root'@'localhost' IDENTIFIED BY '#{mariadb_root_password}';\""
     not_if { ::File.exist? "#{data_dir}/recovery.conf" }
-    only_if { new_resource.password }
+    only_if { !new_resource.password.nil? }
   end
 end
 

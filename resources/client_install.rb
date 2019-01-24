@@ -22,7 +22,7 @@ property :setup_repo, [true, false], default: true
 action :install do
   mariadb_repository 'Add mariadb.org repository' do
     version new_resource.version
-    only_if { new_resource.setup_repo }
+    only_if { !new_resource.setup_repo.nil? }
   end
 
   case node['platform_family']
