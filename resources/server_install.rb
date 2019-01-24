@@ -50,7 +50,7 @@ action :create do
   log 'Enable and start MariaDB service' do
     notifies :enable, "service[#{platform_service_name}]", :immediately
     notifies :stop, "service[#{platform_service_name}]", :immediately
-    notifies :run, 'file[generate-mariadb-root-password]', :immediately
+    notifies :create, 'file[generate-mariadb-root-password]', :immediately
     notifies :run, 'execute[apply-mariadb-root-password]', :immediately
     notifies :start, "service[#{platform_service_name}]", :immediately
   end
