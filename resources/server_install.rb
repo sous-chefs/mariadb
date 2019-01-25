@@ -50,9 +50,7 @@ action :create do
   log 'Enable and start MariaDB service' do
     notifies :enable, "service[#{platform_service_name}]", :immediately
     notifies :stop, "service[#{platform_service_name}]", :immediately
-    notifies :run, 'execute[apply-mariadb-root-password]', :immediately
-    notifies :start, "service[#{platform_service_name}]", :immediately
-    notifies :run, 'execute[verify-root-password-okay]', :immediately
+    notifies :run, "execute[apply-mariadb-root-password]", :immediately
   end
 
   # here we want to generate a new password if: 1- the user passed 'generate' to the password argument
@@ -81,6 +79,8 @@ action :create do
     command "(test -f #{pid_file} && kill $(< #{pid_file})); /usr/sbin/mysqld --init-file=#{data_dir}/recovery.conf&>/dev/null&; sleep 2"
     only_if { ::File.exist? "#{data_dir}/recovery.conf" }
     notifies :create, 'file[generate-mariadb-root-password]', :before
+    notifies :start, "service[#{platform_service_name}]", :immediately
+    notifies :run, "execute[verify-root-password-okay]", :delayed
     action :nothing
   end
 
