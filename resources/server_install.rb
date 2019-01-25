@@ -80,7 +80,7 @@ action :create do
     command "kill `cat #{pid_file}`; /usr/sbin/mysqld --init-file=#{data_dir}/recovery.conf&>/dev/null&"
     only_if { ::File.exist? "#{data_dir}/recovery.conf" }
     notifies :create, 'file[generate-mariadb-root-password]', :before
-    notifies :run, 'execute[ensure-root-password-okay]', :immediately
+    notifies :run, 'execute[verify-root-password-okay]', :immediately
   end
 
   # make sure the password was properly set
