@@ -86,7 +86,7 @@ action :create do
   # make sure the password was properly set
   execute 'verify-root-password-okay' do
     user 'root'
-    command "mysql -p#{mariadb_root_password} -e '\\s'&>/dev/null && kill $(< #{pid_file})"
+    command "mysql -p#{mariadb_root_password} -e '\\s'&>/dev/null && (test -f #{pid_file} && kill $(< #{pid_file}))"
   end
 end
 
