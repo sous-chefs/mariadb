@@ -70,7 +70,7 @@ action :create do
     mode '640'
     sensitive true
     content "ALTER USER 'root'@'localhost' IDENTIFIED BY '#{mariadb_root_password}';"
-    not_if { ::File.exist? "#{data_dir}/recovery.conf" }
+    action :nothing
   end
 
   pid_file = default_pid_file.nil? ? '/var/run/mysql/mysqld.pid' : default_pid_file
@@ -78,15 +78,17 @@ action :create do
   # make sure that mysqld is not running, and then set the root password
   execute 'apply-mariadb-root-password' do
     user 'root'
-    command "(test -f #{pid_file} && kill $(< #{pid_file})); /usr/sbin/mysqld --init-file=#{data_dir}/recovery.conf&>/dev/null&"
+    command "(test -f #{pid_file} && kill $(< #{pid_file})); /usr/sbin/mysqld --init-file=#{data_dir}/recovery.conf&>/dev/null&; sleep 2"
     only_if { ::File.exist? "#{data_dir}/recovery.conf" }
     notifies :create, 'file[generate-mariadb-root-password]', :before
+    action :nothing
   end
 
   # make sure the password was properly set
   execute 'verify-root-password-okay' do
     user 'root'
     command "mysql -p#{mariadb_root_password} -e '\\s'&>/dev/null"
+    action :nothing
   end
 end
 
