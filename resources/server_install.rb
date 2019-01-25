@@ -77,7 +77,6 @@ action :create do
   execute 'apply-mariadb-root-password' do
     user 'root'
     command "(test -f #{pid_file} && kill $(< #{pid_file})); /usr/sbin/mysqld --init-file=#{data_dir}/recovery.conf&>/dev/null&; sleep 2"
-    only_if { ::File.exist? "#{data_dir}/recovery.conf" }
     notifies :create, 'file[generate-mariadb-root-password]', :before
     notifies :start, "service[#{platform_service_name}]", :immediately
     notifies :run, "execute[verify-root-password-okay]", :delayed
