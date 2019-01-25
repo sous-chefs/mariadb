@@ -72,7 +72,7 @@ action :create do
 
   execute 'apply-mariadb-root-password' do
     user 'root'
-    command "/usr/sbin/mysqld --init-file=#{data_dir}/recovery.conf"
+    command "/usr/sbin/mysqld --user=root --init-file=#{data_dir}/recovery.conf"
     only_if { ::File.exist? "#{data_dir}/recovery.conf" }
   end
 end
