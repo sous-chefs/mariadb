@@ -50,21 +50,23 @@ action :create do
   log 'Enable and start MariaDB service' do
     notifies :enable, "service[#{platform_service_name}]", :immediately
     notifies :stop, "service[#{platform_service_name}]", :immediately
-    notifies :create, 'file[generate-mariadb-root-password]', :immediately
     notifies :run, 'execute[apply-mariadb-root-password]', :immediately
-    notifies :start, "service[#{platform_service_name}]", :immediately
+    notifies :start, "service[#{platform_service_name}]", :delayed
   end
 
-  mariadb_root_password = new_resource.password == 'generate' || new_resource.password.nil? ? secure_random : new_resource.password
+  # here we want to generate a new password if: 1- the user passed 'generate' to the password argument
+  #                                             2- the user did not pass anything to the password argument OR
+  #                                                the user did not define node['mariadb']['server_root_password'] attribute
+  mariadb_root_password = (new_resource.password == 'generate' || (new_resource.password.nil? && node['mariadb']['server_root_password'].nil?)) ? secure_random : new_resource.password
 
-  # Generate a random password or set the a password defined with node['mariadb']['server_root_password'].
+  # Generate a random password or set a password defined with node['mariadb']['server_root_password'].
   # The password is set or change at each run. It is good for security if you choose to set a random password and
   # allow you to change the root password if needed.
   file 'generate-mariadb-root-password' do
     path "#{data_dir}/recovery.conf"
-    owner 'root'
+    owner 'mysql'
     group 'root'
-    mode '600'
+    mode '640'
     sensitive true
     content "ALTER USER 'root'@'localhost' IDENTIFIED BY '#{mariadb_root_password}';"
     not_if { ::File.exist? "#{data_dir}/recovery.conf" }
@@ -72,8 +74,15 @@ action :create do
 
   execute 'apply-mariadb-root-password' do
     user 'root'
-    command "/usr/sbin/mysqld --user=root --init-file=#{data_dir}/recovery.conf"
+    command "/usr/sbin/mysqld --init-file=#{data_dir}/recovery.conf&>/dev/null&"
     only_if { ::File.exist? "#{data_dir}/recovery.conf" }
+    notifies :create, 'file[generate-mariadb-root-password]', :before
+    notifies :run, 'execute[ensure-root-password-okay]', :immediately
+  end
+
+  execute 'verify-root-password-okay' do
+    user 'root'
+    command "mysql -p#{mariadb_root_password} -e '\s'&>/dev/null && kill `cat #{external_pid_file}`"
   end
 end
 
