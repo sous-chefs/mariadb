@@ -72,7 +72,7 @@ action_class do
 
   def database_has_password_column
     begin
-      result = run_query('SHOW COLUMNS FROM mysql.user WHERE Field="Password"')
+      result = run_query('SHOW COLUMNS FROM mysql.user WHERE Field="Password";')
     rescue
       return false
     end
