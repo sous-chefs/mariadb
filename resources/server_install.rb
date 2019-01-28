@@ -24,7 +24,7 @@ property :mycnf_file,        String,        default: lazy { "#{conf_dir}/my.cnf"
 property :extconf_directory, String,        default: lazy { ext_conf_dir }
 property :data_directory,    String,        default: lazy { data_dir }
 property :external_pid_file, String,        default: lazy { "/var/run/mysql/#{version}-main.pid" }
-property :password,          [String, nil], default: 'generate'
+property :password,          [String, nil], default: nil
 property :port,              Integer,       default: 3306
 property :initdb_locale,     String,        default: 'UTF-8'
 
