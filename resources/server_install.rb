@@ -74,10 +74,10 @@ flush privileges;"
   end
 
   pid_file = default_pid_file.nil? ? '/var/run/mysql/mysqld.pid' : default_pid_file
-  pid_dir = File.dirname(pid_file)
+  pid_dir = File.dirname(pid_file).to_s
 
   # because some distros may not take care of the pid file location directory, we manage it ourselves
-  directory "#{pid_dir}" do
+  directory pid_dir.to_s do
     owner 'mysql'
     group 'mysql'
     mode '755'
