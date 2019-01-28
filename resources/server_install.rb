@@ -24,7 +24,7 @@ property :mycnf_file,        String,        default: lazy { "#{conf_dir}/my.cnf"
 property :extconf_directory, String,        default: lazy { ext_conf_dir }
 property :data_directory,    String,        default: lazy { data_dir }
 property :external_pid_file, String,        default: lazy { "/var/run/mysql/#{version}-main.pid" }
-property :password,          [String, nil], default: nil
+property :password,          [String, nil], default: lazy { node['mariadb']['server_root_password'] }
 property :port,              Integer,       default: 3306
 property :initdb_locale,     String,        default: 'UTF-8'
 
@@ -56,7 +56,7 @@ action :create do
   # here we want to generate a new password if: 1- the user passed 'generate' to the password argument
   #                                             2- the user did not pass anything to the password argument OR
   #                                                the user did not define node['mariadb']['server_root_password'] attribute
-  mariadb_root_password = (new_resource.password == 'generate' || (new_resource.password.nil? && node['mariadb']['server_root_password'].nil?)) ? secure_random : new_resource.password
+  mariadb_root_password = (new_resource.password == 'generate' || new_resource.password.nil?) ? secure_random : new_resource.password
 
   # Generate a random password or set a password defined with node['mariadb']['server_root_password'].
   # The password is set or change at each run. It is good for security if you choose to set a random password and
