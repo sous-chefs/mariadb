@@ -67,7 +67,8 @@ action :create do
     group 'root'
     mode '640'
     sensitive true
-    content "update user set password=PASSWORD('#{mariadb_root_password}') where User='root';
+    content "use mysql;
+update user set password=PASSWORD('#{mariadb_root_password}') where User='root';
 flush privileges;"
     action :nothing
   end
