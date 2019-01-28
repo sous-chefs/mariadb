@@ -21,6 +21,7 @@ property :enable_mariadb_org, [true, false], default: true
 property :yum_gpg_key_uri,    String, default: 'https://yum.mariadb.org/RPM-GPG-KEY-MariaDB'
 property :apt_gpg_keyserver,  String, default: 'keyserver.ubuntu.com'
 property :apt_gpg_key,        String, default: 'F1656F24C74CD1D8'
+property :apt_key_proxy,      [String, false], default: false
 
 action :add do
   case node['platform_family']
@@ -50,9 +51,7 @@ action :add do
       distribution node['lsb']['codename']
       keyserver new_resource.apt_gpg_keyserver
       key apt_key
-      if node['proxy']['http']
-      key_proxy node['proxy']['http']
-      end
+      key_proxy new_resource.apt_key_proxy
       cache_rebuild true
     end
   else
