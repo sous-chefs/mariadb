@@ -67,7 +67,8 @@ action :create do
     group 'root'
     mode '640'
     sensitive true
-    content "ALTER USER 'root'@'localhost' IDENTIFIED BY '#{mariadb_root_password}';"
+    content "update user set authentication_string=PASSWORD('#{mariadb_root_password}') where User='root';
+flush privileges;" # ALTER USER 'root'@'localhost' IDENTIFIED BY '';"
     action :nothing
   end
 
