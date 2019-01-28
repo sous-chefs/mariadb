@@ -37,7 +37,7 @@ action :create do
     converge_by "Creating user '#{new_resource.username}'@'#{new_resource.host}'" do
       create_sql = "CREATE USER '#{new_resource.username}'@'#{new_resource.host}'"
       if new_resource.password
-        create_sql << " IDENTIFIED BY "
+        create_sql << ' IDENTIFIED BY '
         create_sql << if new_resource.password.is_a?(HashedPassword)
                         " PASSWORD '#{new_resource.password}'"
                       else
@@ -89,7 +89,7 @@ action_class do
 
   def test_user_password
     if database_has_password_column
-      test_sql = "SELECT User,Host,Password FROM mysql.user " \
+      test_sql = 'SELECT User,Host,Password FROM mysql.user ' \
                        "WHERE User='#{new_resource.username}' AND Host='#{new_resource.host}' "
       test_sql << if new_resource.password.is_a? HashedPassword
                     "AND Password='#{new_resource.password}'"
@@ -97,7 +97,7 @@ action_class do
                     "AND Password=PASSWORD('#{new_resource.password}')"
                   end
     else
-      test_sql = "SELECT User,Host,authentication_string FROM mysql.user " \
+      test_sql = 'SELECT User,Host,authentication_string FROM mysql.user ' \
                        "WHERE User='#{new_resource.username}' AND Host='#{new_resource.host}' " \
                        "AND plugin='mysql_native_password' "
       test_sql << if new_resource.password.is_a? HashedPassword
@@ -254,14 +254,14 @@ action :grant do
                     else
                       " '#{new_resource.password}'"
                     end
-      repair_sql << " REQUIRE SSL" if new_resource.require_ssl
-      repair_sql << " REQUIRE X509" if new_resource.require_x509
-      repair_sql << " WITH GRANT OPTION" if new_resource.grant_option
+      repair_sql << ' REQUIRE SSL' if new_resource.require_ssl
+      repair_sql << ' REQUIRE X509' if new_resource.require_x509
+      repair_sql << ' WITH GRANT OPTION' if new_resource.grant_option
 
       redacted_sql = redact_password(repair_sql, new_resource.password)
       Chef::Log.debug("#{@new_resource}: granting with sql [#{redacted_sql}]")
       run_query(repair_sql)
-      run_query("FLUSH PRIVILEGES")
+      run_query('FLUSH PRIVILEGES')
     end
   else
     # The grants are correct, but perhaps the password needs updating?
@@ -299,7 +299,7 @@ action :revoke do
 
       Chef::Log.debug("#{@new_resource}: revoking access with statement [#{revoke_statement}]")
       run_query revoke_statement
-      run_query "FLUSH PRIVILEGES"
+      run_query 'FLUSH PRIVILEGES'
     end
   end
 end
