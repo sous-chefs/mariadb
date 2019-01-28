@@ -50,6 +50,9 @@ action :add do
       distribution node['lsb']['codename']
       keyserver new_resource.apt_gpg_keyserver
       key apt_key
+      if node['proxy']['http']
+      key_proxy node['proxy']['http']
+      end
       cache_rebuild true
     end
   else
