@@ -78,7 +78,7 @@ flush privileges;"
   # make sure that mysqld is not running, and then set the root password and make sure the mysqld process is killed after setting the password
   execute 'apply-mariadb-root-password' do
     user 'mysql'
-    command "(test -f #{pid_file} && kill $(< #{pid_file})); /usr/sbin/mysqld -u root --pid-file=#{pid_file} --init-file=#{data_dir}/recovery.conf&>/dev/null&; sleep 2 && (test -f #{pid_file} && kill $(< #{pid_file}))"
+    command "(test -f #{pid_file} && kill $(< #{pid_file})); /usr/sbin/mysqld -u root --pid-file=#{pid_file} --init-file=#{data_dir}/recovery.conf&>/dev/null& sleep 2 && (test -f #{pid_file} && kill $(< #{pid_file}))"
     notifies :create, 'file[generate-mariadb-root-password]', :before
     notifies :start, "service[#{platform_service_name}]", :immediately
     notifies :run, 'execute[verify-root-password-okay]', :delayed
