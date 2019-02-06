@@ -25,9 +25,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - A mechanism to properly set the root password for mariadb ([#234-bc33fb2](https://github.com/sous-chefs/mariadb/pull/234/commits/bc33fb2c9dfc0a14754eb76bbff43ac6c3346d5b) :
 [#234-c576d42](https://github.com/sous-chefs/mariadb/pull/234/commits/c576d42a7317d63d87a0cff44ad7c564a9b1a0e2))
 
-### Changed
-
-- Default value for the `password` property of `mariadb_server_install` to `node['mariadb']['server_root_password']` to allow users to define a node-wide mariadb root password ([#214](https://github.com/sous-chefs/mariadb/issues/214)) 
   
 ### Fixed
 
