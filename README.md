@@ -1,7 +1,8 @@
 MariaDB Cookbook
 ================
 
-[![Build Status](https://travis-ci.org/sous-chefs/mariadb.svg?branch=master)](https://travis-ci.org/sous-chefs/mariadb) [![Cookbook Version](https://img.shields.io/cookbook/v/mariadb.svg)](https://supermarket.chef.io/cookbooks/mariadb)
+[![Cookbook Version](https://img.shields.io/cookbook/v/mariadb.svg)](https://supermarket.chef.io/cookbooks/mariadb)
+[![Build Status](https://img.shields.io/circleci/project/github/sous-chefs/mariadb/master.svg)](https://circleci.com/gh/sous-chefs/mariadb)
 
 ## Description
 
