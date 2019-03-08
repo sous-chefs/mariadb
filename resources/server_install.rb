@@ -24,7 +24,7 @@ property :mycnf_file,        String,        default: lazy { "#{conf_dir}/my.cnf"
 property :extconf_directory, String,        default: lazy { ext_conf_dir }
 property :data_directory,    String,        default: lazy { data_dir }
 property :external_pid_file, String,        default: lazy { "/var/run/mysql/#{version}-main.pid" }
-property :password,          [String, nil], default: 'generate'
+property :password,          [String, nil], default: lazy { node['mariadb']['server_root_password'] }, sensitive: true
 property :port,              Integer,       default: 3306
 property :initdb_locale,     String,        default: 'UTF-8'
 
@@ -50,20 +50,27 @@ action :create do
   log 'Enable and start MariaDB service' do
     notifies :enable, "service[#{platform_service_name}]", :immediately
     notifies :start, "service[#{platform_service_name}]", :immediately
+    notifies :run, 'bash[apply-mariadb-root-password]', :immediately
   end
 
-  mariadb_root_password = new_resource.password == 'generate' || new_resource.password.nil? ? secure_random : new_resource.password
+  # Generate a ramdom password or set the a password defined with
+  # node['mariadb']['server_root_password'].  The password is set or
+  # change at each run. It is good for security if you choose to set a
+  # random password and allow you to change the root password if
+  # needed.  
+  mariadb_root_password = new_resource.password || secure_random
 
-  # Generate a ramdom password or set the a password defined with node['mariadb']['password']['root'].
-  # The password is set or change at each run. It is good for security if you choose to set a random password and
-  # allow you to change the root password if needed.
-  bash 'generate-mariadb-root-password' do
+  statement = <<-EOH
+UPDATE user SET password=PASSWORD('#{mariadb_root_password}') WHERE User='root';
+FLUSH PRIVILEGES;
+EOH
+  
+  bash 'apply-mariadb-root-password' do
+    sensitive true
     user 'root'
-    code <<-EOH
-    echo "ALTER USER 'root'@'localhost' IDENTIFIED BY \'#{mariadb_root_password}\';" | /usr/bin/mysql
-    EOH
+    code "echo \"#{statement}\" | /usr/bin/mysql -D mysql"
     not_if { ::File.exist? "#{data_dir}/recovery.conf" }
-    only_if { new_resource.password }
+    not_if "mysql -u root -p#{mariadb_root_password} -e '\\s'&>/dev/null"
   end
 end
 
