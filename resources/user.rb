@@ -27,10 +27,10 @@ property :grant_option,  [TrueClass, FalseClass],            default: false
 property :require_ssl,   [TrueClass, FalseClass],            default: false
 property :require_x509,  [TrueClass, FalseClass],            default: false
 # Credentials used for control connection
-property :ctrl_user,     [String, NilClass],                 default: 'root', desired_state: false
-property :ctrl_password, [String, NilClass],                 default: nil, sensitive: true, desired_state: false
-property :ctrl_host,     [String, NilClass],                 default: 'localhost', desired_state: false
-property :ctrl_port,     [Integer, NilClass],                default: 3306, desired_state: false
+property :ctrl_user,     [String, nil],                      default: 'root', desired_state: false
+property :ctrl_password, [String, nil],                      default: lazy { node['mariadb']['server_root_password'] }, sensitive: true, desired_state: false
+property :ctrl_host,     [String, nil],                      default: 'localhost', desired_state: false
+property :ctrl_port,     [Integer, nil],                     default: 3306, desired_state: false
 
 action :create do
   if current_resource.nil?
@@ -216,7 +216,7 @@ end
 
 action :grant do
   db_name = new_resource.database_name ? "\\`#{new_resource.database_name}\\`" : '*'
-  tbl_name = new_resource.table ? new_resource.table : '*'
+  tbl_name = new_resource.table || '*'
   test_table = new_resource.database_name ? 'mysql.db' : 'mysql.user'
 
   # Test
@@ -271,7 +271,7 @@ end
 
 action :revoke do
   db_name = new_resource.database_name ? "\\`#{new_resource.database_name}\\`" : '*'
-  tbl_name = new_resource.table ? new_resource.table : '*'
+  tbl_name = new_resource.table || '*'
   test_table = new_resource.database_name ? 'mysql.db' : 'mysql.user'
 
   privs_to_revoke = []

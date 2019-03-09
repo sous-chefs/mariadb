@@ -56,15 +56,14 @@ action :create do
   # Generate a ramdom password or set the a password defined with
   # node['mariadb']['server_root_password'].  The password is set or
   # change at each run. It is good for security if you choose to set a
-  # random password and allow you to change the root password if
-  # needed.  
+  # random password and allow you to change the root password if needed.
   mariadb_root_password = new_resource.password || secure_random
 
   statement = <<-EOH
 UPDATE user SET password=PASSWORD('#{mariadb_root_password}') WHERE User='root';
 FLUSH PRIVILEGES;
 EOH
-  
+
   bash 'apply-mariadb-root-password' do
     sensitive true
     user 'root'
