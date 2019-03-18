@@ -93,14 +93,6 @@ flush privileges;"
     notifies :create, 'file[generate-mariadb-root-password]', :before
     notifies :create, "directory[#{pid_dir}]", :before
     notifies :start, "service[#{platform_service_name}]", :immediately
-    notifies :run, 'execute[verify-root-password-okay]', :delayed
-    action :nothing
-  end
-
-  # make sure the password was properly set
-  execute 'verify-root-password-okay' do
-    user 'root'
-    command "mysql -u root -p#{mariadb_root_password} -e '\\s'&>/dev/null"
     action :nothing
   end
 end
