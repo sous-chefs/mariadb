@@ -9,6 +9,6 @@ end
 find_resource(:service, 'mariadb') do
   extend MariaDBCookbook::Helpers
   service_name lazy { platform_service_name }
-  supports restart: true, status: true
+  supports restart: true, status: true, reload: true
   action [:enable, :start]
 end
