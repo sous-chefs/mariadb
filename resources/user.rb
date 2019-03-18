@@ -216,7 +216,7 @@ end
 
 action :grant do
   db_name = new_resource.database_name ? "\\`#{new_resource.database_name}\\`" : '*'
-  tbl_name = new_resource.table ? new_resource.table : '*'
+  tbl_name = new_resource.table || '*'
   test_table = new_resource.database_name ? 'mysql.db' : 'mysql.user'
 
   # Test
@@ -271,7 +271,7 @@ end
 
 action :revoke do
   db_name = new_resource.database_name ? "\\`#{new_resource.database_name}\\`" : '*'
-  tbl_name = new_resource.table ? new_resource.table : '*'
+  tbl_name = new_resource.table || '*'
   test_table = new_resource.database_name ? 'mysql.db' : 'mysql.user'
 
   privs_to_revoke = []
