@@ -21,6 +21,8 @@ property :enable_mariadb_org, [true, false], default: true
 property :yum_gpg_key_uri,    String, default: 'https://yum.mariadb.org/RPM-GPG-KEY-MariaDB'
 property :apt_gpg_keyserver,  String, default: 'keyserver.ubuntu.com'
 property :apt_gpg_key,        String, default: 'F1656F24C74CD1D8'
+property :apt_key_proxy,      [String, false], default: false
+property :apt_repository,     String, default: 'http://mariadb.mirrors.ovh.net/MariaDB/repo'
 
 action :add do
   case node['platform_family']
@@ -45,11 +47,12 @@ action :add do
     apt_key = new_resource.apt_gpg_key == 'F1656F24C74CD1D8' && node['platform'] == 'debian' && node['platform_version'].split('.')[0].to_i < 9 ? 'CBCB082A1BB943DB' : new_resource.apt_gpg_key
 
     apt_repository 'mariadb_org_repository' do
-      uri          "http://mariadb.mirrors.ovh.net/MariaDB/repo/#{new_resource.version}/#{node['platform']}"
+      uri          "#{new_resource.apt_repository}/#{new_resource.version}/#{node['platform']}"
       components   ['main']
       distribution node['lsb']['codename']
       keyserver new_resource.apt_gpg_keyserver
       key apt_key
+      key_proxy new_resource.apt_key_proxy
       cache_rebuild true
     end
   else

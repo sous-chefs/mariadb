@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Added
+
+- Property `apt_key_proxy` to `mariadb_repository` to be able to pass a proxy setting to apt-key ([#234](https://github.com/sous-chefs/mariadb/pull/234/commits/d5b09122492d5474b38ad00a454bf49175a12c79))
+- A mechanism to properly set the root password for mariadb ([#234-bc33fb2](https://github.com/sous-chefs/mariadb/pull/234/commits/bc33fb2c9dfc0a14754eb76bbff43ac6c3346d5b) :
+[#234-c576d42](https://github.com/sous-chefs/mariadb/pull/234/commits/c576d42a7317d63d87a0cff44ad7c564a9b1a0e2))
+- APT repository property to allow the user to select another mirror than ovh.net
+  
+### Fixed
+
+- String quoting that prevented some SQL commands to execute properly ([#220](https://github.com/sous-chefs/mariadb/issues/220))
+- Changelog broken links
+- Setup repo condition, it always updated even if `setup_repo` was `false`
+
 ## 2.0.0
 
 ### Added
@@ -23,8 +38,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Added resource `mariadb_database` to manage databases ([#187](https://github.com/sous-chefs/mariadb/pull/187))
 - Added resource `mariadb_user` to manage users and privileges ([#187](https://github.com/sous-chefs/mariadb/pull/187))
 - Added support for MariaDB galera 10.2 ([#197](https://github.com/sous-chefs/mariadb/pull/197))
-- Added support for Debian 9 ([#193](https://github.com/sous-chefs/mariadb/issue/193),[#194](https://github.com/sous-chefs/mariadb/issue/194),[#198](https://github.com/sous-chefs/mariadb/issue/198),[#202](https://github.com/sous-chefs/mariadb/issue/202))
-- Added the new SST method mariabackup ([#192](https://github.com/sous-chefs/mariadb/issue/192))
+- Added support for Debian 9 ([#193](https://github.com/sous-chefs/mariadb/issues/193),[#194](https://github.com/sous-chefs/mariadb/issues/194),[#198](https://github.com/sous-chefs/mariadb/issues/198),[#202](https://github.com/sous-chefs/mariadb/issues/202))
+- Added the new SST method mariabackup ([#192](https://github.com/sous-chefs/mariadb/issues/192))
 
 ### Fixed
 
