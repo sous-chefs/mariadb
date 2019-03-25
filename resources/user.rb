@@ -22,7 +22,7 @@ property :password,      [String, HashedPassword, NilClass], default: nil,  sens
 property :host,          String,                             default: 'localhost', desired_state: false
 property :database_name, String
 property :table,         String
-property :privileges,    Array,                              default: [:all]
+property :privileges,    Array,                              default: ['ALL PRIVILEGES']
 property :grant_option,  [TrueClass, FalseClass],            default: false
 property :require_ssl,   [TrueClass, FalseClass],            default: false
 property :require_x509,  [TrueClass, FalseClass],            default: false
@@ -183,10 +183,10 @@ action_class do
       :trigger,
     ]
 
-    # convert :all to the individual db or global privs
-    desired_privs = if new_resource.privileges == [:all] && new_resource.database_name
+    # convert "ALL PRIVILEGES" to the individual db or global privs
+    desired_privs = if (new_resource.privileges == ['ALL PRIVILEGES'] || new_resource.privileges == ['ALL']) && new_resource.database_name
                       possible_db_privs
-                    elsif new_resource.privileges == [:all]
+                    elsif new_resource.privileges == ['ALL PRIVILEGES'] || new_resource.privileges == ['ALL']
                       possible_global_privs
                     else
                       new_resource.privileges

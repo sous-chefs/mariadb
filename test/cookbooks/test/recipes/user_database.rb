@@ -122,7 +122,7 @@ mariadb_user 'fozzie' do
   database_name 'databass'
   password 'wokkawokka'
   host 'mars'
-  privileges [:select, :update, :insert]
+  privileges %w(SELECT UPDATE INSERT)
   require_ssl true
   ctrl_password 'gsql'
   action :grant
@@ -135,7 +135,7 @@ mariadb_user 'moozie' do
   password hash2
   ctrl_password 'gsql'
   host '127.0.0.1'
-  privileges [:select, :update, :insert]
+  privileges %w(SELECT UPDATE INSERT)
   require_ssl false
   action :grant
 end
@@ -147,7 +147,7 @@ mariadb_user 'rizzo' do
   password 'salmon'
   ctrl_password 'gsql'
   host '127.0.0.1'
-  privileges [:select]
+  privileges ['SELECT']
   require_ssl false
   action :grant
 end

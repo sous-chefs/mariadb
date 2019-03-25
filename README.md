@@ -465,7 +465,7 @@ mariadb_user 'name' do
   host                       String # defaults to 'localhost'
   password                   String, HashedPassword
   # The privileges to be granted/revoked
-  privileges                 Array # defaults to [:all]
+  privileges                 Array # defaults to ["ALL PRIVILEGES"]
   database_name              String # to grant/revoke privileges on a database 
   table                      String # to grant/revoke privileges on a particular database table
   grant_option               true|false # defaults to false 
@@ -500,7 +500,7 @@ mariadb_user 'foo_user' do
   password 'super_secret'
   database_name 'foo'
   host '%'
-  privileges [:select,:update,:insert]
+  privileges ["SELECT","UPDATE","INSERT"]
   action :grant
 end
 ```

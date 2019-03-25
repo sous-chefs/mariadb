@@ -38,4 +38,12 @@ control 'mariadb_user' do
   describe sql.query('show grants for \'rizzo\'@\'127.0.0.1\'') do
     its(:stdout) { should include '*125EA03B506F7C876D9321E9055F37601461E970' }
   end
+
+  describe sql.query("SELECT Select_priv, Insert_priv, Update_priv FROM mysql.db WHERE Host='mars' AND User='foozie' AND Db = 'databass'") do
+    its('stdout') { should_not match 'N' }
+  end
+
+  describe sql.query("SELECT Select_priv FROM mysql.db WHERE Host='mars' AND User='foozie' AND Db = 'datasalmon'") do
+    its('stdout') { should_not match 'N' }
+  end
 end
