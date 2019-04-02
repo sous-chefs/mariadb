@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed
 
 - Write a new documentation following sous-chefs.org guidelines
+- undefined method `ext_conf_dir` when using mariadb 2.0.0 ([#225](https://github.com/sous-chefs/mariadb/issues/225)) 
 
 ### Removed
 

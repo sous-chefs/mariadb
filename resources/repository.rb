@@ -42,6 +42,7 @@ action :add do
     end
 
   when 'debian', 'ubuntu'
+    apt_update
     package 'apt-transport-https'
     package 'dirmngr' if (node['platform'] == 'debian' && node['platform_version'].split('.')[0].to_i >= 9) || (node['platform'] == 'ubuntu' && node['platform_version'].split('.')[0].to_i >= 18)
     apt_key = new_resource.apt_gpg_key == 'F1656F24C74CD1D8' && node['platform'] == 'debian' && node['platform_version'].split('.')[0].to_i < 9 ? 'CBCB082A1BB943DB' : new_resource.apt_gpg_key

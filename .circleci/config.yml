@@ -72,6 +72,11 @@ workflows:
           suite: server-configuration
           requires: [ lint, danger ]
       - kitchen/dokken-single:
+          name: debian-9-configuration
+          platform: debian-9
+          suite: configuration
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
           name: centos-6-resources
           platform: centos-6
           suite: resources

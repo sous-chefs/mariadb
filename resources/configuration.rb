@@ -16,6 +16,8 @@
 # limitations under the License.
 #
 
+include MariaDBCookbook::Helpers
+
 # name of the extra conf file, used for .cnf filename
 property :configuration_name, String, name_property: true
 property :section,            String, required: true
@@ -46,4 +48,8 @@ action :remove do
       action :delete
     end
   end
+end
+
+action_class do
+  include MariaDBCookbook::Helpers
 end
