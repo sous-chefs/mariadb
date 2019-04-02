@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Write a new documentation following sous-chefs.org guidelines
 - undefined method `ext_conf_dir` when using mariadb 2.0.0 ([#225](https://github.com/sous-chefs/mariadb/issues/225)) 
+- Rename property `apt_repository` to `apt_repository_uri` in repository resource ([#245](https://github.com/sous-chefs/mariadb/issues/245))
 
 ### Removed
 
