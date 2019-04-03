@@ -22,11 +22,6 @@ workflows:
           suite: repository
           requires: [ lint, danger ]
       - kitchen/dokken-single:
-          name: debian-8-repository
-          platform: debian-8
-          suite: repository
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
           name: debian-9-repository
           platform: debian-9
           suite: repository
@@ -39,11 +34,6 @@ workflows:
       - kitchen/dokken-single:
           name: centos-7-client-install
           platform: centos-7
-          suite: client-install
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: debian-8-client-install
-          platform: debian-8
           suite: client-install
           requires: [ lint, danger ]
       - kitchen/dokken-single:
@@ -62,11 +52,6 @@ workflows:
           suite: server-install
           requires: [ lint, danger ]
       - kitchen/dokken-single:
-          name: debian-8-server-install
-          platform: debian-8
-          suite: server-install
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
           name: debian-9-server-install
           platform: debian-9
           suite: server-install
@@ -79,11 +64,6 @@ workflows:
       - kitchen/dokken-single:
           name: centos-7-server-configuration
           platform: centos-7
-          suite: server-configuration
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: debian-8-server-configuration
-          platform: debian-8
           suite: server-configuration
           requires: [ lint, danger ]
       - kitchen/dokken-single:
@@ -102,11 +82,6 @@ workflows:
           suite: resources
           requires: [ lint, danger ]
       - kitchen/dokken-single:
-          name: debian-8-resources
-          platform: debian-8
-          suite: resources
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
           name: debian-9-resources
           platform: debian-9
           suite: resources
@@ -122,11 +97,6 @@ workflows:
           suite: replication
           requires: [ lint, danger ]
       - kitchen/dokken-single:
-          name: debian-8-replication
-          platform: debian-8
-          suite: replication
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
           name: debian-9-replication
           platform: debian-9
           suite: replication
@@ -139,11 +109,6 @@ workflows:
       - kitchen/dokken-single:
           name: centos-7-datadir-changed
           platform: centos-7
-          suite: datadir-changed
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: debian-8-datadir-changed
-          platform: debian-8
           suite: datadir-changed
           requires: [ lint, danger ]
       - kitchen/dokken-single:

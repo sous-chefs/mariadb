@@ -19,13 +19,6 @@ platforms:
     # Note for future cookbook contributors: faking out the network like we do above breaks the network
     # e.g. `getaddrinfo: Temporary failure in name resolution`
 
-- name: debian-8
-  driver:
-    image: dokken/debian-8
-    pid_one_command: /bin/systemd
-    intermediate_instructions:
-      - RUN /usr/bin/apt-get update
-
 - name: debian-9
   driver:
     image: dokken/debian-9
