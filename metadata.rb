@@ -10,7 +10,7 @@ chef_version     '>= 13'
 version          '2.1.0'
 
 supports 'ubuntu'
-supports 'debian', '>= 8.0'
+supports 'debian', '>= 9.0'
 supports 'centos', '>= 6.4'
 
 depends 'selinux_policy', '~> 2.0'
