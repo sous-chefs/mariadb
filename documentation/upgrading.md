@@ -1,6 +1,6 @@
 # Upgrading from v1.5
 
-From v2.0.0 of the mariadb cookbook we have removed all recipes and attributes from the cookbook.
+From v2.0.0 of the mariadb cookbook we have removed all recipes and most of the attributes from the cookbook.
 
 # Deprecations
 
