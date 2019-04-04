@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 3.0.0
 
+### Fixed
+
+- Write a new documentation following sous-chefs.org guidelines
+
 ### Removed
 
 - Support for debian 8 (end of life since 2018-6-6)
