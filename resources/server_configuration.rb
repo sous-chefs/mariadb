@@ -91,7 +91,7 @@ property :innodb_io_capacity,             Integer,           default: 400
 property :innodb_flush_method,            String,            default: 'O_DIRECT'
 property :innodb_options,                 Hash,              default: {}
 property :replication_server_id,          [String, nil],     default: nil
-property :replication_log_bin,            String,            default: lazy { "#{mysqld_log_directory}/mariadb-bin" }
+property :replication_log_bin,            [String, nil],     default: lazy { "#{mysqld_log_directory}/mariadb-bin" }
 property :replication_log_bin_index,      String,            default: lazy { "#{mysqld_log_directory}/mariadb-bin.index" }
 property :replication_sync_binlog,        [String, Integer], default: 0
 property :replication_expire_logs_days,   Integer,           default: 10
