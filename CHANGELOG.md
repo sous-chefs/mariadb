@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 3.0.0
 
+## Added
+
+- Added tests suite for 2 scenarios (`galera_configuration` and `port_changed`)
+
 ### Fixed
 
 - Write a new documentation following sous-chefs.org guidelines
