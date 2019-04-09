@@ -43,6 +43,8 @@ If you are wondering where all the recipes went in v2.0+, or how on earth I use 
 - [`server_configuration`](documentation/resource_mariadb_server_configuration.md)
 - [`galera_configuration`](documentation/resource_mariadb_galera_configuration.md)
 - [`replication`](documentation/resource_mariadb_replication.md)
+- [`user`](documentation/resource_mariadb_user.md)
+- [`database`](documentation/resource_mariadb_database.md)
 
 Contributing
 ------------

@@ -30,6 +30,9 @@ suites:
   - name: server_install
     run_list:
       - recipe[test::server_install]
+  - name: configuration
+    run_list:
+      - recipe[test::configuration]
   - name: server_configuration
     run_list:
       - recipe[test::server_configuration]
