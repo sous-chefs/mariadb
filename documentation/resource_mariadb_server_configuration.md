@@ -81,7 +81,7 @@ Name                            | Types             | Description               
 `innodb_flush_method`           | String            |                                                               | `O_DIRECT`                                       | no
 `innodb_options`                | Hash              |                                                               | `{}`                                             | no
 `replication_server_id`         | String, nil       |                                                               | `nil`                                            | no
-`replication_log_bin`           | String            |                                                               | `"#{mysqld_log_directory}/mariadb-bin"`(5)       | no
+`replication_log_bin`           | String,nil        |                                                               | `"#{mysqld_log_directory}/mariadb-bin"`(5)       | no
 `replication_log_bin_index`     | String            |                                                               | `"#{mysqld_log_directory}/mariadb-bin.index"` (5)| no
 `replication_sync_binlog`       | String, Integer   |                                                               | `0`                                              | no
 `replication_expire_logs_days`  | Integer           |                                                               | `10`                                             | no
