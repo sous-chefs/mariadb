@@ -32,19 +32,19 @@ If you can't upgrade your chef 13, please user the version 1.5.4 or earlier of t
 
 ## Upgrading
 
-If you are wondering where all the recipes went in v2.0+, or how on earth I use this new cookbook please see [upgrading.md](documentation/upgrading.md) for a full description.
+If you are wondering where all the recipes went in v2.0+, or how on earth I use this new cookbook please see [upgrading.md](https://github.com/sous-chefs/mariadb/blob/master/documentation/upgrading.md) for a full description.
 
 ## Resources
 
-- [`repository`](documentation/resource_mariadb_repository.md)
-- [`client_install`](documentation/resource_mariadb_client_install.md)
-- [`server_install`](documentation/resource_mariadb_server_install.md)
-- [`configuration`](documentation/resource_mariadb_configuration.md)
-- [`server_configuration`](documentation/resource_mariadb_server_configuration.md)
-- [`galera_configuration`](documentation/resource_mariadb_galera_configuration.md)
-- [`replication`](documentation/resource_mariadb_replication.md)
-- [`user`](documentation/resource_mariadb_user.md)
-- [`database`](documentation/resource_mariadb_database.md)
+- [`repository`](https://github.com/sous-chefs/mariadb/blob/master/documentation/resource_mariadb_repository.md)
+- [`client_install`](https://github.com/sous-chefs/mariadb/blob/master/documentation/resource_mariadb_client_install.md)
+- [`server_install`](https://github.com/sous-chefs/mariadb/blob/master/documentation/resource_mariadb_server_install.md)
+- [`configuration`](https://github.com/sous-chefs/mariadb/blob/master/documentation/resource_mariadb_configuration.md)
+- [`server_configuration`](https://github.com/sous-chefs/mariadb/blob/master/documentation/resource_mariadb_server_configuration.md)
+- [`galera_configuration`](https://github.com/sous-chefs/mariadb/blob/master/documentation/resource_mariadb_galera_configuration.md)
+- [`replication`](https://github.com/sous-chefs/mariadb/blob/master/documentation/resource_mariadb_replication.md)
+- [`user`](https://github.com/sous-chefs/mariadb/blob/master/documentation/resource_mariadb_user.md)
+- [`database`](https://github.com/sous-chefs/mariadb/blob/master/documentation/resource_mariadb_database.md)
 
 Contributing
 ------------
