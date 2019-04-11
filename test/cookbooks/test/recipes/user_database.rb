@@ -119,11 +119,18 @@ mariadb_user 'statler' do
 end
 
 mariadb_user 'fozzie' do
-  database_name 'databass'
   password 'wokkawokka'
   host 'mars'
-  privileges [:select, :update, :insert]
+  privileges [:usage]
   require_ssl true
+  ctrl_password 'gsql'
+  action :grant
+end
+
+mariadb_user 'fozzie' do
+  database_name 'databass'
+  host 'mars'
+  privileges [:select, :update, :insert, :show_view]
   ctrl_password 'gsql'
   action :grant
 end

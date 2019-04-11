@@ -11,6 +11,7 @@ control 'mariadb_user' do
 
   describe sql.query("show grants for 'fozzie'@'mars'") do
     its(:stdout) { should include '*EF112B3D562CB63EA3275593C10501B59C4A390D' }
+    its(:stdout) { should include 'SHOW VIEW' }
   end
 
   describe sql.query('show grants for  \'moozie\'@\'127.0.0.1\'') do

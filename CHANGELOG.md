@@ -15,6 +15,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Write a new documentation following sous-chefs.org guidelines
 - undefined method `ext_conf_dir` when using mariadb 2.0.0 ([#225](https://github.com/sous-chefs/mariadb/issues/225)) 
 - Rename property `apt_repository` to `apt_repository_uri` in repository resource ([#245](https://github.com/sous-chefs/mariadb/issues/245))
+- Grant action should not require and modify the password ([#236](https://github.com/sous-chefs/mariadb/issues/236))
+- Grant fails if symbol privilege contains an underscore ([#243](https://github.com/sous-chefs/mariadb/issues/243))
 
 ### Removed
 

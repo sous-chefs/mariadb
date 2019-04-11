@@ -36,7 +36,7 @@ action :create do
   if current_resource.nil?
     converge_by "Creating user '#{new_resource.username}'@'#{new_resource.host}'" do
       create_sql = "CREATE USER '#{new_resource.username}'@'#{new_resource.host}'"
-      if new_resource.password
+      unless new_resource.password.nil?
         create_sql << ' IDENTIFIED BY '
         create_sql << if new_resource.password.is_a?(HashedPassword)
                         " PASSWORD '#{new_resource.password}'"
@@ -194,7 +194,7 @@ action_class do
     desired_privs
   end
 
-  def revokify_key(key)
+  def clean_grant_name(key)
     return '' if key.nil?
 
     # Some keys need to be translated as outlined by the table found here:
@@ -245,15 +245,19 @@ action :grant do
 
   # Repair
   if incorrect_privs
+    privileges_to_set = new_resource.privileges.map { |key| clean_grant_name(key) }
     converge_by "Granting privs for '#{new_resource.username}'@'#{new_resource.host}'" do
-      repair_sql = "GRANT #{new_resource.privileges.join(',')}"
+      repair_sql = "GRANT #{privileges_to_set.join(',')}"
       repair_sql << " ON #{db_name}.#{tbl_name}"
-      repair_sql << " TO '#{new_resource.username}'@'#{new_resource.host}' IDENTIFIED BY"
-      repair_sql << if new_resource.password.is_a?(HashedPassword)
-                      " PASSWORD '#{new_resource.password}'"
-                    else
-                      " '#{new_resource.password}'"
-                    end
+      repair_sql << " TO '#{new_resource.username}'@'#{new_resource.host}'"
+      unless new_resource.password.nil?
+        repair_sql << ' IDENTIFIED BY'
+        repair_sql << if new_resource.password.is_a?(HashedPassword)
+                        " PASSWORD '#{new_resource.password}'"
+                      else
+                        " '#{new_resource.password}'"
+                      end
+      end
       repair_sql << ' REQUIRE SSL' if new_resource.require_ssl
       repair_sql << ' REQUIRE X509' if new_resource.require_x509
       repair_sql << ' WITH GRANT OPTION' if new_resource.grant_option
@@ -263,9 +267,9 @@ action :grant do
       run_query(repair_sql)
       run_query('FLUSH PRIVILEGES')
     end
-  else
+  elsif !password_up_to_date && !new_resource.password.nil?
     # The grants are correct, but perhaps the password needs updating?
-    update_user_password unless password_up_to_date
+    update_user_password
   end
 end
 
@@ -286,7 +290,7 @@ action :revoke do
     desired_privs.each do |p|
       key = p.to_s.capitalize.tr(' ', '_').gsub('Replication_', 'Repl_').gsub('Create_temporary_tables', 'Create_tmp_table').gsub('Show_databases', 'Show_db')
       key = "#{key}_priv"
-      privs_to_revoke << revokify_key(p) if r[key] != 'N'
+      privs_to_revoke << clean_grant_name(p) if r[key] != 'N'
     end
   end
 
