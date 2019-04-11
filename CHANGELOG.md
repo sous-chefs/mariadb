@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## Added
 
 - Added tests suite for 2 scenarios (`galera_configuration` and `port_changed`)
+- Support for Debian 10
 
 ### Fixed
 
