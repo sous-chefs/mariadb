@@ -194,7 +194,7 @@ action_class do
     desired_privs
   end
 
-  def revokify_key(key)
+  def get_clean_grant_right_name(key)
     return '' if key.nil?
 
     # Some keys need to be translated as outlined by the table found here:
@@ -220,52 +220,51 @@ action :grant do
   test_table = new_resource.database_name ? 'mysql.db' : 'mysql.user'
 
   # Test
-  incorrect_privs = nil
+  privs_to_grant = []
   test_sql = "SELECT * from #{test_table}"
   test_sql << " WHERE User='#{new_resource.username}'"
   test_sql << " AND Host='#{new_resource.host}'"
   test_sql << " AND Db='#{new_resource.database_name}'" if new_resource.database_name
   test_sql_results = run_query test_sql
 
-  incorrect_privs = true if test_sql_results.split("\n").count == 0
-  # These should all be 'Y'
-  unless test_sql_results.split("\n").count <= 1
+  if test_sql_results.split("\n").count == 0
+    privs_to_grant = desired_privs.map { |p| get_clean_grant_right_name(p) }
+  else
+    # These should all be 'Y'
     parsed_result = parse_mysql_batch_result(test_sql_results)
     Chef::Log.debug(parsed_result)
     parsed_result.each do |r|
       desired_privs.each do |p|
         key = p.to_s.capitalize.tr(' ', '_').gsub('Replication_', 'Repl_').gsub('Create_temporary_tables', 'Create_tmp_table').gsub('Show_databases', 'Show_db')
         key = "#{key}_priv"
-        incorrect_privs = true if r[key] != 'Y'
+        privs_to_grant << get_clean_grant_right_name(p) if r[key] != 'Y'
       end
     end
   end
 
-  password_up_to_date = incorrect_privs || test_user_password
-
   # Repair
-  if incorrect_privs
+  if privs_to_grant.empty?
+    # The grants are correct, but perhaps the password needs updating?
+    update_user_password unless test_user_password
+  else
     converge_by "Granting privs for '#{new_resource.username}'@'#{new_resource.host}'" do
-      repair_sql = "GRANT #{new_resource.privileges.join(',')}"
-      repair_sql << " ON #{db_name}.#{tbl_name}"
-      repair_sql << " TO '#{new_resource.username}'@'#{new_resource.host}' IDENTIFIED BY"
-      repair_sql << if new_resource.password.is_a?(HashedPassword)
-                      " PASSWORD '#{new_resource.password}'"
-                    else
-                      " '#{new_resource.password}'"
-                    end
-      repair_sql << ' REQUIRE SSL' if new_resource.require_ssl
-      repair_sql << ' REQUIRE X509' if new_resource.require_x509
-      repair_sql << ' WITH GRANT OPTION' if new_resource.grant_option
+      grant_statement = "GRANT #{privs_to_grant.join(',')}"
+      grant_statement << " ON #{db_name}.#{tbl_name}"
+      grant_statement << " TO '#{new_resource.username}'@'#{new_resource.host}' IDENTIFIED BY"
+      grant_statement << if new_resource.password.is_a?(HashedPassword)
+                           " PASSWORD '#{new_resource.password}'"
+                         else
+                           " '#{new_resource.password}'"
+                         end
+      grant_statement << ' REQUIRE SSL' if new_resource.require_ssl
+      grant_statement << ' REQUIRE X509' if new_resource.require_x509
+      grant_statement << ' WITH GRANT OPTION' if new_resource.grant_option
 
-      redacted_sql = redact_password(repair_sql, new_resource.password)
+      redacted_sql = redact_password(grant_statement, new_resource.password)
       Chef::Log.debug("#{@new_resource}: granting with sql [#{redacted_sql}]")
-      run_query(repair_sql)
+      run_query(grant_statement)
       run_query('FLUSH PRIVILEGES')
     end
-  else
-    # The grants are correct, but perhaps the password needs updating?
-    update_user_password unless password_up_to_date
   end
 end
 
@@ -282,11 +281,13 @@ action :revoke do
   test_sql_results = run_query test_sql
 
   # These should all be 'N'
-  test_sql_results.each do |r|
+  parsed_result = parse_mysql_batch_result(test_sql_results)
+  Chef::Log.debug(parsed_result)
+  parsed_result.each do |r|
     desired_privs.each do |p|
       key = p.to_s.capitalize.tr(' ', '_').gsub('Replication_', 'Repl_').gsub('Create_temporary_tables', 'Create_tmp_table').gsub('Show_databases', 'Show_db')
       key = "#{key}_priv"
-      privs_to_revoke << revokify_key(p) if r[key] != 'N'
+      privs_to_revoke << get_clean_grant_right_name(p) if r[key] != 'N'
     end
   end
 

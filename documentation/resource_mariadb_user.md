@@ -52,7 +52,7 @@ mariadb_user 'foo_user' do
   password 'super_secret'
   database_name 'foo'
   host '%'
-  privileges [:select,:update,:insert]
+  privileges [:select,:update,:insert,:"show view",:"create view"]
   action :grant
 end
 ```
