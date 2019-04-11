@@ -20,7 +20,15 @@ property :version,            String, default: '10.3'
 property :enable_mariadb_org, [true, false], default: true
 property :yum_gpg_key_uri,    String, default: 'https://yum.mariadb.org/RPM-GPG-KEY-MariaDB'
 property :apt_gpg_keyserver,  String, default: 'keyserver.ubuntu.com'
-property :apt_gpg_key,        String, default: 'F1656F24C74CD1D8'
+property :apt_gpg_key,        String, default: lazy {
+  if node['lsb']['codename'] == 'buster' || node['lsb']['codename'] == 'buster/sid'
+    'F1656F24C74CD1D8'
+  elsif node['platform'] == 'debian' && node['platform_version'].split('.')[0].to_i < 9
+    'CBCB082A1BB943DB'
+  else
+    'F1656F24C74CD1D8'
+  end
+}
 property :apt_key_proxy,      [String, false], default: false
 property :apt_repository_uri, String, default: 'http://mariadb.mirrors.ovh.net/MariaDB/repo'
 
@@ -45,17 +53,13 @@ action :add do
     apt_update
     package 'apt-transport-https'
     package 'dirmngr' if (node['platform'] == 'debian' && node['platform_version'].split('.')[0].to_i >= 9) || (node['platform'] == 'ubuntu' && node['platform_version'].split('.')[0].to_i >= 18)
-    apt_key = new_resource.apt_gpg_key == 'F1656F24C74CD1D8' && node['platform'] == 'debian' && node['platform_version'].split('.')[0].to_i < 9 ? 'CBCB082A1BB943DB' : new_resource.apt_gpg_key
-    if node['lsb']['codename'] == 'buster' || node['lsb']['codename'] == 'buster/sid'
-      apt_key = 'F1656F24C74CD1D8'
-    end
 
     apt_repository 'mariadb_org_repository' do
       uri          "#{new_resource.apt_repository_uri}/#{new_resource.version}/#{node['platform']}"
       components   ['main']
       distribution node['lsb']['codename']
       keyserver new_resource.apt_gpg_keyserver
-      key apt_key
+      key new_resource.apt_gpg_key
       key_proxy new_resource.apt_key_proxy
       cache_rebuild true
     end
