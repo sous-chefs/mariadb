@@ -1,0 +1,9 @@
+name: configuration
+title: MariaDB Configuration
+maintainer: Nicolas Blanc
+copyright_email: sinfomicien@gmail.com
+license: Apache
+summary: Verify the correct configuration of an extra file of the mariadb server
+version: 0.0.1
+supports:
+  - os-family: unix

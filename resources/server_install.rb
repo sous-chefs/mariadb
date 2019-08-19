@@ -49,21 +49,51 @@ action :create do
 
   log 'Enable and start MariaDB service' do
     notifies :enable, "service[#{platform_service_name}]", :immediately
-    notifies :start, "service[#{platform_service_name}]", :immediately
+    notifies :stop, "service[#{platform_service_name}]", :immediately
+    notifies :run, 'execute[apply-mariadb-root-password]', :immediately
   end
 
-  mariadb_root_password = new_resource.password == 'generate' || new_resource.password.nil? ? secure_random : new_resource.password
+  # here we want to generate a new password if: 1- the user passed 'generate' to the password argument
+  #                                             2- the user did not pass anything to the password argument OR
+  #                                                the user did not define node['mariadb']['server_root_password'] attribute
+  mariadb_root_password = (new_resource.password == 'generate' || new_resource.password.nil?) ? secure_random : new_resource.password
 
-  # Generate a ramdom password or set the a password defined with node['mariadb']['password']['root'].
+  # Generate a random password or set a password defined with node['mariadb']['server_root_password'].
   # The password is set or change at each run. It is good for security if you choose to set a random password and
   # allow you to change the root password if needed.
-  bash 'generate-mariadb-root-password' do
-    user 'root'
-    code <<-EOH
-    echo "ALTER USER 'root'@'localhost' IDENTIFIED BY \'#{mariadb_root_password}\';" | /usr/bin/mysql
-    EOH
-    not_if { ::File.exist? "#{data_dir}/recovery.conf" }
-    only_if { new_resource.password }
+  file 'generate-mariadb-root-password' do
+    path "#{data_dir}/recovery.conf"
+    owner 'mysql'
+    group 'root'
+    mode '640'
+    sensitive true
+    content "use mysql;
+update user set password=PASSWORD('#{mariadb_root_password}') where User='root';
+flush privileges;"
+    action :nothing
+  end
+
+  pid_file = default_pid_file.nil? ? '/var/run/mysqld/mysqld.pid' : default_pid_file
+  pid_dir = ::File.dirname(pid_file)
+
+  # because some distros may not take care of the pid file location directory, we manage it ourselves
+  directory pid_dir do
+    owner 'mysql'
+    group 'mysql'
+    mode '755'
+    recursive true
+    action :nothing
+  end
+
+  # make sure that mysqld is not running, and then set the root password and make sure the mysqld process is killed after setting the password
+  execute 'apply-mariadb-root-password' do
+    user 'mysql'
+    # TODO, I really dislike the sleeps here, should come up with a better way to do this
+    command "(test -f #{pid_file} && kill `cat #{pid_file}` && sleep 3); /usr/sbin/mysqld -u root --pid-file=#{pid_file} --init-file=#{data_dir}/recovery.conf&>/dev/null& sleep 2 && (test -f #{pid_file} && kill `cat #{pid_file}`)"
+    notifies :create, 'file[generate-mariadb-root-password]', :before
+    notifies :create, "directory[#{pid_dir}]", :before
+    notifies :start, "service[#{platform_service_name}]", :immediately
+    action :nothing
   end
 end
 

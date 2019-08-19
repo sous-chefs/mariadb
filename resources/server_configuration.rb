@@ -41,6 +41,7 @@ property :mysqld_skip_external_locking,   [true, false],     default: true
 property :mysqld_skip_log_bin,            [true, false],     default: false
 property :mysqld_skip_name_resolve,       [true, false],     default: false
 property :mysqld_bind_address,            String,            default: '127.0.0.1'
+property :mysqld_port,                    [String, Integer], default: 3306
 property :mysqld_max_connections,         Integer,           default: 100
 property :mysqld_max_statement_time,      [Integer, nil],    default: nil
 property :mysqld_connect_timeout,         Integer,           default: 5
@@ -90,7 +91,7 @@ property :innodb_io_capacity,             Integer,           default: 400
 property :innodb_flush_method,            String,            default: 'O_DIRECT'
 property :innodb_options,                 Hash,              default: {}
 property :replication_server_id,          [String, nil],     default: nil
-property :replication_log_bin,            String,            default: lazy { "#{mysqld_log_directory}/mariadb-bin" }
+property :replication_log_bin,            [String, nil],     default: lazy { "#{mysqld_log_directory}/mariadb-bin" }
 property :replication_log_bin_index,      String,            default: lazy { "#{mysqld_log_directory}/mariadb-bin.index" }
 property :replication_sync_binlog,        [String, Integer], default: 0
 property :replication_expire_logs_days,   Integer,           default: 10
@@ -114,6 +115,7 @@ action :modify do
               mysqld_user: new_resource.mysqld_user,
               mysqld_pid_file: new_resource.mysqld_pid_file,
               mysqld_socket: new_resource.mysqld_socket,
+              mysqld_port: new_resource.mysqld_port,
               mysqld_basedir: new_resource.mysqld_basedir,
               mysqld_datadir: new_resource.mysqld_datadir,
               mysqld_tmpdir: new_resource.mysqld_tmpdir,
@@ -193,7 +195,13 @@ action :modify do
     action :add
   end
 
-  move_data_dir if new_resource.mysqld_datadir != data_dir
+  ruby_block 'restart_mariadb_if_needed' do
+    block do
+      move_data_dir if new_resource.mysqld_datadir != data_dir
+
+      restart_mariadb_service unless port_open?(new_resource.mysqld_bind_address, new_resource.mysqld_port)
+    end
+  end
 end
 
 action_class do

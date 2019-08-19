@@ -72,7 +72,7 @@ action_class do
 
   def database_has_password_column
     begin
-      result = run_query('SHOW COLUMNS FROM mysql.user WHERE Field="Password"')
+      result = run_query("SHOW COLUMNS FROM mysql.user WHERE Field='Password';")
     rescue
       return false
     end
@@ -216,7 +216,7 @@ end
 
 action :grant do
   db_name = new_resource.database_name ? "\\`#{new_resource.database_name}\\`" : '*'
-  tbl_name = new_resource.table ? new_resource.table : '*'
+  tbl_name = new_resource.table || '*'
   test_table = new_resource.database_name ? 'mysql.db' : 'mysql.user'
 
   # Test
@@ -271,7 +271,7 @@ end
 
 action :revoke do
   db_name = new_resource.database_name ? "\\`#{new_resource.database_name}\\`" : '*'
-  tbl_name = new_resource.table ? new_resource.table : '*'
+  tbl_name = new_resource.table || '*'
   test_table = new_resource.database_name ? 'mysql.db' : 'mysql.user'
 
   privs_to_revoke = []
