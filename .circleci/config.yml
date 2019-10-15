@@ -27,6 +27,11 @@ workflows:
           suite: repository
           requires: [ lint, danger ]
       - kitchen/dokken-single:
+          name: debian-10-repository
+          platform: debian-10
+          suite: repository
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
           name: centos-6-client-install
           platform: centos-6
           suite: client-install
@@ -39,6 +44,11 @@ workflows:
       - kitchen/dokken-single:
           name: debian-9-client-install
           platform: debian-9
+          suite: client-install
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-10-client-install
+          platform: debian-10
           suite: client-install
           requires: [ lint, danger ]
       - kitchen/dokken-single:
@@ -57,6 +67,11 @@ workflows:
           suite: server-install
           requires: [ lint, danger ]
       - kitchen/dokken-single:
+          name: debian-10-server-install
+          platform: debian-10
+          suite: server-install
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
           name: centos-6-server-configuration
           platform: centos-6
           suite: server-configuration
@@ -72,8 +87,18 @@ workflows:
           suite: server-configuration
           requires: [ lint, danger ]
       - kitchen/dokken-single:
+          name: debian-10-server-configuration
+          platform: debian-10
+          suite: server-configuration
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
           name: debian-9-configuration
           platform: debian-9
+          suite: configuration
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-10-configuration
+          platform: debian-10
           suite: configuration
           requires: [ lint, danger ]
       - kitchen/dokken-single:
@@ -92,6 +117,11 @@ workflows:
           suite: resources
           requires: [ lint, danger ]
       - kitchen/dokken-single:
+          name: debian-10-resources
+          platform: debian-10
+          suite: resources
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
           name: centos-6-replication
           platform: centos-6
           suite: replication
@@ -104,6 +134,11 @@ workflows:
       - kitchen/dokken-single:
           name: debian-9-replication
           platform: debian-9
+          suite: replication
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-10-replication
+          platform: debian-10
           suite: replication
           requires: [ lint, danger ]
       - kitchen/dokken-single:
@@ -129,5 +164,20 @@ workflows:
       - kitchen/dokken-single:
           name: debian-9-port-changed
           platform: debian-9
+          suite: port-changed
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-10-datadir-changed
+          platform: debian-10
+          suite: datadir-changed
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-10-galera-configuration
+          platform: debian-10
+          suite: galera-configuration
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-10-port-changed
+          platform: debian-10
           suite: port-changed
           requires: [ lint, danger ]
