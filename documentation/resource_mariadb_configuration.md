@@ -23,19 +23,23 @@ Name                | Types             | Description                           
 ## Examples
 
 This example:
+
 ```ruby
 mariadb_configuration 'fake' do
   section 'mysqld'
   option :foo => 'bar'
 end
 ```
+
 will become the file fake.cnf in the include dir (depend on your platform), which contain:
+
 ```
 [mysqld]
 foo=bar
 ```
 
 In another example, if the value start with a '#', then it's considered as a comment, and the value is printed as is (without the key):
+
 ```ruby
 mariadb_configuration 'fake' do
   section 'mysqld'
@@ -43,7 +47,9 @@ mariadb_configuration 'fake' do
     :foo => bar
 end
 ```
+
 will become the file fake.cnf in the include dir (depend on your platform), which contain:
+
 ```
 [mysqld]
 # Here i am

@@ -23,7 +23,7 @@ Name              | Types             | Description                             
 
 When `host` has the value `localhost`, it will try to connect using the Unix socket defined in `node['mariadb']['client']['socket']`, or TCP/IP if no socket is defined.
 
-##### Examples
+### Examples
 
 ```ruby
 # Create a database
@@ -33,12 +33,12 @@ mariadb_database 'wordpress-cust01' do
   password node['wordpress-cust01']['mysql']['initial_root_password']
   action :create
 end
- 
+
 # Drop a database
 mariadb_database 'baz' do
   action :drop
 end
- 
+
 # Query a database
 mariadb_database 'flush the privileges' do
   sql 'flush privileges'
