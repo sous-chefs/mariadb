@@ -23,7 +23,7 @@ property :apt_gpg_keyserver,  String, default: 'keyserver.ubuntu.com'
 property :apt_gpg_key,        String, default: lazy {
   if node['lsb']['codename'] == 'buster' || node['lsb']['codename'] == 'buster/sid'
     'F1656F24C74CD1D8'
-  elsif node['platform'] == 'debian' && node['platform_version'].split('.')[0].to_i < 9
+  elsif platform?('ubuntu') && node['platform_version'].split('.')[0].to_i < 9
     'CBCB082A1BB943DB'
   else
     'F1656F24C74CD1D8'
@@ -52,7 +52,7 @@ action :add do
   when 'debian', 'ubuntu'
     apt_update
     package 'apt-transport-https'
-    package 'dirmngr' if (node['platform'] == 'debian' && node['platform_version'].split('.')[0].to_i >= 9) || (node['platform'] == 'ubuntu' && node['platform_version'].split('.')[0].to_i >= 18)
+    package 'dirmngr' if (platform?('ubuntu') && node['platform_version'].split('.')[0].to_i >= 9) || (platform?('ubuntu') && node['platform_version'].split('.')[0].to_i >= 18)
 
     apt_repository 'mariadb_org_repository' do
       uri          "#{new_resource.apt_repository_uri}/#{new_resource.version}/#{node['platform']}"

@@ -21,7 +21,7 @@ include MariaDBCookbook::Helpers
 # name of the extra conf file, used for .cnf filename
 property :configuration_name, String, name_property: true
 property :section,            String, required: true
-property :option,             Hash,   required: true, default: {}
+property :option,             Hash,   required: true
 property :cookbook,           String,                 default: 'mariadb'
 property :extconf_directory,  String,                 default: lazy { ext_conf_dir }
 
