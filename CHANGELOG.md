@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- Make `server_configuration` and `server_install` resources idempotent ([#265](https://github.com/sous-chefs/mariadb/issues/265))
+
 ## [3.0.0] ()
 
 ### Added

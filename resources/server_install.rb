@@ -47,12 +47,6 @@ action :create do
     action :nothing
   end
 
-  log 'Enable and start MariaDB service' do
-    notifies :enable, "service[#{platform_service_name}]", :immediately
-    notifies :stop, "service[#{platform_service_name}]", :immediately
-    notifies :run, 'execute[apply-mariadb-root-password]', :immediately
-  end
-
   # here we want to generate a new password if: 1- the user passed 'generate' to the password argument
   #                                             2- the user did not pass anything to the password argument OR
   #                                                the user did not define node['mariadb']['server_root_password'] attribute
@@ -90,10 +84,13 @@ flush privileges;"
     user 'mysql'
     # TODO, I really dislike the sleeps here, should come up with a better way to do this
     command "(test -f #{pid_file} && kill `cat #{pid_file}` && sleep 3); /usr/sbin/mysqld -u root --pid-file=#{pid_file} --init-file=#{data_dir}/recovery.conf&>/dev/null& sleep 2 && (test -f #{pid_file} && kill `cat #{pid_file}`)"
+    notifies :enable, "service[#{platform_service_name}]", :before
+    notifies :stop, "service[#{platform_service_name}]", :before
     notifies :create, 'file[generate-mariadb-root-password]', :before
     notifies :create, "directory[#{pid_dir}]", :before
     notifies :start, "service[#{platform_service_name}]", :immediately
-    action :nothing
+    action :run
+    not_if "mysql -B -uroot -p#{mariadb_root_password} -e 'SELECT 1;' > /dev/null"
   end
 end
 
