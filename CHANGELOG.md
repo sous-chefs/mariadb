@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 
+- Fixed replication resource `load_current_value` to use Integers where required
 - Make `server_configuration` and `server_install` resources idempotent ([#265](https://github.com/sous-chefs/mariadb/issues/265))
 
 ## [3.0.0] ()
