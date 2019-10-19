@@ -12,6 +12,8 @@ provisioner:
   product_name: chef
   product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
   install_strategy: once
+  enforce_idempotency: true
+  multiple_converge: 2
 
 platforms:
   - name: amazonlinux
