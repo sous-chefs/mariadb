@@ -52,7 +52,7 @@ action :add do
   when 'debian', 'ubuntu'
     apt_update
     package 'apt-transport-https'
-    package 'dirmngr' if (platform?('ubuntu') && node['platform_version'].split('.')[0].to_i >= 9) || (platform?('ubuntu') && node['platform_version'].split('.')[0].to_i >= 18)
+    package 'dirmngr' if (platform?('ubuntu') && node['platform_version'].to_i >= 9) || (platform?('ubuntu') && node['platform_version'].to_i >= 18)
 
     apt_repository 'mariadb_org_repository' do
       uri          "#{new_resource.apt_repository_uri}/#{new_resource.version}/#{node['platform']}"
