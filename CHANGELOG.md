@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fixed `mariadbbackup_pkg_name` helper for yum-based platforms ([#276](https://github.com/sous-chefs/mariadb/issues/276))
 - Fixed replication resource `load_current_value` to use Integers where required
 - Make `server_configuration` and `server_install` resources idempotent ([#265](https://github.com/sous-chefs/mariadb/issues/265))
+- Simplify platform check logic in the repository resource
 
 ## [3.0.0] ()
 
