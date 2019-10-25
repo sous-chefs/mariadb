@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [3.1.0] (2019-10-24)
 
 ### Fixed
 
@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Make `server_configuration` and `server_install` resources idempotent ([#265](https://github.com/sous-chefs/mariadb/issues/265))
 - Simplify platform check logic in the repository resource
 
-## [3.0.0] ()
+## [3.0.0] (2019-10-17)
 
 ### Added
 
