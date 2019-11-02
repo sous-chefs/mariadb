@@ -1,4 +1,12 @@
 ---
+jobs:
+  final:
+    docker:
+      - image: bash:latest
+    steps:
+      - run:
+          name: Finish cooking
+          command: echo "Finished cooking"
 lint_and_unit: &lint_and_unit
   - delivery
   - danger
@@ -20,16 +28,24 @@ workflows:
       - kitchen/delivery:
           name: delivery
       - kitchen/dokken-single:
+          name: repository-amazonlinux
+          suite: repository-amazonlinux
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: repository-debian-9
+          suite: repository-debian-9
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: repository-debian-10
+          suite: repository-debian-10
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
           name: repository-centos-6
           suite: repository-centos-6
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: repository-centos-7
           suite: repository-centos-7
-          requires: *lint_and_unit
-      - kitchen/dokken-single:
-          name: repository-debian-9
-          suite: repository-debian-9
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: repository-ubuntu-1604
@@ -40,16 +56,28 @@ workflows:
           suite: repository-ubuntu-1804
           requires: *lint_and_unit
       - kitchen/dokken-single:
+          name: repository-amazonlinux-2
+          suite: repository-amazonlinux-2
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: client-install-amazonlinux
+          suite: client-install-amazonlinux
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: client-install-debian-9
+          suite: client-install-debian-9
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: client-install-debian-10
+          suite: client-install-debian-10
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
           name: client-install-centos-6
           suite: client-install-centos-6
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: client-install-centos-7
           suite: client-install-centos-7
-          requires: *lint_and_unit
-      - kitchen/dokken-single:
-          name: client-install-debian-9
-          suite: client-install-debian-9
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: client-install-ubuntu-1604
@@ -60,16 +88,28 @@ workflows:
           suite: client-install-ubuntu-1804
           requires: *lint_and_unit
       - kitchen/dokken-single:
+          name: client-install-amazonlinux-2
+          suite: client-install-amazonlinux-2
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: server-install-amazonlinux
+          suite: server-install-amazonlinux
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: server-install-debian-9
+          suite: server-install-debian-9
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: server-install-debian-10
+          suite: server-install-debian-10
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
           name: server-install-centos-6
           suite: server-install-centos-6
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: server-install-centos-7
           suite: server-install-centos-7
-          requires: *lint_and_unit
-      - kitchen/dokken-single:
-          name: server-install-debian-9
-          suite: server-install-debian-9
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: server-install-ubuntu-1604
@@ -80,16 +120,28 @@ workflows:
           suite: server-install-ubuntu-1804
           requires: *lint_and_unit
       - kitchen/dokken-single:
+          name: server-install-amazonlinux-2
+          suite: server-install-amazonlinux-2
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: configuration-amazonlinux
+          suite: configuration-amazonlinux
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: configuration-debian-9
+          suite: configuration-debian-9
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: configuration-debian-10
+          suite: configuration-debian-10
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
           name: configuration-centos-6
           suite: configuration-centos-6
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: configuration-centos-7
           suite: configuration-centos-7
-          requires: *lint_and_unit
-      - kitchen/dokken-single:
-          name: configuration-debian-9
-          suite: configuration-debian-9
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: configuration-ubuntu-1604
@@ -100,16 +152,28 @@ workflows:
           suite: configuration-ubuntu-1804
           requires: *lint_and_unit
       - kitchen/dokken-single:
+          name: configuration-amazonlinux-2
+          suite: configuration-amazonlinux-2
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: server-configuration-amazonlinux
+          suite: server-configuration-amazonlinux
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: server-configuration-debian-9
+          suite: server-configuration-debian-9
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: server-configuration-debian-10
+          suite: server-configuration-debian-10
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
           name: server-configuration-centos-6
           suite: server-configuration-centos-6
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: server-configuration-centos-7
           suite: server-configuration-centos-7
-          requires: *lint_and_unit
-      - kitchen/dokken-single:
-          name: server-configuration-debian-9
-          suite: server-configuration-debian-9
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: server-configuration-ubuntu-1604
@@ -120,16 +184,28 @@ workflows:
           suite: server-configuration-ubuntu-1804
           requires: *lint_and_unit
       - kitchen/dokken-single:
+          name: server-configuration-amazonlinux-2
+          suite: server-configuration-amazonlinux-2
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: resources-amazonlinux
+          suite: resources-amazonlinux
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: resources-debian-9
+          suite: resources-debian-9
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: resources-debian-10
+          suite: resources-debian-10
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
           name: resources-centos-6
           suite: resources-centos-6
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: resources-centos-7
           suite: resources-centos-7
-          requires: *lint_and_unit
-      - kitchen/dokken-single:
-          name: resources-debian-9
-          suite: resources-debian-9
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: resources-ubuntu-1604
@@ -140,16 +216,28 @@ workflows:
           suite: resources-ubuntu-1804
           requires: *lint_and_unit
       - kitchen/dokken-single:
+          name: resources-amazonlinux-2
+          suite: resources-amazonlinux-2
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: replication-amazonlinux
+          suite: replication-amazonlinux
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: replication-debian-9
+          suite: replication-debian-9
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: replication-debian-10
+          suite: replication-debian-10
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
           name: replication-centos-6
           suite: replication-centos-6
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: replication-centos-7
           suite: replication-centos-7
-          requires: *lint_and_unit
-      - kitchen/dokken-single:
-          name: replication-debian-9
-          suite: replication-debian-9
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: replication-ubuntu-1604
@@ -160,16 +248,28 @@ workflows:
           suite: replication-ubuntu-1804
           requires: *lint_and_unit
       - kitchen/dokken-single:
+          name: replication-amazonlinux-2
+          suite: replication-amazonlinux-2
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: datadir-changed-amazonlinux
+          suite: datadir-changed-amazonlinux
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: datadir-changed-debian-9
+          suite: datadir-changed-debian-9
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: datadir-changed-debian-10
+          suite: datadir-changed-debian-10
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
           name: datadir-changed-centos-6
           suite: datadir-changed-centos-6
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: datadir-changed-centos-7
           suite: datadir-changed-centos-7
-          requires: *lint_and_unit
-      - kitchen/dokken-single:
-          name: datadir-changed-debian-9
-          suite: datadir-changed-debian-9
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: datadir-changed-ubuntu-1604
@@ -180,16 +280,28 @@ workflows:
           suite: datadir-changed-ubuntu-1804
           requires: *lint_and_unit
       - kitchen/dokken-single:
+          name: datadir-changed-amazonlinux-2
+          suite: datadir-changed-amazonlinux-2
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: port-changed-amazonlinux
+          suite: port-changed-amazonlinux
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: port-changed-debian-9
+          suite: port-changed-debian-9
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: port-changed-debian-10
+          suite: port-changed-debian-10
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
           name: port-changed-centos-6
           suite: port-changed-centos-6
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: port-changed-centos-7
           suite: port-changed-centos-7
-          requires: *lint_and_unit
-      - kitchen/dokken-single:
-          name: port-changed-debian-9
-          suite: port-changed-debian-9
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: port-changed-ubuntu-1604
@@ -200,16 +312,28 @@ workflows:
           suite: port-changed-ubuntu-1804
           requires: *lint_and_unit
       - kitchen/dokken-single:
+          name: port-changed-amazonlinux-2
+          suite: port-changed-amazonlinux-2
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: galera-configuration-amazonlinux
+          suite: galera-configuration-amazonlinux
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: galera-configuration-debian-9
+          suite: galera-configuration-debian-9
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: galera-configuration-debian-10
+          suite: galera-configuration-debian-10
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
           name: galera-configuration-centos-6
           suite: galera-configuration-centos-6
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: galera-configuration-centos-7
           suite: galera-configuration-centos-7
-          requires: *lint_and_unit
-      - kitchen/dokken-single:
-          name: galera-configuration-debian-9
-          suite: galera-configuration-debian-9
           requires: *lint_and_unit
       - kitchen/dokken-single:
           name: galera-configuration-ubuntu-1604
@@ -219,3 +343,89 @@ workflows:
           name: galera-configuration-ubuntu-1804
           suite: galera-configuration-ubuntu-1804
           requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: galera-configuration-amazonlinux-2
+          suite: galera-configuration-amazonlinux-2
+          requires: *lint_and_unit
+      - final:
+          requires:
+            - repository-amazonlinux
+            - repository-debian-9
+            - repository-debian-10
+            - repository-centos-6
+            - repository-centos-7
+            - repository-ubuntu-1604
+            - repository-ubuntu-1804
+            - repository-amazonlinux-2
+            - client-install-amazonlinux
+            - client-install-debian-9
+            - client-install-debian-10
+            - client-install-centos-6
+            - client-install-centos-7
+            - client-install-ubuntu-1604
+            - client-install-ubuntu-1804
+            - client-install-amazonlinux-2
+            - server-install-amazonlinux
+            - server-install-debian-9
+            - server-install-debian-10
+            - server-install-centos-6
+            - server-install-centos-7
+            - server-install-ubuntu-1604
+            - server-install-ubuntu-1804
+            - server-install-amazonlinux-2
+            - configuration-amazonlinux
+            - configuration-debian-9
+            - configuration-debian-10
+            - configuration-centos-6
+            - configuration-centos-7
+            - configuration-ubuntu-1604
+            - configuration-ubuntu-1804
+            - configuration-amazonlinux-2
+            - server-configuration-amazonlinux
+            - server-configuration-debian-9
+            - server-configuration-debian-10
+            - server-configuration-centos-6
+            - server-configuration-centos-7
+            - server-configuration-ubuntu-1604
+            - server-configuration-ubuntu-1804
+            - server-configuration-amazonlinux-2
+            - resources-amazonlinux
+            - resources-debian-9
+            - resources-debian-10
+            - resources-centos-6
+            - resources-centos-7
+            - resources-ubuntu-1604
+            - resources-ubuntu-1804
+            - resources-amazonlinux-2
+            - replication-amazonlinux
+            - replication-debian-9
+            - replication-debian-10
+            - replication-centos-6
+            - replication-centos-7
+            - replication-ubuntu-1604
+            - replication-ubuntu-1804
+            - replication-amazonlinux-2
+            - datadir-changed-amazonlinux
+            - datadir-changed-debian-9
+            - datadir-changed-debian-10
+            - datadir-changed-centos-6
+            - datadir-changed-centos-7
+            - datadir-changed-ubuntu-1604
+            - datadir-changed-ubuntu-1804
+            - datadir-changed-amazonlinux-2
+            - port-changed-amazonlinux
+            - port-changed-debian-9
+            - port-changed-debian-10
+            - port-changed-centos-6
+            - port-changed-centos-7
+            - port-changed-ubuntu-1604
+            - port-changed-ubuntu-1804
+            - port-changed-amazonlinux-2
+            - galera-configuration-amazonlinux
+            - galera-configuration-debian-9
+            - galera-configuration-debian-10
+            - galera-configuration-centos-6
+            - galera-configuration-centos-7
+            - galera-configuration-ubuntu-1604
+            - galera-configuration-ubuntu-1804
+            - galera-configuration-amazonlinux-2
