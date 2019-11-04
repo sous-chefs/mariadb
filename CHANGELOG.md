@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Fixed platform for AmazonLinux
+
 ## [3.1.0] (2019-10-24)
 
 ### Fixed
