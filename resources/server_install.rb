@@ -27,7 +27,7 @@ property :external_pid_file, String,        default: lazy { "/var/run/mysql/#{ve
 property :password,          [String, nil], default: 'generate'
 property :port,              Integer,       default: 3306
 property :initdb_locale,     String,        default: 'UTF-8'
-property :package_name,	     String,        default: node['platform_family'] == 'debian' ? "mariadb-server-#{new_resource.version}" : 'MariaDB-server'
+property :package_name,      String,        default: node['platform_family'] == 'debian' ? "mariadb-server-#{new_resource.version}" : 'MariaDB-server'
 
 action :install do
   node.run_state['mariadb'] ||= {}
