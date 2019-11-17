@@ -37,7 +37,7 @@ action :install do
   mariadb_client_install 'Install MariaDB Client' do
     version new_resource.version
     setup_repo new_resource.setup_repo
-    package_name node.run_state['mariadb']['client_pkg'] if node.run_state['mariadb'] && node.run_state['mariadb']['client_pkg'] 
+    package_name node.run_state['mariadb']['client_pkg'] if node.run_state['mariadb'] && node.run_state['mariadb']['client_pkg']
   end
 
   package new_resource.package_name
