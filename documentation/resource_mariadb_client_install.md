@@ -11,6 +11,7 @@ This resource installs mariadb client packages.
 Name                | Types             | Description                                                   | Default                                   | Required?
 ------------------- | ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
 `version`           | String            | Version of MariaDB to install                                 | `10.3`                                    | no
+`package_name`      | String            | Name of MariaDB client package to install                            | `MariaDB-client`                   | no
 `setup_repo`        | Boolean           | Define if you want to add the MariaDB repository              | `true`                                    | no
 
 ### Examples

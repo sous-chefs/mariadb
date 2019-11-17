@@ -27,17 +27,20 @@ property :external_pid_file, String,        default: lazy { "/var/run/mysql/#{ve
 property :password,          [String, nil], default: 'generate'
 property :port,              Integer,       default: 3306
 property :initdb_locale,     String,        default: 'UTF-8'
+property :package_name,	     String,        default: node['platform_family'] == 'debian' ? "mariadb-server-#{new_resource.version}" : 'MariaDB-server'
 
 action :install do
   node.run_state['mariadb'] ||= {}
   node.run_state['mariadb']['version'] = new_resource.version
 
+  # this should be removed. It's cute but costly.
   mariadb_client_install 'Install MariaDB Client' do
     version new_resource.version
     setup_repo new_resource.setup_repo
+    package_name node.run_state['mariadb']['client_pkg'] if node.run_state['mariadb'] && node.run_state['mariadb']['client_pkg'] 
   end
 
-  package server_pkg_name
+  package new_resource.package_name
 end
 
 action :create do

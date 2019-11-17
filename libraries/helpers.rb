@@ -224,11 +224,6 @@ module MariaDBCookbook
       end
     end
 
-    # determine the platform specific server package name
-    def server_pkg_name
-      platform_family?('debian') ? "mariadb-server-#{new_resource.version}" : 'MariaDB-server'
-    end
-
     # given the base URL build the complete URL string for a yum repo
     def yum_repo_url(base_url)
       "#{base_url}/#{new_resource.version}/#{yum_repo_platform_string}"

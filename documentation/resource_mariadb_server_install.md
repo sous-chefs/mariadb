@@ -12,6 +12,7 @@ This resource installs mariadb server packages.
 Name                            | Types             | Description                                                   | Default                                   | Required?
 ------------------------------- | ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
 `version`                       | String            | Version of MariaDB to install                                 | `10.3`                                    | no
+`package_name`                  | String            | Name of MariaDB server package to install                     | `MariaDB-server`                          | no
 `setup_repo`                    | Boolean           | Define if you want to add the MariaDB repository              | `true`                                    | no
 `mycnf_file`                    | String            |                                                               | `"#{conf_dir}/my.cnf"` (1)                | no
 `extra_configuration_directory` | String            |                                                               | `ext_conf_dir` (2)                        | no
