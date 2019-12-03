@@ -23,7 +23,7 @@ property :apt_gpg_keyserver,  String, default: 'keyserver.ubuntu.com'
 property :apt_gpg_key,        String, default: lazy {
   if node['lsb']['codename'] == 'buster' || node['lsb']['codename'] == 'buster/sid'
     'F1656F24C74CD1D8'
-  elsif platform?('ubuntu') && node['platform_version'].split('.')[0].to_i < 9
+  elsif platform?('ubuntu') && node['platform_version'].to_i < 9
     'CBCB082A1BB943DB'
   else
     'F1656F24C74CD1D8'
