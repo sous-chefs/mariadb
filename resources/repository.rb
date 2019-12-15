@@ -17,7 +17,7 @@
 #
 
 property :version,            String, default: '10.3'
-property :enable_mariadb_org, [true, false], default: true
+property :enable_mariadb_org, [TrueClass, FalseClass], default: true
 property :yum_gpg_key_uri,    String, default: 'https://yum.mariadb.org/RPM-GPG-KEY-MariaDB'
 property :apt_gpg_keyserver,  String, default: 'keyserver.ubuntu.com'
 property :apt_gpg_key,        String, default: lazy {

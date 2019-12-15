@@ -37,9 +37,9 @@ property :mysqld_datadir,                 String,            default: '/var/lib/
 property :mysqld_tmpdir,                  String,            default: '/var/tmp'
 property :mysqld_lc_messages_dir,         String,            default: '/usr/share/mysql'
 property :mysqld_lc_messages,             String,            default: 'en_US'
-property :mysqld_skip_external_locking,   [true, false],     default: true
-property :mysqld_skip_log_bin,            [true, false],     default: false
-property :mysqld_skip_name_resolve,       [true, false],     default: false
+property :mysqld_skip_external_locking,   [TrueClass, FalseClass],     default: true
+property :mysqld_skip_log_bin,            [TrueClass, FalseClass],     default: false
+property :mysqld_skip_name_resolve,       [TrueClass, FalseClass],     default: false
 property :mysqld_bind_address,            String,            default: '127.0.0.1'
 property :mysqld_port,                    [String, Integer], default: 3306
 property :mysqld_max_connections,         Integer,           default: 100
@@ -75,14 +75,14 @@ property :mysqld_log_slow_rate_limit,     Integer,           default: 1000
 property :mysqld_log_slow_verbosity,      String,            default: 'query_plan'
 property :mysqld_log_output,              String,            default: 'FILE'
 property :mysqld_options,                 Hash,              default: {}
-property :mysqldump_quick,                [true, false],     default: true
-property :mysqldump_quote_names,          [true, false],     default: true
+property :mysqldump_quick,                [TrueClass, FalseClass],     default: true
+property :mysqldump_quote_names,          [TrueClass, FalseClass],     default: true
 property :mysqldump_max_allowed_packet,   String,            default: '16M'
 property :mysqldump_options,              Hash,              default: {}
 property :isamchk_key_buffer,             String,            default: '16M'
 property :isamchk_options,                Hash,              default: {}
 property :innodb_log_file_size,           String,            default: '50M'
-property :innodb_bps_percentage_memory,   [true, false],     default: false
+property :innodb_bps_percentage_memory,   [TrueClass, FalseClass], default: false
 property :innodb_buffer_pool_size,        String,            default: '50M'
 property :innodb_log_buffer_size,         String,            default: '8M'
 property :innodb_file_per_table,          Integer,           default: 1

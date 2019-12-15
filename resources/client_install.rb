@@ -17,7 +17,7 @@
 #
 
 property :version,    String, default: '10.3'
-property :setup_repo, [true, false], default: true
+property :setup_repo, [TrueClass, FalseClass], default: true
 
 action :install do
   mariadb_repository 'Add mariadb.org repository' do

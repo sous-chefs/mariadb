@@ -6,7 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 
-- Simplify a platform version check in the repository resource
+- Simplify a platform version check in the repository resource and helper
+- Use TrueClass and FalseClass in resources
 
 ## [3.1.0] (2019-10-24)
 
