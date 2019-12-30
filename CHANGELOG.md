@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Fixed support statement for chef-13 in metadata, rejected since 2.0.0
 
+## Unreleased
+
+- Simplify a platform version check in the repository resource
+
 ## [3.1.0] (2019-10-24)
 
 ### Fixed
