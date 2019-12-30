@@ -18,8 +18,12 @@
 
 property :version,    String, default: '10.3'
 property :setup_repo, [true, false], default: true
+property :package_name, String, default: 'MariaDB-client'
 
 action :install do
+  node.run_state['mariadb'] ||= {}
+  node.run_state['mariadb']['client_pkg'] = new_resource.package_name
+
   mariadb_repository 'Add mariadb.org repository' do
     version new_resource.version
     only_if { new_resource.setup_repo }
@@ -29,6 +33,6 @@ action :install do
   when 'debian'
     package "mariadb-client-#{new_resource.version}"
   when 'rhel', 'fedora', 'amazon'
-    package 'MariaDB-client'
+    package new_resource.package_name
   end
 end
