@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 
+- Fixed changing the character set and collation of an existing database resource
 - Simplify a platform version check in the repository resource
 
 ## [3.1.0] (2019-10-24)
