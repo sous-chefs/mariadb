@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## Unreleased
 
 - Simplify a platform version check in the repository resource
+- Migrate testing to actions
 
 ## [3.1.0] (2019-10-24)
 
