@@ -6,8 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 
-- Simplify a platform version check in the repository resource
-- Migrate testing to actions
+- Simplify a platform version check in the repository resource and the helpers library
+- Migrate testing to Github Actions
+- Simplify the apt_repository resource usage in the repository resource
+- Use true/false in the user resource not TrueClass / FalseClass
 
 ## [3.1.0] (2019-10-24)
 
