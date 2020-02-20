@@ -195,12 +195,19 @@ action :modify do
     action :add
   end
 
+  ruby_block 'move_data_dir_if_needed' do
+    block do
+      move_data_dir
+    end
+    only_if { new_resource.mysqld_datadir != data_dir }
+    only_if { !::File.symlink?(data_dir) }
+  end
+
   ruby_block 'restart_mariadb_if_needed' do
     block do
-      move_data_dir if new_resource.mysqld_datadir != data_dir
-
-      restart_mariadb_service unless port_open?(new_resource.mysqld_bind_address, new_resource.mysqld_port)
+      restart_mariadb_service
     end
+    not_if { port_open?(new_resource.mysqld_bind_address, new_resource.mysqld_port) }
   end
 end
 

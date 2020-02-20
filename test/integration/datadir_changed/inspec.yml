@@ -1,3 +1,4 @@
+---
 name: datadir_changed
 title: MariaDB Data Directory changed test scenario
 maintainer: Nicolas Blanc

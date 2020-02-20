@@ -1,3 +1,4 @@
+---
 name: server_install
 title: MariaDB Server Install
 maintainer: Nicolas Blanc
@@ -8,5 +9,5 @@ version: 0.0.1
 supports:
   - os-family: unix
 depends:
-    - name: client_install
-      path: ./test/integration/client_install
+  - name: client_install
+    path: ./test/integration/client_install

@@ -96,10 +96,10 @@ load_current_value do
   slave_status = parse_mysql_batch_result(raw_slave_status)
   slave_status.each do |row|
     master_host row['Master_Host']
-    master_port row['Master_Port']
+    master_port row['Master_Port'].to_i
     master_user row['Master_User']
     master_log_file row['Master_Log_File']
-    master_log_pos row['Read_Master_Log_Pos']
+    master_log_pos row['Read_Master_Log_Pos'].to_i
     master_use_gtid row['Using_Gtid'].nil? ? 'No' : row['Using_Gtid']
   end
   master_info_file = if master_connection.empty?

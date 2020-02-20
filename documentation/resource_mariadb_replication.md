@@ -19,13 +19,13 @@ Name                                   | Types             | Description        
 `cookbook`                             | String            |                                                               | `mariadb`                                 | no
 `connection_name`                      | String            | The resource name                                             |                                           | yes
 `host`                                 | String, nil       |                                                               | `localhost`                               | no
-`port`                                 | Integer, nil      |                                                               | `3306`                                    | no 
-`user`                                 | String, nil       |                                                               | `root`                                    | no 
-`password`                             | String, nil       |                                                               | `nil`                                     | no 
-`change_master_while_running`          | true, false       |                                                               | `false`                                   | no 
-`master_password`                      | String            |                                                               |                                           | yes 
-`master_port`                          | Integer           |                                                               | `3306`                                    | no 
-`master_use_gtid`                      | String            |                                                               | `No`                                      | no 
+`port`                                 | Integer, nil      |                                                               | `3306`                                    | no
+`user`                                 | String, nil       |                                                               | `root`                                    | no
+`password`                             | String, nil       |                                                               | `nil`                                     | no
+`change_master_while_running`          | true, false       |                                                               | `false`                                   | no
+`master_password`                      | String            |                                                               |                                           | yes
+`master_port`                          | Integer           |                                                               | `3306`                                    | no
+`master_use_gtid`                      | String            |                                                               | `No`                                      | no
 `master_host`                          | String            |                                                               |                                           | yes
 `master_user`                          | String            |                                                               |                                           | yes
 `master_connect_retry`                 | String            |                                                               |                                           | no
@@ -42,6 +42,7 @@ mariadb_replication 'default' do
   action :stop
 end
 ```
+
 will stop the replication on the host `fakehost` using the user `root` and password `fakepass` to connect to.
 
 When you add a replication configuration, you have to define at least 4 values `master_host`, `master_user`, `master_password` and `master_use_gtid`. And if you don't want the GTID support, you have to define also `master_log_file` and `master_log_pos`

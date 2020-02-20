@@ -13,7 +13,7 @@ Name                | Types             | Description                           
 `version`           | String            | Version of MariaDB to install                                 | `10.3`                                    | no
 `setup_repo`        | Boolean           | Define if you want to add the MariaDB repository              | `true`                                    | no
 
-#### Examples
+### Examples
 
 To install '10.3' version:
 
