@@ -1,3 +1,4 @@
+---
 name: client_install
 title: MariaDB client integration tests
 maintainer: Nicolas Blanc

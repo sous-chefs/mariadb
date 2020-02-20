@@ -35,7 +35,7 @@ mariadb_user 'disenfranchised' do
   password 'super_secret'
   action :create
 end
- 
+
 # Create an user using a hashed password string instead of plain text one
 mariadb_user 'disenfranchised' do
   password hashed_password('md5eacdbf8d9847a76978bd515fae200a2a')

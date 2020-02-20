@@ -212,10 +212,15 @@ module MariaDBCookbook
     end
 
     def mariadbbackup_pkg_name
-      if new_resource.version == '10.3'
-        'mariadb-backup'
+      case node['platform_family']
+      when 'rhel', 'fedora', 'amazon'
+        'MariaDB-backup'
       else
-        "mariadb-backup-#{new_resource.version}"
+        if new_resource.version == '10.3'
+          'mariadb-backup'
+        else
+          "mariadb-backup-#{new_resource.version}"
+        end
       end
     end
 

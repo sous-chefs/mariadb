@@ -6,7 +6,7 @@ mariadb_replication 'default' do
   master_user 'slave_replication'
   master_password '@lph0ns3'
   master_host '1.1.1.100'
-  master_use_gtid 'current_pos'
+  master_use_gtid 'Current_Pos'
 end
 
 %w(1 2 3).each do |server_number|
@@ -16,6 +16,6 @@ end
     master_user 'slave_replication'
     master_password '@lph0ns3'
     master_host "1.1.1.#{server_number}"
-    master_use_gtid 'current_pos'
+    master_use_gtid 'Current_Pos'
   end
 end

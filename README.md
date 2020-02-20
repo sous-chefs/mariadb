@@ -37,7 +37,7 @@ This cookbook is maintained by the Sous Chefs. The Sous Chefs are a community of
 ### Chef version
 
 Since version 2.0.0 of this cookbook, chef 13 support is dropped. New chef 14 is the minimum version tested.
-If you can't upgrade your chef 13, please user the version 1.5.4 or earlier of this cookbook.
+If you can't upgrade your chef 13, please use the version 1.5.4 or earlier of this cookbook.
 
 ## Upgrading
 
@@ -58,11 +58,11 @@ If you are wondering where all the recipes went in v2.0+, or how on earth I use 
 ## Contributing
 
 1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
-3. Write your change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
+1. Create a named feature branch (like `add_component_x`)
+1. Write your change
+1. Write tests for your change (if applicable)
+1. Run the tests, ensuring they all pass
+1. Submit a Pull Request using Github
 
 ## Contributors
 
