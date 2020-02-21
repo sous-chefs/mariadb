@@ -215,11 +215,7 @@ module MariaDBCookbook
       if platform_family?('rhel', 'fedora', 'amazon')
         'MariaDB-backup'
       else
-        if new_resource.version == '10.3'
-          'mariadb-backup'
-        else
-          "mariadb-backup-#{new_resource.version}"
-        end
+        new_resource.version == '10.3' ? 'mariadb-backup' : "mariadb-backup-#{new_resource.version}"
       end
     end
 
