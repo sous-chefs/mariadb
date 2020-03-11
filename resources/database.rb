@@ -37,10 +37,10 @@ action :create do
     end
   else
     converge_if_changed :encoding do
-      run_query("ALTER SCHEMA '#{new_resource.database_name}' CHARACTER SET = #{encoding}", nil)
+      run_query("ALTER SCHEMA \\`#{new_resource.database_name}\\` CHARACTER SET #{new_resource.encoding}", nil)
     end
     converge_if_changed :collation do
-      run_query("ALTER SCHEMA '#{new_resource.database_name}' COLLATE = #{collation}", nil)
+      run_query("ALTER SCHEMA \\`#{new_resource.database_name}\\` COLLATE #{new_resource.collation}", nil)
     end
   end
 end
