@@ -6,9 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 
+- Simplify a platform version check in the repository resource and the helpers library
+- Migrate testing to Github Actions
+- Simplify the apt_repository resource usage in the repository resource
+- Use true/false in the user resource not TrueClass / FalseClass
 - Fixed changing the character set and collation of an existing database resource
 - Simplify a platform version check in the repository resource
-- Migrate testing to actions
+- Migrate testing to GitHub Actions
 
 ## [3.1.0] (2019-10-24)
 

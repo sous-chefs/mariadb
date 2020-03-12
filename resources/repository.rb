@@ -57,7 +57,6 @@ action :add do
     apt_repository 'mariadb_org_repository' do
       uri          "#{new_resource.apt_repository_uri}/#{new_resource.version}/#{node['platform']}"
       components   ['main']
-      distribution node['lsb']['codename']
       keyserver new_resource.apt_gpg_keyserver
       key new_resource.apt_gpg_key
       key_proxy new_resource.apt_key_proxy

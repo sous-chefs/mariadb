@@ -22,13 +22,13 @@ property :password,      [String, HashedPassword, NilClass], default: nil,  sens
 property :host,          String,                             default: 'localhost', desired_state: false
 property :database_name, String
 property :table,         String
-property :privileges,    Array,                              default: [:all]
-property :grant_option,  [TrueClass, FalseClass],            default: false
-property :require_ssl,   [TrueClass, FalseClass],            default: false
-property :require_x509,  [TrueClass, FalseClass],            default: false
+property :privileges,    Array, default: [:all]
+property :grant_option,  [true, false],            default: false
+property :require_ssl,   [true, false],            default: false
+property :require_x509,  [true, false],            default: false
 # Credentials used for control connection
-property :ctrl_user,     [String, NilClass],                 default: 'root', desired_state: false
-property :ctrl_password, [String, NilClass],                 default: nil, sensitive: true, desired_state: false
+property :ctrl_user,     [String, NilClass], default: 'root', desired_state: false
+property :ctrl_password, [String, NilClass], sensitive: true, desired_state: false
 property :ctrl_host,     [String, NilClass],                 default: 'localhost', desired_state: false
 property :ctrl_port,     [Integer, NilClass],                default: 3306, desired_state: false
 
