@@ -22,8 +22,8 @@ property :version,                     String,         default: '10.3'
 property :host,                        [String, nil],  default: 'localhost', desired_state: false
 property :port,                        [Integer, nil], default: 3306,        desired_state: false
 property :user,                        [String, nil],  default: 'root',      desired_state: false
-property :password,                    [String, nil],  default: nil,         sensitive: true, desired_state: false
-property :change_master_while_running, [true, false],  default: false,       desired_state: false
+property :password,                    [String, nil], sensitive: true, desired_state: false
+property :change_master_while_running, [true, false],  default: false, desired_state: false
 property :master_password,             String,         sensitive: true
 property :master_port,                 Integer,        default: 3306
 property :master_use_gtid,             String,         default: 'No'

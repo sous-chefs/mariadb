@@ -24,7 +24,7 @@ property :mycnf_file,                     String,            default: lazy { "#{
 property :extra_configuration_directory,  String,            default: lazy { ext_conf_dir }
 property :client_port,                    [String, Integer], default: 3306
 property :client_socket,                  String,            default: lazy { default_socket }
-property :client_host,                    [String, nil],     default: nil
+property :client_host,                    [String, nil]
 property :client_options,                 Hash,              default: {}
 property :mysqld_safe_socket,             String,            default: lazy { default_socket }
 property :mysqld_safe_nice,               [String, Integer], default: 0
@@ -62,7 +62,7 @@ property :mysqld_read_buffer_size,        String,            default: '2M'
 property :mysqld_read_rnd_buffer_size,    String,            default: '1M'
 property :mysqld_query_cache_limit,       String,            default: '128K'
 property :mysqld_query_cache_size,        String,            default: '64M'
-property :mysqld_query_cache_type,        [String, nil],     default: nil
+property :mysqld_query_cache_type,        [String, nil]
 property :mysqld_default_storage_engine,  String,            default: 'InnoDB'
 property :mysqld_log_directory,           String,            default: '/var/log/mysql'
 property :mysqld_general_log_file,        String,            default: lazy { "#{mysqld_log_directory}/mysql.log" }
@@ -90,7 +90,7 @@ property :innodb_open_files,              Integer,           default: 400
 property :innodb_io_capacity,             Integer,           default: 400
 property :innodb_flush_method,            String,            default: 'O_DIRECT'
 property :innodb_options,                 Hash,              default: {}
-property :replication_server_id,          [String, nil],     default: nil
+property :replication_server_id,          [String, nil]
 property :replication_log_bin,            [String, nil],     default: lazy { "#{mysqld_log_directory}/mariadb-bin" }
 property :replication_log_bin_index,      String,            default: lazy { "#{mysqld_log_directory}/mariadb-bin.index" }
 property :replication_sync_binlog,        [String, Integer], default: 0
