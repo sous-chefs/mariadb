@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 
+- resolved cookstyle error: resources/database.rb:24:42 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+- resolved cookstyle error: resources/database.rb:25:42 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+- resolved cookstyle error: resources/galera_configuration.rb:24:66 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+- resolved cookstyle error: resources/galera_configuration.rb:25:66 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+- resolved cookstyle error: resources/galera_configuration.rb:32:66 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+- resolved cookstyle error: resources/replication.rb:25:54 convention: `Layout/ExtraSpacing`
+- resolved cookstyle error: resources/replication.rb:25:56 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+- resolved cookstyle error: resources/replication.rb:26:71 convention: `Layout/ExtraSpacing`
+- resolved cookstyle error: resources/server_configuration.rb:27:62 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+- resolved cookstyle error: resources/server_configuration.rb:65:62 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+- resolved cookstyle error: resources/server_configuration.rb:93:62 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+
 - Simplify a platform version check in the repository resource and the helpers library
 - Migrate testing to Github Actions
 - Simplify the apt_repository resource usage in the repository resource
