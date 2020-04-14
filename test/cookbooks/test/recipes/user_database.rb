@@ -1,4 +1,4 @@
-::Chef::Recipe.send(:include, HashedPassword::Helper)
+::Chef::Recipe.include HashedPassword::Helper
 
 include_recipe 'test::server_configuration'
 
