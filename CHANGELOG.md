@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 
+- resolved cookstyle error: resources/server_configuration.rb:203:5 refactor: `ChefStyle/NegatingOnlyIf`
+- resolved cookstyle error: resources/server_configuration.rb:288:7 refactor: `ChefStyle/NegatingOnlyIf`
+- resolved cookstyle error: test/cookbooks/test/recipes/user_database.rb:1:16 warning: `Lint/SendWithMixinArgument`
 - resolved cookstyle error: resources/database.rb:24:42 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
 - resolved cookstyle error: resources/database.rb:25:42 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
 - resolved cookstyle error: resources/galera_configuration.rb:24:66 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`

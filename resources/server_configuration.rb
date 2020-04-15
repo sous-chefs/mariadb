@@ -200,7 +200,7 @@ action :modify do
       move_data_dir
     end
     only_if { new_resource.mysqld_datadir != data_dir }
-    only_if { !::File.symlink?(data_dir) }
+    not_if { ::File.symlink?(data_dir) }
   end
 
   ruby_block 'restart_mariadb_if_needed' do
@@ -285,7 +285,7 @@ action_class do
       notifies :stop, "service[#{platform_service_name}]", :immediately
       notifies :run, 'bash[move-datadir]', :immediately
       notifies :start, "service[#{platform_service_name}]", :immediately
-      only_if { !::File.symlink?(data_dir) }
+      not_if { ::File.symlink?(data_dir) }
     end
   end
 end
