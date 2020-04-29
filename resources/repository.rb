@@ -40,11 +40,19 @@ action :add do
       source new_resource.yum_gpg_key_uri
     end
 
+    # yum repository workaround for CentOS 8 and RHEL 8
+    # https://jira.mariadb.org/browse/MDEV-20673
+    opts = {}
+    if platform_family?('rhel') && node['platform_version'].to_f >= 8
+      opts[:module_hotfixes] = 1
+    end
+
     yum_repository "MariaDB #{new_resource.version}" do
       repositoryid "mariadb#{new_resource.version}"
       description "MariaDB.org #{new_resource.version}"
       baseurl     yum_repo_url('http://yum.mariadb.org')
       enabled     new_resource.enable_mariadb_org
+      options     opts
       gpgcheck    true
       gpgkey      "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-MariaDB-#{new_resource.version}"
     end
