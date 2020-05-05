@@ -4,22 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
-
-- resolved cookstyle error: resources/server_configuration.rb:203:5 refactor: `ChefStyle/NegatingOnlyIf`
-- resolved cookstyle error: resources/server_configuration.rb:288:7 refactor: `ChefStyle/NegatingOnlyIf`
-- resolved cookstyle error: test/cookbooks/test/recipes/user_database.rb:1:16 warning: `Lint/SendWithMixinArgument`
-- resolved cookstyle error: resources/database.rb:24:42 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
-- resolved cookstyle error: resources/database.rb:25:42 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
-- resolved cookstyle error: resources/galera_configuration.rb:24:66 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
-- resolved cookstyle error: resources/galera_configuration.rb:25:66 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
-- resolved cookstyle error: resources/galera_configuration.rb:32:66 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
-- resolved cookstyle error: resources/replication.rb:25:54 convention: `Layout/ExtraSpacing`
-- resolved cookstyle error: resources/replication.rb:25:56 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
-- resolved cookstyle error: resources/replication.rb:26:71 convention: `Layout/ExtraSpacing`
-- resolved cookstyle error: resources/server_configuration.rb:27:62 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
-- resolved cookstyle error: resources/server_configuration.rb:65:62 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
-- resolved cookstyle error: resources/server_configuration.rb:93:62 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+## 3.2.0 (2020-05-05)
 
 - Simplify a platform version check in the repository resource and the helpers library
 - Migrate testing to Github Actions
@@ -28,6 +13,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fixed changing the character set and collation of an existing database resource
 - Simplify a platform version check in the repository resource
 - Migrate testing to GitHub Actions
+- Various Cookstyle fixes:
+  - resolved cookstyle error: resources/server_configuration.rb:203:5 refactor: `ChefStyle/NegatingOnlyIf`
+  - resolved cookstyle error: resources/server_configuration.rb:288:7 refactor: `ChefStyle/NegatingOnlyIf`
+  - resolved cookstyle error: test/cookbooks/test/recipes/user_database.rb:1:16 warning: `Lint/SendWithMixinArgument`
+  - resolved cookstyle error: resources/database.rb:24:42 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+  - resolved cookstyle error: resources/database.rb:25:42 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+  - resolved cookstyle error: resources/galera_configuration.rb:24:66 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+  - resolved cookstyle error: resources/galera_configuration.rb:25:66 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+  - resolved cookstyle error: resources/galera_configuration.rb:32:66 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+  - resolved cookstyle error: resources/replication.rb:25:54 convention: `Layout/ExtraSpacing`
+  - resolved cookstyle error: resources/replication.rb:25:56 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+  - resolved cookstyle error: resources/replication.rb:26:71 convention: `Layout/ExtraSpacing`
+  - resolved cookstyle error: resources/server_configuration.rb:27:62 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+  - resolved cookstyle error: resources/server_configuration.rb:65:62 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
+  - resolved cookstyle error: resources/server_configuration.rb:93:62 refactor: `ChefRedundantCode/StringPropertyWithNilDefault`
 
 ## [3.1.0] (2019-10-24)
 
