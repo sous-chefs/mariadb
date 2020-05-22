@@ -6,11 +6,11 @@ description      'Installs/Configures MariaDB'
 
 source_url       'https://github.com/sous-chefs/mariadb'
 issues_url       'https://github.com/sous-chefs/mariadb/issues'
-chef_version     '>= 13'
+chef_version     '>= 15'
 version          '3.2.0'
 
-supports 'ubuntu'
+supports 'ubuntu', '>= 18.04'
 supports 'debian', '>= 9.0'
-supports 'centos', '>= 6.4'
+supports 'centos', '>= 7'
 
 depends 'selinux_policy', '~> 2.0'

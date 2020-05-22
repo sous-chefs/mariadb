@@ -9,6 +9,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Update CHANGELOG format
 - Add CentOS 8 to GitHub Actions
 - Add Ubuntu 20.04 to GitHub Actions
+- Remove Amazon Linux 2 from GitHub Actions
+- Chef 15 is now the lowest supported version
+  - See [cookbook support](https://sous-chefs.org/docs/cookbook-support/) for more information.
 
 ## 3.2.0 (2020-05-05)
 
