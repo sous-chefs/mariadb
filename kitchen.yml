@@ -14,12 +14,12 @@ verifier:
   name: inspec
 
 platforms:
-  - name: centos-6
   - name: centos-7
   - name: centos-8
   - name: debian-9
-  - name: ubuntu-16.04
+  - name: debian-10
   - name: ubuntu-18.04
+  - name: ubuntu-20.04
 
 suites:
   - name: repository
@@ -43,12 +43,12 @@ suites:
   - name: replication
     run_list:
       - recipe[test::replication]
-  - name: datadir_changed
+  - name: datadir
     run_list:
-      - recipe[test::datadir_changed]
-  - name: port_changed
+      - recipe[test::datadir]
+  - name: port
     run_list:
-      - recipe[test::port_changed]
+      - recipe[test::port]
   - name: galera_configuration
     run_list:
       - recipe[test::galera_configuration]

@@ -40,12 +40,13 @@ jobs:
     strategy:
       matrix:
         os:
-          - 'amazonlinux-2'
-          - 'debian-10'
-          - 'debian-9'
-          - 'ubuntu-1604'
-          - 'ubuntu-1804'
+          # - 'amazonlinux-2'
           - 'centos-7'
+          - 'centos-8'
+          - 'debian-9'
+          - 'debian-10'
+          - 'ubuntu-1804'
+          - 'ubuntu-2004'
         suite:
           - 'repository'
           - 'client-install'
@@ -55,7 +56,7 @@ jobs:
           - 'resources'
           - 'replication'
           - 'datadir'
-          - 'port-changed'
+          - 'port'
           - 'galera-configuration'
       fail-fast: false
 
