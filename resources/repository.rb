@@ -57,7 +57,7 @@ action :add do
       gpgkey      "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-MariaDB-#{new_resource.version}"
     end
 
-  when 'debian', 'ubuntu'
+  when 'debian'
     apt_update
     package 'apt-transport-https'
     package 'dirmngr' if (platform?('ubuntu') && node['platform_version'].to_i >= 9) || (platform?('ubuntu') && node['platform_version'].to_i >= 18)
