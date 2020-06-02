@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 4.0.1 (2020-06-02)
 
 - resolved cookstyle error: resources/repository.rb:60:18 refactor: `ChefCorrectness/InvalidPlatformFamilyInCase`
 
