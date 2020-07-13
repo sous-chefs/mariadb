@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- resolved cookstyle error: test/cookbooks/test/recipes/user_database.rb:1:1 refactor: `ChefCorrectness/IncorrectLibraryInjection`
+- resolved cookstyle error: test/cookbooks/test/recipes/user_database.rb:17:3 refactor: `ChefModernize/ConditionalUsingTest`
+- resolved cookstyle error: test/cookbooks/test/recipes/user_database.rb:27:3 refactor: `ChefModernize/ConditionalUsingTest`
+- resolved cookstyle error: test/cookbooks/test/recipes/user_database.rb:37:3 refactor: `ChefModernize/ConditionalUsingTest`
+- resolved cookstyle error: test/cookbooks/test/recipes/user_database.rb:47:3 refactor: `ChefModernize/ConditionalUsingTest`
+- resolved cookstyle error: test/cookbooks/test/recipes/user_database.rb:57:3 refactor: `ChefModernize/ConditionalUsingTest`
+- resolved cookstyle error: test/cookbooks/test/recipes/user_database.rb:67:3 refactor: `ChefModernize/ConditionalUsingTest`
+
 ## 4.0.1 (2020-06-02)
 
 - resolved cookstyle error: resources/repository.rb:60:18 refactor: `ChefCorrectness/InvalidPlatformFamilyInCase`

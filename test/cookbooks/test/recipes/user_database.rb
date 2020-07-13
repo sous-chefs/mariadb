@@ -1,4 +1,4 @@
-::Chef::Recipe.include HashedPassword::Helper
+::Chef::DSL::Recipe.include HashedPassword::Helper
 
 include_recipe 'test::server_configuration'
 
@@ -14,7 +14,7 @@ bash 'create datatrout' do
   echo 'CREATE SCHEMA datatrout;' | /usr/bin/mysql -u root -pgsql;
   touch /tmp/troutmarker
   EOF
-  not_if 'test -f /tmp/troutmarker'
+  not_if { ::File.exist?('/tmp/troutmarker') }
   action :run
 end
 
@@ -24,7 +24,7 @@ bash 'create datasalmon' do
   echo 'CREATE SCHEMA datasalmon;' | /usr/bin/mysql -u root -pgsql;
   touch /tmp/salmonmarker
   EOF
-  not_if 'test -f /tmp/salmonmarker'
+  not_if { ::File.exist?('/tmp/salmonmarker') }
   action :run
 end
 
@@ -34,7 +34,7 @@ bash 'create kermit' do
   echo "CREATE USER 'kermit'@'localhost';" | /usr/bin/mysql -u root -pgsql;
   touch /tmp/kermitmarker
   EOF
-  not_if 'test -f /tmp/kermitmarker'
+  not_if { ::File.exist?('/tmp/kermitmarker') }
   action :run
 end
 
@@ -44,7 +44,7 @@ bash 'create rowlf' do
   echo "CREATE USER 'rowlf'@'localhost' IDENTIFIED BY 'hunter2';" | /usr/bin/mysql -u root -pgsql;
   touch /tmp/rowlfmarker
   EOF
-  not_if 'test -f /tmp/rowlfmarker'
+  not_if { ::File.exist?('/tmp/rowlfmarker') }
   action :run
 end
 
@@ -54,7 +54,7 @@ bash 'create statler' do
   echo "CREATE USER 'statler'@'localhost' IDENTIFIED BY 'hunter2';" | /usr/bin/mysql -u root -pgsql;
   touch /tmp/statlermarker
   EOF
-  not_if 'test -f /tmp/statlermarker'
+  not_if { ::File.exist?('/tmp/statlermarker') }
   action :run
 end
 
@@ -64,7 +64,7 @@ bash 'create rizzo' do
   echo "GRANT SELECT ON datasalmon.* TO 'rizzo'@'127.0.0.1' IDENTIFIED BY 'hunter2';" | /usr/bin/mysql -u root -pgsql;
   touch /tmp/rizzomarker
   EOF
-  not_if 'test -f /tmp/rizzomarker'
+  not_if { ::File.exist?('/tmp/rizzomarker') }
   action :run
 end
 
