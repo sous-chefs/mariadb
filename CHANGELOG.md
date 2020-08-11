@@ -6,6 +6,23 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- resolved cookstyle error: resources/galera_configuration.rb:114:5 convention: `Style/RedundantAssignment`
+- resolved cookstyle error: resources/galera_configuration.rb:115:5 convention: `Layout/IndentationWidth`
+- resolved cookstyle error: resources/galera_configuration.rb:120:26 warning: `Layout/EndAlignment`
+- resolved cookstyle error: resources/galera_configuration.rb:121:1 convention: `Layout/EmptyLinesAroundMethodBody`
+- resolved cookstyle error: resources/galera_configuration.rb:121:1 convention: `Layout/TrailingWhitespace`
+- resolved cookstyle error: resources/user.rb:187:5 convention: `Style/RedundantAssignment`
+- resolved cookstyle error: resources/user.rb:188:5 convention: `Layout/IndentationWidth`
+- resolved cookstyle error: resources/user.rb:189:21 convention: `Layout/ElseAlignment`
+- resolved cookstyle error: resources/user.rb:190:5 convention: `Layout/IndentationWidth`
+- resolved cookstyle error: resources/user.rb:191:21 convention: `Layout/ElseAlignment`
+- resolved cookstyle error: resources/user.rb:192:5 convention: `Layout/IndentationWidth`
+- resolved cookstyle error: resources/user.rb:193:21 warning: `Layout/EndAlignment`
+- resolved cookstyle error: resources/user.rb:194:1 convention: `Layout/EmptyLinesAroundMethodBody`
+- resolved cookstyle error: resources/user.rb:194:1 convention: `Layout/TrailingWhitespace`
+- resolved cookstyle error: resources/user.rb:203:5 convention: `Style/RedundantAssignment`
+- resolved cookstyle error: resources/user.rb:204:1 convention: `Layout/EmptyLinesAroundMethodBody`
+- resolved cookstyle error: resources/user.rb:204:1 convention: `Layout/TrailingWhitespace`
 - resolved cookstyle error: test/cookbooks/test/recipes/user_database.rb:1:1 refactor: `ChefCorrectness/IncorrectLibraryInjection`
 - resolved cookstyle error: test/cookbooks/test/recipes/user_database.rb:17:3 refactor: `ChefModernize/ConditionalUsingTest`
 - resolved cookstyle error: test/cookbooks/test/recipes/user_database.rb:27:3 refactor: `ChefModernize/ConditionalUsingTest`
