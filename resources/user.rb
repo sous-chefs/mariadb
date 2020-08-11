@@ -184,14 +184,13 @@ action_class do
     ]
 
     # convert :all to the individual db or global privs
-    desired_privs = if new_resource.privileges == [:all] && new_resource.database_name
-                      possible_db_privs
-                    elsif new_resource.privileges == [:all]
-                      possible_global_privs
-                    else
-                      new_resource.privileges
-                    end
-    desired_privs
+    if new_resource.privileges == [:all] && new_resource.database_name
+      possible_db_privs
+    elsif new_resource.privileges == [:all]
+      possible_global_privs
+    else
+      new_resource.privileges
+    end
   end
 
   def revokify_key(key)
@@ -200,8 +199,7 @@ action_class do
     # Some keys need to be translated as outlined by the table found here:
     # https://dev.mysql.com/doc/refman/5.7/en/privileges-provided.html
     result = key.to_s.downcase.tr('_', ' ').gsub('repl ', 'replication ').gsub('create tmp table', 'create temporary tables').gsub('show db', 'show databases')
-    result = result.gsub(/ priv$/, '')
-    result
+    result.gsub(/ priv$/, '')
   end
 end
 

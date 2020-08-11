@@ -111,14 +111,13 @@ action_class do
         params['family'] == 'inet' && ipaddress = ip
       end
     end
-    wsrep_node_address = unless ipaddress.empty?
-                           if new_resource.wsrep_node_port.nil?
-                             ipaddress
-                           else
-                             "#{ipaddress}:#{new_resource.wsrep_node_port}"
-                           end
-                         end
-    wsrep_node_address
+    unless ipaddress.empty?
+      if new_resource.wsrep_node_port.nil?
+        ipaddress
+      else
+        "#{ipaddress}:#{new_resource.wsrep_node_port}"
+      end
+    end
   end
 
   def build_galera_options
