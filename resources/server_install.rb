@@ -41,7 +41,7 @@ action :install do
 end
 
 action :create do
-  find_resource(:service, 'mysql') do
+  find_resource(:service, 'mariadb') do
     service_name lazy { platform_service_name }
     supports restart: true, status: true, reload: true
     action :nothing
@@ -51,7 +51,6 @@ action :create do
   #                                             2- the user did not pass anything to the password argument OR
   #                                                the user did not define node['mariadb']['server_root_password'] attribute
   mariadb_root_password = (new_resource.password == 'generate' || new_resource.password.nil?) ? secure_random : new_resource.password
-
   # Generate a random password or set a password defined with node['mariadb']['server_root_password'].
   # The password is set or change at each run. It is good for security if you choose to set a random password and
   # allow you to change the root password if needed.
@@ -76,7 +75,6 @@ flush privileges;"
     group 'mysql'
     mode '755'
     recursive true
-    action :nothing
   end
 
   # make sure that mysqld is not running, and then set the root password and make sure the mysqld process is killed after setting the password

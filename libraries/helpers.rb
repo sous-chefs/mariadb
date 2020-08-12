@@ -184,7 +184,7 @@ module MariaDBCookbook
 
     # determine the platform specific service name
     def platform_service_name(_version = node.run_state['mariadb']['version'])
-      'mysql'
+      'mariadb'
     end
 
     def restart_mariadb_service

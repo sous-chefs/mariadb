@@ -13,25 +13,24 @@ provisioner:
   product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
   install_strategy: once
   enforce_idempotency: true
-  multiple_converge: 2
+  multiple_converge: 3
 
 platforms:
-  - name: amazonlinux-2
-    driver:
-      image: dokken/amazonlinux-2
-      pid_one_command: /usr/lib/systemd/systemd
-
   - name: centos-7
     driver:
       image: dokken/centos-7
       platform: rhel
       pid_one_command: /usr/lib/systemd/systemd
+    provisioner:
+      multiple_converge: 2
 
   - name: centos-8
     driver:
       image: dokken/centos-8
       platform: rhel
       pid_one_command: /usr/lib/systemd/systemd
+    provisioner:
+      multiple_converge: 2
 
   - name: debian-9
     driver:
@@ -39,6 +38,7 @@ platforms:
       pid_one_command: /bin/systemd
       intermediate_instructions:
         - RUN /usr/bin/apt-get update
+    
 
   - name: debian-10
     driver:
