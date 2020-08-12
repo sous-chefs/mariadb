@@ -51,6 +51,7 @@ action :create do
   #                                             2- the user did not pass anything to the password argument OR
   #                                                the user did not define node['mariadb']['server_root_password'] attribute
   mariadb_root_password = (new_resource.password == 'generate' || new_resource.password.nil?) ? secure_random : new_resource.password
+  mariadb_root_password = mariadb_root_password.gsub('\\', '\\\\\\').gsub('\'', '\\\\\'').gsub('"', '\\\\"')
   # Generate a random password or set a password defined with node['mariadb']['server_root_password'].
   # The password is set or change at each run. It is good for security if you choose to set a random password and
   # allow you to change the root password if needed.
