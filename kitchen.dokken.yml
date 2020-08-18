@@ -13,7 +13,7 @@ provisioner:
   product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
   install_strategy: once
   enforce_idempotency: true
-  multiple_converge: 3
+  multiple_converge: 2
 
 platforms:
   - name: centos-7
@@ -22,7 +22,6 @@ platforms:
       platform: rhel
       pid_one_command: /usr/lib/systemd/systemd
     provisioner:
-      multiple_converge: 2
 
   - name: centos-8
     driver:
@@ -30,7 +29,6 @@ platforms:
       platform: rhel
       pid_one_command: /usr/lib/systemd/systemd
     provisioner:
-      multiple_converge: 2
 
   - name: debian-9
     driver:
@@ -38,7 +36,6 @@ platforms:
       pid_one_command: /bin/systemd
       intermediate_instructions:
         - RUN /usr/bin/apt-get update
-    
 
   - name: debian-10
     driver:

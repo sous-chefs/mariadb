@@ -76,6 +76,7 @@ flush privileges;"
     group 'mysql'
     mode '755'
     recursive true
+    action :nothing
   end
 
   # make sure that mysqld is not running, and then set the root password and make sure the mysqld process is killed after setting the password
