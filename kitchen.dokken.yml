@@ -21,14 +21,12 @@ platforms:
       image: dokken/centos-7
       platform: rhel
       pid_one_command: /usr/lib/systemd/systemd
-    provisioner:
 
   - name: centos-8
     driver:
       image: dokken/centos-8
       platform: rhel
       pid_one_command: /usr/lib/systemd/systemd
-    provisioner:
 
   - name: debian-9
     driver:
