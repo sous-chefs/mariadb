@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+provides :mariadb_client_install
 
 property :version,    String, default: '10.3'
 property :setup_repo, [true, false], default: true

@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+provides :mariadb_repository
 
 property :version,            String, default: '10.3'
 property :enable_mariadb_org, [true, false], default: true

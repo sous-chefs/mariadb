@@ -6,6 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Allowed " in password
+- Changed resources to use :provides
+- Replaced mysql service name with mariadb
 - resolved cookstyle error: resources/galera_configuration.rb:114:5 convention: `Style/RedundantAssignment`
 - resolved cookstyle error: resources/galera_configuration.rb:115:5 convention: `Layout/IndentationWidth`
 - resolved cookstyle error: resources/galera_configuration.rb:120:26 warning: `Layout/EndAlignment`
