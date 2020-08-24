@@ -17,9 +17,9 @@ control 'mariadb_user' do
     its('stderr') { should include '*F798E7C0681068BAE3242AA2297D2360DBBDA62B' }
   end
 
-  sql2 = mysql_session('moozie', 'zokkazokka', '127.0.0.1')
+  # sql2 = mysql_session('moozie', 'zokkazokka', '127.0.0.1')
 
-  # TODO https://github.com/inspec/inspec/pull/5219
+  # TODO: https://github.com/inspec/inspec/pull/5219
   # describe sql2.query('show tables from databass') do
   #   its(:exit_status) { should eq 0 }
   # end
