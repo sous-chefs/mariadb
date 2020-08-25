@@ -52,7 +52,7 @@ action :create do
   #                                             2- the user did not pass anything to the password argument OR
   #                                                the user did not define node['mariadb']['server_root_password'] attribute
   mariadb_root_password = (new_resource.password == 'generate' || new_resource.password.nil?) ? secure_random : new_resource.password
-  
+
   # Here we make sure to escape all \ ' and " charachters so that they will be preserved in the final password
   mariadb_root_password = mariadb_root_password.gsub('\\', '\\\\\\').gsub('\'', '\\\\\'').gsub('"', '\\\\"')
   # Generate a random password or set a password defined with node['mariadb']['server_root_password'].
