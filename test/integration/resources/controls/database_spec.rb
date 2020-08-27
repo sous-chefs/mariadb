@@ -5,7 +5,7 @@ control 'mariadb_database' do
   sql = mysql_session('root', 'gsql')
 
   describe sql.query('show databases') do
-    its(:stdout) { should match(/databass/) }
-    its(:stdout) { should_not match(/datatrout/) }
+    its('output') { should match(/databass/) }
+    its('output') { should_not match(/datatrout/) }
   end
 end

@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+provides :mariadb_server_install
 
 include MariaDBCookbook::Helpers
 
@@ -41,7 +42,7 @@ action :install do
 end
 
 action :create do
-  find_resource(:service, 'mysql') do
+  find_resource(:service, 'mariadb') do
     service_name lazy { platform_service_name }
     supports restart: true, status: true, reload: true
     action :nothing
@@ -52,6 +53,8 @@ action :create do
   #                                                the user did not define node['mariadb']['server_root_password'] attribute
   mariadb_root_password = (new_resource.password == 'generate' || new_resource.password.nil?) ? secure_random : new_resource.password
 
+  # Here we make sure to escape all \ ' and " characters so that they will be preserved in the final password
+  mariadb_root_password = mariadb_root_password.gsub('\\', '\\\\\\').gsub('\'', '\\\\\'').gsub('"', '\\\\"')
   # Generate a random password or set a password defined with node['mariadb']['server_root_password'].
   # The password is set or change at each run. It is good for security if you choose to set a random password and
   # allow you to change the root password if needed.
