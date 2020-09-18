@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative '../../libraries/helpers.rb'
+require_relative '../../libraries/helpers'
 
 RSpec.describe MariaDBCookbook::Helpers do
   class DummyClass < Chef::Node
