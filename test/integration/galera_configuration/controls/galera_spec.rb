@@ -38,7 +38,7 @@ control 'mariadb_galera_configuration' do
     wsrep_cluster_name = galera_cluster
     wsrep_sst_method = mariabackup
     wsrep_sst_auth = sstuser:some_secret_password
-    wsrep_provider = /usr/lib/galera/libgalera_smm.so
+    wsrep_provider = /usr/lib64/galera/libgalera_smm.so
     wsrep_slave_threads = 8
     wsrep_node_address = #{ip_address}
   EOF
