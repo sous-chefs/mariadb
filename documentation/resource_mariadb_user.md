@@ -29,30 +29,40 @@ Name              | Types                  | Description                        
 
 ## Examples
 
+Create an user but grant no privileges:
+
 ```ruby
-# Create an user but grant no privileges
 mariadb_user 'disenfranchised' do
   password 'super_secret'
   action :create
 end
+```
 
-# Create an user using a hashed password string instead of plain text one
+Create an user using a hashed password string instead of plain text one:
+
+```ruby
 mariadb_user 'disenfranchised' do
   password hashed_password('md5eacdbf8d9847a76978bd515fae200a2a')
   action :create
 end
+```
 
-# Drop a user
+Drop a user:
+
+```ruby
 mariadb_user 'foo_user' do
   action :drop
 end
+```
 
-# Grant SELECT, UPDATE, and INSERT privileges to all tables in foo db from all hosts
+Grant `SELECT`, `UPDATE`, and `INSERT` privileges to all tables in foo db from all hosts:
+
+```ruby
 mariadb_user 'foo_user' do
   password 'super_secret'
   database_name 'foo'
   host '%'
-  privileges [:select,:update,:insert]
+  privileges [:select, :update, :insert]
   action :grant
 end
 ```
