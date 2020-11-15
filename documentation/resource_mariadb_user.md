@@ -66,3 +66,15 @@ mariadb_user 'foo_user' do
   action :grant
 end
 ```
+
+Use underscores when specifying grants that use spaces:
+
+```ruby
+mariadb_user 'foo_user' do
+  password 'super_secret'
+  database_name 'foo'
+  host '%'
+  privileges [:reload, :process, :lock_tables, :replication_client]
+  action :grant
+end
+```
