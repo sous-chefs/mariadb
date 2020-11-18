@@ -11,6 +11,7 @@ control 'mariadb_user' do
 
   describe sql.query("show grants for 'fozzie'@'mars'") do
     its('output') { should include '*EF112B3D562CB63EA3275593C10501B59C4A390D' }
+    its('output') { should include 'GRANT SELECT, INSERT, UPDATE ON `databass`.* TO `fozzie`@`mars`' }
   end
 
   describe sql.query('show grants for  \'moozie\'@\'127.0.0.1\'') do
@@ -38,5 +39,9 @@ control 'mariadb_user' do
 
   describe sql.query('show grants for \'rizzo\'@\'127.0.0.1\'') do
     its('output') { should include '*125EA03B506F7C876D9321E9055F37601461E970' }
+  end
+
+  describe sql.query("show grants for 'spaces'@'127.0.0.1'") do
+    its('output') { should include 'GRANT LOCK TABLES, REPLICATION CLIENT ON *.* TO `spaces`@`127.0.0.1`' }
   end
 end

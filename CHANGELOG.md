@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Unreleased
 
 - resolved cookstyle error: spec/libraries/helper_spec.rb:2:18 convention: `Style/RedundantFileExtensionInRequire`
+- resolved underscore bug: `mariadb_user`'s `:grant` action incorrectly handled privileges with underscores, now it correctly substitutes them with a space
 
 ## 4.1.0 (2020-08-27)
 

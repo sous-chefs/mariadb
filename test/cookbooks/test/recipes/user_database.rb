@@ -152,6 +152,14 @@ mariadb_user 'rizzo' do
   action :grant
 end
 
+mariadb_user 'spaces' do
+  password 'nounderscore'
+  ctrl_password 'gsql'
+  host '127.0.0.1'
+  privileges [:lock_tables, :replication_client]
+  action :grant
+end
+
 mariadb_database 'flush privileges' do
   database_name 'databass'
   password 'gsql'
