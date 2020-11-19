@@ -257,5 +257,9 @@ module MariaDBCookbook
         '/var/run/mysqld/mysqld.pid'
       end
     end
+
+    def default_libgalera_smm_path
+      node['kernel']['machine'] == 'x86_64' ? '/usr/lib64/galera/libgalera_smm.so' : '/usr/lib/galera/libgalera_smm.so'
+    end
   end
 end

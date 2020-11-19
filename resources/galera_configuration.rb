@@ -27,7 +27,7 @@ property :gcomm_address,                         [String, nil]
 property :server_id,                             Integer,        default: 100
 property :wsrep_sst_method,                      String,         default: 'rsync'
 property :wsrep_sst_auth,                        String,         default: 'sstuser:some_secret_password'
-property :wsrep_provider,                        String,         default: '/usr/lib/galera/libgalera_smm.so'
+property :wsrep_provider,                        String,         default: lazy { default_libgalera_smm_path }
 property :wsrep_slave_threads,                   String,         default: '%{auto}'
 property :innodb_flush_log_at_trx_commit,        Integer,        default: 2
 property :wsrep_node_address_interface,          [String, nil]

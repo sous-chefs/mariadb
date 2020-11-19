@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 4.1.1 (2020-11-18)
 
+- fix default `libgalera_smm.so` path on x86\_64 systems
 - resolved cookstyle error: spec/libraries/helper_spec.rb:2:18 convention: `Style/RedundantFileExtensionInRequire`
 - resolved underscore bug: `mariadb_user`'s `:grant` action incorrectly handled privileges with underscores, now it correctly substitutes them with a space
 
