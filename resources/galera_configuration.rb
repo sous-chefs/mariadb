@@ -18,24 +18,25 @@ provides :mariadb_galera_configuration
 
 include MariaDBCookbook::Helpers
 
-property :version,                               String,         default: '10.3'
+property :bootstrap_cluster,                     [true, false],  default: false
+property :cluster_name,                          String,         default: 'galera_cluster'
+property :cluster_nodes,                         Array,          default: []
+property :cluster_search_query,                  [String, nil]
 property :cookbook,                              String,         default: 'mariadb'
 property :extra_configuration_directory,         String,         default: lazy { ext_conf_dir }
-property :cluster_name,                          String,         default: 'galera_cluster'
-property :cluster_search_query,                  [String, nil]
 property :gcomm_address,                         [String, nil]
-property :server_id,                             Integer,        default: 100
-property :wsrep_sst_method,                      String,         default: 'rsync'
-property :wsrep_sst_auth,                        String,         default: 'sstuser:some_secret_password'
-property :wsrep_provider,                        String,         default: lazy { default_libgalera_smm_path }
-property :wsrep_slave_threads,                   String,         default: '%{auto}'
 property :innodb_flush_log_at_trx_commit,        Integer,        default: 2
-property :wsrep_node_address_interface,          [String, nil]
-property :wsrep_node_port,                       [Integer, nil], default: nil
-property :wsrep_node_incoming_address_interface, String
-property :wsrep_provider_options,                Hash,           default: { 'gcache.size': '512M' }
 property :options,                               Hash,           default: {}
-property :cluster_nodes,                         Array,          default: []
+property :server_id,                             Integer,        default: 100
+property :version,                               String,         default: '10.3'
+property :wsrep_node_address_interface,          [String, nil]
+property :wsrep_node_incoming_address_interface, String
+property :wsrep_node_port,                       [Integer, nil], default: nil
+property :wsrep_provider,                        String,         default: lazy { default_libgalera_smm_path }
+property :wsrep_provider_options,                Hash,           default: { 'gcache.size': '512M' }
+property :wsrep_slave_threads,                   String,         default: '%{auto}'
+property :wsrep_sst_auth,                        String,         default: 'sstuser:some_secret_password'
+property :wsrep_sst_method,                      String,         default: 'rsync'
 
 action :create do
   case new_resource.wsrep_sst_method
