@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- Remove unused `selinux_policy` cookbook dependency
+
 ## 4.1.2 (2020-11-18)
 
 - fix default `libgalera_smm.so` path on x86\_64 systems
