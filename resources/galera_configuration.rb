@@ -18,7 +18,6 @@ provides :mariadb_galera_configuration
 
 include MariaDBCookbook::Helpers
 
-property :bootstrap_cluster,                     [true, false],  default: false
 property :cluster_name,                          String,         default: 'galera_cluster'
 property :cluster_nodes,                         Array,          default: []
 property :cluster_search_query,                  [String, nil]
@@ -59,8 +58,35 @@ action :create do
   end
 end
 
+action :bootstrap do
+  ruby_block 'bootstrap galera cluster' do
+    block do
+      shell_out!('galera_new_cluster')
+      node.normal['mariadb']['galera']['bootstrapped'] = true # rubocop:disable ChefCorrectness/NodeNormal
+    end
+    notifies :stop, "service[#{platform_service_name}]", :before
+    not_if { galera_cluster_bootstrapped? && bootstrapped_attribute_set? }
+  end
+end
+
+action :join do
+  ruby_block 'join galera cluster' do
+    block do
+      node.normal['mariadb']['galera']['bootstrapped'] = true if galera_cluster_joined? # rubocop:disable ChefCorrectness/NodeNormal
+    end
+    notifies :restart, "service[#{platform_service_name}]", :before
+    not_if { galera_cluster_joined? && bootstrapped_attribute_set? }
+  end
+end
+
 action_class do
   include MariaDBCookbook::Helpers
+
+  def bootstrapped_attribute_set?
+    node['mariadb']['galera']['bootstrapped']
+  rescue NoMethodError
+    false
+  end
 
   def build_gcomm
     if new_resource.gcomm_address.nil?

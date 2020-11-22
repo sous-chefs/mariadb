@@ -46,4 +46,15 @@ control 'mariadb_galera_configuration' do
   describe file(galera_config_file) do
     its('content') { should eq content }
   end
+
+  describe mysql_session('root', 'gsql').query('show status like "wsrep_%";') do
+    {
+      'wsrep_cluster_size' => '1',
+      'wsrep_cluster_status' => 'Primary',
+      'wsrep_evs_state' => 'OPERATIONAL',
+      'wsrep_ready' => 'ON',
+    }.each_pair do |k, v|
+      its('output') { should match(/^#{k}\s*#{v}$/) }
+    end
+  end
 end
