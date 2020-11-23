@@ -259,7 +259,12 @@ module MariaDBCookbook
     end
 
     def default_libgalera_smm_path
-      node['kernel']['machine'] == 'x86_64' ? '/usr/lib64/galera/libgalera_smm.so' : '/usr/lib/galera/libgalera_smm.so'
+      case node['platform_family']
+      when 'rhel', 'fedora', 'amazon'
+        '/usr/lib64/galera/libgalera_smm.so'
+      when 'debian'
+        '/usr/lib/galera/libgalera_smm.so'
+      end
     end
 
     def mariadb_status_value(variable)
