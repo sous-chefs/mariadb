@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
 ## 4.1.4 - *2020-11-26*
 
 - Add back `selinux_policy` to install vendored SELinux policies
