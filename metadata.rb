@@ -11,3 +11,5 @@ version          '4.1.3'
 supports 'ubuntu', '>= 18.04'
 supports 'debian', '>= 9.0'
 supports 'centos', '>= 7.0'
+
+depends 'selinux_policy', '~> 2.4'

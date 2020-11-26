@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Add back `selinux_policy` to install vendored SELinux policies
+
 ## 4.1.3 - *2020-11-23*
 
 - Remove unused `selinux_policy` cookbook dependency
