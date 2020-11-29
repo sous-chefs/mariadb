@@ -1,3 +1,9 @@
+if platform_family?('rhel')
+  package 'libselinux-utils'
+  selinux_state 'enforcing'
+  selinux_policy_install 'install'
+end
+
 mariadb_repository 'install'
 
 mariadb_server_install 'package' do
