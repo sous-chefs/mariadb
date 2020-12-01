@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Add `bootstrap` and `join` actions to `mariadb_galera_configuration` to bootstrap and join clusters
+
 ## 4.1.4 - *2020-11-26*
 
 - Add back `selinux_policy` to install vendored SELinux policies

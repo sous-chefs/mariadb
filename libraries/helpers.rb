@@ -259,7 +259,30 @@ module MariaDBCookbook
     end
 
     def default_libgalera_smm_path
-      node['kernel']['machine'] == 'x86_64' ? '/usr/lib64/galera/libgalera_smm.so' : '/usr/lib/galera/libgalera_smm.so'
+      case node['platform_family']
+      when 'rhel', 'fedora', 'amazon'
+        '/usr/lib64/galera/libgalera_smm.so'
+      when 'debian'
+        '/usr/lib/galera/libgalera_smm.so'
+      end
+    end
+
+    def mariadb_status_value(variable)
+      query = "select VARIABLE_VALUE from information_schema.GLOBAL_STATUS where VARIABLE_NAME = \"#{variable}\";"
+      result = shell_out!("mysql -B -N -uroot -p#{node.run_state['mariadb_root_password']} -e '#{query}'")
+      result.stdout.chomp
+    end
+
+    def galera_cluster_bootstrapped?
+      mariadb_status_value('wsrep_ready') == 'ON'
+    rescue Mixlib::ShellOut::ShellCommandFailed
+      false
+    end
+
+    def galera_cluster_joined?
+      mariadb_status_value('wsrep_cluster_size').to_i > 1
+    rescue Mixlib::ShellOut::ShellCommandFailed
+      false
     end
   end
 end

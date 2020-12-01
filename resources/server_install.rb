@@ -62,6 +62,10 @@ action :create do
 
   # Here we make sure to escape all \ ' and " characters so that they will be preserved in the final password
   mariadb_root_password = mariadb_root_password.gsub('\\', '\\\\\\').gsub('\'', '\\\\\'').gsub('"', '\\\\"')
+
+  # Store the password in the run state for any other resources that may need it.
+  node.run_state['mariadb_root_password'] = mariadb_root_password
+
   # Generate a random password or set a password defined with node['mariadb']['server_root_password'].
   # The password is set or change at each run. It is good for security if you choose to set a random password and
   # allow you to change the root password if needed.

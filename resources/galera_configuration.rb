@@ -18,24 +18,24 @@ provides :mariadb_galera_configuration
 
 include MariaDBCookbook::Helpers
 
-property :version,                               String,         default: '10.3'
+property :cluster_name,                          String,         default: 'galera_cluster'
+property :cluster_nodes,                         Array,          default: []
+property :cluster_search_query,                  [String, nil]
 property :cookbook,                              String,         default: 'mariadb'
 property :extra_configuration_directory,         String,         default: lazy { ext_conf_dir }
-property :cluster_name,                          String,         default: 'galera_cluster'
-property :cluster_search_query,                  [String, nil]
 property :gcomm_address,                         [String, nil]
-property :server_id,                             Integer,        default: 100
-property :wsrep_sst_method,                      String,         default: 'rsync'
-property :wsrep_sst_auth,                        String,         default: 'sstuser:some_secret_password'
-property :wsrep_provider,                        String,         default: lazy { default_libgalera_smm_path }
-property :wsrep_slave_threads,                   String,         default: '%{auto}'
 property :innodb_flush_log_at_trx_commit,        Integer,        default: 2
-property :wsrep_node_address_interface,          [String, nil]
-property :wsrep_node_port,                       [Integer, nil], default: nil
-property :wsrep_node_incoming_address_interface, String
-property :wsrep_provider_options,                Hash,           default: { 'gcache.size': '512M' }
 property :options,                               Hash,           default: {}
-property :cluster_nodes,                         Array,          default: []
+property :server_id,                             Integer,        default: 100
+property :version,                               String,         default: '10.3'
+property :wsrep_node_address_interface,          [String, nil]
+property :wsrep_node_incoming_address_interface, String
+property :wsrep_node_port,                       [Integer, nil], default: nil
+property :wsrep_provider,                        String,         default: lazy { default_libgalera_smm_path }
+property :wsrep_provider_options,                Hash,           default: { 'gcache.size': '512M' }
+property :wsrep_slave_threads,                   String,         default: '%{auto}'
+property :wsrep_sst_auth,                        String,         default: 'sstuser:some_secret_password'
+property :wsrep_sst_method,                      String,         default: 'rsync'
 
 action :create do
   case new_resource.wsrep_sst_method
@@ -58,8 +58,35 @@ action :create do
   end
 end
 
+action :bootstrap do
+  ruby_block 'bootstrap galera cluster' do
+    block do
+      shell_out!('galera_new_cluster')
+      node.normal['mariadb']['galera']['bootstrapped'] = true # rubocop:disable ChefCorrectness/NodeNormal
+    end
+    notifies :stop, "service[#{platform_service_name}]", :before
+    not_if { galera_cluster_bootstrapped? && bootstrapped_attribute_set? }
+  end
+end
+
+action :join do
+  ruby_block 'join galera cluster' do
+    block do
+      node.normal['mariadb']['galera']['bootstrapped'] = true if galera_cluster_joined? # rubocop:disable ChefCorrectness/NodeNormal
+    end
+    notifies :restart, "service[#{platform_service_name}]", :before
+    not_if { galera_cluster_joined? && bootstrapped_attribute_set? }
+  end
+end
+
 action_class do
   include MariaDBCookbook::Helpers
+
+  def bootstrapped_attribute_set?
+    node['mariadb']['galera']['bootstrapped']
+  rescue NoMethodError
+    false
+  end
 
   def build_gcomm
     if new_resource.gcomm_address.nil?

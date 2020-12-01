@@ -13,4 +13,5 @@ end
 mariadb_galera_configuration 'MariaDB Galera Configuration' do
   version '10.3'
   wsrep_sst_method 'mariabackup'
+  action [:create, :bootstrap]
 end
