@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
 ## 4.2.1 - *2021-01-25*
 
 - Ensure we run `selinux_policy_install` if selinux is enabled
