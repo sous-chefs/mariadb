@@ -40,6 +40,8 @@ action :install do
 
   package server_pkg_name
 
+  selinux_policy_install 'mariadb' if selinux_enabled?
+
   %w(mariadb-server mariadb).each do |m|
     selinux_policy_module m do
       content lazy { ::File.read("/usr/share/mysql/policy/selinux/#{m}.te") }
@@ -110,6 +112,5 @@ end
 
 action_class do
   include MariaDBCookbook::Helpers
-
-  Chef::Resource.include Chef::Util::Selinux
+  include Chef::Util::Selinux
 end
