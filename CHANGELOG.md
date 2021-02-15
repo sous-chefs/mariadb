@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Make sleep configurable in `apply-mariadb-root-password`
+
 ## 4.2.1 - *2021-01-25*
 
 - Ensure we run `selinux_policy_install` if selinux is enabled

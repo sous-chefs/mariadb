@@ -28,6 +28,7 @@ property :external_pid_file, String,        default: lazy { "/var/run/mysql/#{ve
 property :password,          [String, nil], default: 'generate'
 property :port,              Integer,       default: 3306
 property :initdb_locale,     String,        default: 'UTF-8'
+property :install_sleep,     Integer,       default: 4, desired_state: false
 
 action :install do
   node.run_state['mariadb'] ||= {}
@@ -99,7 +100,7 @@ flush privileges;"
   execute 'apply-mariadb-root-password' do
     user 'mysql'
     # TODO, I really dislike the sleeps here, should come up with a better way to do this
-    command "(test -f #{pid_file} && kill `cat #{pid_file}` && sleep 3); /usr/sbin/mysqld -u root --pid-file=#{pid_file} --init-file=#{data_dir}/recovery.conf&>/dev/null& sleep 2 && (test -f #{pid_file} && kill `cat #{pid_file}`)"
+    command "(test -f #{pid_file} && kill `cat #{pid_file}` && sleep #{new_resource.install_sleep}); /usr/sbin/mysqld -u root --pid-file=#{pid_file} --init-file=#{data_dir}/recovery.conf&>/dev/null& sleep #{new_resource.install_sleep} && (test -f #{pid_file} && kill `cat #{pid_file}`)"
     notifies :enable, "service[#{platform_service_name}]", :before
     notifies :stop, "service[#{platform_service_name}]", :before
     notifies :create, 'file[generate-mariadb-root-password]', :before
