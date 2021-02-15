@@ -6,8 +6,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
-## 4.2.2 - *2021-02-15*
-
 - Make sleep configurable in `apply-mariadb-root-password`
 
 ## 4.2.1 - *2021-01-25*
