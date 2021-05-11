@@ -16,6 +16,7 @@
 # limitations under the License.
 #
 provides :mariadb_repository
+unified_mode true
 
 property :version,            String, default: '10.3'
 property :enable_mariadb_org, [true, false], default: true
