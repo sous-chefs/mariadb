@@ -16,6 +16,7 @@
 # limitations under the License.
 #
 provides :mariadb_server_install
+unified_mode true
 
 include MariaDBCookbook::Helpers
 

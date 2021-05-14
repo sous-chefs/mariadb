@@ -6,6 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Chef 17 updates: enable `unified_mode` on all resources
+- Bump required Chef Infra Client to >= 15.3
+
 ## 4.3.0 - *2021-02-15*
 
 - Make sleep configurable in `apply-mariadb-root-password`

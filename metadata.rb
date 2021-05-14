@@ -5,7 +5,7 @@ license          'Apache-2.0'
 description      'Installs/Configures MariaDB'
 source_url       'https://github.com/sous-chefs/mariadb'
 issues_url       'https://github.com/sous-chefs/mariadb/issues'
-chef_version     '>= 15'
+chef_version     '>= 15.3'
 version          '4.3.0'
 
 supports 'ubuntu', '>= 18.04'
