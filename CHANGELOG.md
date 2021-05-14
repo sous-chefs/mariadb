@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 5.0.0 - *2021-05-14*
 
 - Chef 17 updates: enable `unified_mode` on all resources
 - Bump required Chef Infra Client to >= 15.3
