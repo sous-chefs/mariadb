@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Migrate to using `selinux` cookbook which incorporates `selinux_policy` cookbook resources
+
 ## 5.0.2 - *2021-08-30*
 
 - Standardise files with files in sous-chefs/repo-management

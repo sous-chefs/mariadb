@@ -63,7 +63,7 @@ action :bootstrap do
   ruby_block 'bootstrap galera cluster' do
     block do
       shell_out!('galera_new_cluster')
-      node.normal['mariadb']['galera']['bootstrapped'] = true # rubocop:disable ChefCorrectness/NodeNormal
+      node.normal['mariadb']['galera']['bootstrapped'] = true # rubocop:disable Chef/Correctness/NodeNormal
     end
     notifies :stop, "service[#{platform_service_name}]", :before
     not_if { galera_cluster_bootstrapped? && bootstrapped_attribute_set? }
@@ -73,7 +73,7 @@ end
 action :join do
   ruby_block 'join galera cluster' do
     block do
-      node.normal['mariadb']['galera']['bootstrapped'] = true if galera_cluster_joined? # rubocop:disable ChefCorrectness/NodeNormal
+      node.normal['mariadb']['galera']['bootstrapped'] = true if galera_cluster_joined? # rubocop:disable Chef/Correctness/NodeNormal
     end
     notifies :restart, "service[#{platform_service_name}]", :before
     not_if { galera_cluster_joined? && bootstrapped_attribute_set? }
