@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
 ## 5.1.0 - *2021-10-13*
 
 - Migrate to using `selinux` cookbook which incorporates `selinux_policy` cookbook resources
