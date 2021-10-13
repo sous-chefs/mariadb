@@ -42,10 +42,10 @@ action :install do
 
   package server_pkg_name
 
-  selinux_policy_install 'mariadb' if selinux_enabled?
+  selinux_install 'mariadb' if selinux_enabled?
 
   %w(mariadb-server mariadb).each do |m|
-    selinux_policy_module m do
+    selinux_module m do
       content lazy { ::File.read("/usr/share/mysql/policy/selinux/#{m}.te") }
       only_if { selinux_enabled? }
     end
