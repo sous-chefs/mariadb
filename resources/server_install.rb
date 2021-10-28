@@ -79,9 +79,8 @@ action :create do
     group 'root'
     mode '640'
     sensitive true
-    content "use mysql;
-update user set password=PASSWORD('#{mariadb_root_password}') where User='root';
-flush privileges;"
+    content "ALTER USER root@localhost IDENTIFIED VIA unix_socket OR mysql_native_password USING PASSWORD('#{mariadb_root_password}');
+FLUSH PRIVILEGES;"
     action :nothing
   end
 
