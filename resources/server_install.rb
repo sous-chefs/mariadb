@@ -73,14 +73,21 @@ action :create do
   # Generate a random password or set a password defined with node['mariadb']['server_root_password'].
   # The password is set or change at each run. It is good for security if you choose to set a random password and
   # allow you to change the root password if needed.
+  set_password_command = 'USE mysql;'
+  set_password_command += if new_resource.version =~ /^10\.[0-3]/
+                            "UPDATE user SET password=PASSWORD('#{mariadb_root_password}') WHERE User='root';"
+                          else
+                            "ALTER USER root@localhost IDENTIFIED VIA unix_socket OR mysql_native_password USING PASSWORD('#{mariadb_root_password}');"
+                          end
+  set_password_command += "FLUSH PRIVILEGES;\n"
+
   file 'generate-mariadb-root-password' do
     path "#{data_dir}/recovery.conf"
     owner 'mysql'
     group 'root'
     mode '640'
     sensitive true
-    content "ALTER USER root@localhost IDENTIFIED VIA unix_socket OR mysql_native_password USING PASSWORD('#{mariadb_root_password}');
-FLUSH PRIVILEGES;"
+    content set_password_command
     action :nothing
   end
 
