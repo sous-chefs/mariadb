@@ -1,7 +1,7 @@
 include_recipe 'test::server_configuration'
 
 mariadb_server_configuration 'MariaDB Server Configuration' do
-  version '10.3'
+  version node['mariadb_server_test_version']
 end
 
 yum_repository 'epel' do
@@ -11,7 +11,7 @@ yum_repository 'epel' do
 end
 
 mariadb_galera_configuration 'MariaDB Galera Configuration' do
-  version '10.3'
+  version node['mariadb_server_test_version']
   wsrep_sst_method 'mariabackup'
   action [:create, :bootstrap]
 end
