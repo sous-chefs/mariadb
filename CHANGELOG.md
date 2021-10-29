@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 5.2.0 - *2021-10-29*
 
 - Testing MariaDB 10.4 server install
 - Fix root password cannot be manually set on 10.4+
