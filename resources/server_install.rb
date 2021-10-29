@@ -74,7 +74,7 @@ action :create do
   # The password is set or change at each run. It is good for security if you choose to set a random password and
   # allow you to change the root password if needed.
   set_password_command = "USE mysql;\n"
-  set_password_command += if new_resource.version =~ /^10\.[0-3]/
+  set_password_command += if new_resource.version.to_f <= 10.3
                             "UPDATE user SET password=PASSWORD('#{mariadb_root_password}') WHERE User='root';\n"
                           else
                             "ALTER USER root@localhost IDENTIFIED VIA unix_socket OR mysql_native_password USING PASSWORD('#{mariadb_root_password}');\n"
