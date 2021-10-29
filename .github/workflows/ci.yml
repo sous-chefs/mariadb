@@ -50,7 +50,8 @@ jobs:
         suite:
           - 'repository'
           - 'client-install'
-          - 'server-install'
+          - 'server-install-103'
+          - 'server-install-104'
           - 'configuration'
           - 'server-configuration'
           - 'resources'

@@ -6,6 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Testing MariaDB 10.4 server install
+- Fix root password cannot be manually set on 10.4+
+
 ## 5.1.0 - *2021-10-13*
 
 - Migrate to using `selinux` cookbook which incorporates `selinux_policy` cookbook resources

@@ -29,7 +29,7 @@ property :external_pid_file, String,        default: lazy { "/var/run/mysql/#{ve
 property :password,          [String, nil], default: 'generate'
 property :port,              Integer,       default: 3306
 property :initdb_locale,     String,        default: 'UTF-8'
-property :install_sleep,     Integer,       default: 4, desired_state: false
+property :install_sleep,     Integer,       default: 5, desired_state: false
 
 action :install do
   node.run_state['mariadb'] ||= {}
@@ -73,15 +73,21 @@ action :create do
   # Generate a random password or set a password defined with node['mariadb']['server_root_password'].
   # The password is set or change at each run. It is good for security if you choose to set a random password and
   # allow you to change the root password if needed.
+  set_password_command = "USE mysql;\n"
+  set_password_command += if new_resource.version.to_f <= 10.3
+                            "UPDATE user SET password=PASSWORD('#{mariadb_root_password}') WHERE User='root';\n"
+                          else
+                            "ALTER USER root@localhost IDENTIFIED VIA unix_socket OR mysql_native_password USING PASSWORD('#{mariadb_root_password}');\n"
+                          end
+  set_password_command += "FLUSH PRIVILEGES;\n"
+
   file 'generate-mariadb-root-password' do
     path "#{data_dir}/recovery.conf"
     owner 'mysql'
     group 'root'
     mode '640'
     sensitive true
-    content "use mysql;
-update user set password=PASSWORD('#{mariadb_root_password}') where User='root';
-flush privileges;"
+    content set_password_command
     action :nothing
   end
 

@@ -3,10 +3,13 @@ if platform_family?('rhel')
   selinux_state 'enforcing'
 end
 
-mariadb_repository 'install'
+mariadb_repository 'install' do
+  version node['mariadb_server_test_version']
+end
 
 mariadb_server_install 'package' do
   action [:install, :create]
+  version node['mariadb_server_test_version']
   password 'gsql'
 end
 

@@ -1,3 +1,3 @@
 mariadb_repository 'mariadb repo' do
-  version '10.3'
+  version node['mariadb_server_test_version']
 end
