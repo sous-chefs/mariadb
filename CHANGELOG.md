@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Add CentOS Stream 8 to CI pipeline
+
 ## 5.2.0 - *2021-10-29*
 
 - Testing MariaDB 10.4 server install
