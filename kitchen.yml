@@ -26,7 +26,6 @@ platforms:
   - name: ubuntu-18.04
   - name: ubuntu-20.04
   - name: rockylinux-8
-  - name: opensuse-leap-15
 
 suites:
   - name: repository
