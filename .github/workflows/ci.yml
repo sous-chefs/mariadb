@@ -18,12 +18,16 @@ jobs:
           - almalinux-8
           - amazonlinux-2
           - debian-10
-          - debian-11
+          # TODO: need to update to using newer versions of MariaDB for this to
+          # work
+          # - debian-11
           - centos-7
           - centos-stream-8
-          - fedora-latest
-          - ubuntu-18.04
-          - ubuntu-20.04
+          # TODO: need to update to using newer versions of MariaDB for this to
+          # work
+          # - fedora-latest
+          - ubuntu-1804
+          - ubuntu-2004
           - rockylinux-8
           - opensuse-leap-15
         suite:
