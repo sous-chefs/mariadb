@@ -6,7 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
-Standardise files with files in sous-chefs/repo-management
+- Standardise files with files in sous-chefs/repo-management
+- Fix Alma / Rocky Linux (resolves #340)
 
 ## 5.2.2 - *2022-02-08*
 

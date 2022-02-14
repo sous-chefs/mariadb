@@ -7,7 +7,7 @@ end
 yum_repository 'epel' do
   mirrorlist "http://mirrors.fedoraproject.org/mirrorlist?repo=epel-#{node['platform_version'].to_i}&arch=$basearch"
   gpgkey "https://download.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-#{node['platform_version'].to_i}"
-  only_if { platform?('centos') }
+  only_if { platform_family?('rhel') }
 end
 
 mariadb_galera_configuration 'MariaDB Galera Configuration' do
