@@ -8,3 +8,4 @@ version '0.1.0'
 
 depends 'mariadb'
 depends 'selinux'
+depends 'yum-epel'
