@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Remove delivery and move to calling RSpec directly via a reusable workflow
+- Update tested platforms
+- Fix Alma / Rocky Linux (resolves #340)
+
 ## 5.2.2 - *2022-02-08*
 
 - Remove delivery folder

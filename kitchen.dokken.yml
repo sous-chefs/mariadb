@@ -1,30 +1,36 @@
 ---
 driver:
   name: dokken
-  privileged: true  # because Docker and SystemD/Upstart
-  env: [CHEF_LICENSE=accept]
+  privileged: true
 
-transport:
-  name: dokken
-
-provisioner:
-  name: dokken
-  product_name: chef
-  product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
-  install_strategy: once
-  enforce_idempotency: true
-  multiple_converge: 2
+transport: { name: dokken }
+provisioner: { name: dokken }
+verifier: { name: inspec }
 
 platforms:
+  - name: almalinux-8
+    driver:
+      image: dokken/almalinux-8
+      pid_one_command: /usr/lib/systemd/systemd
+
+  - name: amazonlinux-2
+    driver:
+      image: dokken/amazonlinux-2
+      pid_one_command: /usr/lib/systemd/systemd
+
+  - name: debian-10
+    driver:
+      image: dokken/debian-10
+      pid_one_command: /bin/systemd
+
+  - name: debian-11
+    driver:
+      image: dokken/debian-11
+      pid_one_command: /bin/systemd
+
   - name: centos-7
     driver:
       image: dokken/centos-7
-      platform: rhel
-      pid_one_command: /usr/lib/systemd/systemd
-
-  - name: centos-8
-    driver:
-      image: dokken/centos-8
       pid_one_command: /usr/lib/systemd/systemd
 
   - name: centos-stream-8
@@ -32,30 +38,27 @@ platforms:
       image: dokken/centos-stream-8
       pid_one_command: /usr/lib/systemd/systemd
 
-  - name: debian-9
+  - name: fedora-latest
     driver:
-      image: dokken/debian-9
-      pid_one_command: /bin/systemd
-      intermediate_instructions:
-        - RUN /usr/bin/apt-get update
-
-  - name: debian-10
-    driver:
-      image: dokken/debian-10
-      pid_one_command: /bin/systemd
-      intermediate_instructions:
-        - RUN /usr/bin/apt-get update
+      image: dokken/fedora-latest
+      pid_one_command: /usr/lib/systemd/systemd
 
   - name: ubuntu-18.04
     driver:
       image: dokken/ubuntu-18.04
       pid_one_command: /bin/systemd
-      intermediate_instructions:
-        - RUN /usr/bin/apt-get update
 
   - name: ubuntu-20.04
     driver:
       image: dokken/ubuntu-20.04
-      pid_one_command: /bin/systemd
-      intermediate_instructions:
-        - RUN /usr/bin/apt-get update
+      pid_one_command: /usr/lib/systemd/systemd
+
+  - name: ubuntu-22.04
+    driver:
+      image: dokken/ubuntu-22.04
+      pid_one_command: /usr/lib/systemd/systemd
+
+  - name: rockylinux-8
+    driver:
+      image: dokken/rockylinux-8
+      pid_one_command: /usr/lib/systemd/systemd

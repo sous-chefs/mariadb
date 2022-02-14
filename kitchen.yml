@@ -5,21 +5,27 @@ driver:
 provisioner:
   name: chef_infra
   product_name: <%= ENV['CHEF_PRODUCT_NAME'] || 'chef' %>
+  product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
+  chef_license: accept-no-persist
   enforce_idempotency: true
   multiple_converge: 2
   deprecations_as_errors: true
+  log_level: <%= ENV['CHEF_LOG_LEVEL'] || 'auto' %>
 
 verifier:
   name: inspec
 
 platforms:
-  - name: centos-7
-  - name: centos-8
-  - name: centos-stream-8
-  - name: debian-9
+  - name: almalinux-8
+  - name: amazonlinux-2
   - name: debian-10
+  - name: debian-11
+  - name: centos-7
+  - name: centos-stream-8
+  - name: fedora-latest
   - name: ubuntu-18.04
   - name: ubuntu-20.04
+  - name: rockylinux-8
 
 suites:
   - name: repository
