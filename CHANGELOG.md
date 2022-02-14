@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 5.2.3 - *2022-02-14*
 
 - Remove delivery and move to calling RSpec directly via a reusable workflow
 - Update tested platforms
