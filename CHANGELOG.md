@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 5.2.4 - *2022-03-16*
 
 - Install `mariadb.pp` SELinux policy instead of building `mariadb-server.te` policy
 
