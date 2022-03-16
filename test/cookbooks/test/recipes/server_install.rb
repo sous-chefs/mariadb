@@ -1,5 +1,5 @@
 if platform_family?('rhel')
-  package 'libselinux-utils'
+  selinux_install 'default'
   selinux_state 'enforcing'
 end
 

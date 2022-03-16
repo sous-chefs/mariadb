@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Install `mariadb.pp` SELinux policy instead of building `mariadb-server.te` policy
+
 ## 5.2.3 - *2022-02-14*
 
 - Remove delivery and move to calling RSpec directly via a reusable workflow

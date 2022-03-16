@@ -44,11 +44,12 @@ action :install do
 
   selinux_install 'mariadb' if selinux_enabled?
 
-  %w(mariadb-server mariadb).each do |m|
-    selinux_module m do
-      content lazy { ::File.read("/usr/share/mysql/policy/selinux/#{m}.te") }
-      only_if { selinux_enabled? }
-    end
+  # This should get automatically installed via the package, but in case it doesn't ensure it does here
+  # https://mariadb.com/kb/en/selinux/
+  selinux_module 'mariadb' do
+    base_dir '/usr/share/mysql/policy/selinux'
+    only_if { selinux_enabled? }
+    action :install
   end
 end
 
