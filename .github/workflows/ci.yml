@@ -30,24 +30,24 @@ jobs:
           - ubuntu-2004
           - rockylinux-8
         suite:
-          - 'repository'
-          - 'client-install'
-          - 'server-install-103'
-          - 'server-install-104'
-          - 'configuration'
-          - 'server-configuration'
-          - 'resources'
-          - 'replication'
-          - 'datadir'
-          - 'port'
-          - 'galera-configuration'
+          - "repository"
+          - "client-install"
+          - "server-install-103"
+          - "server-install-104"
+          - "configuration"
+          - "server-configuration"
+          - "resources"
+          - "replication"
+          - "datadir"
+          - "port"
+          - "galera-configuration"
       fail-fast: false
 
     steps:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Install Chef
-        uses: actionshub/chef-install@main
+        uses: actionshub/chef-install@2.0.4
       - name: Disable apparmor for mysqld
         run: |
           set -x
@@ -55,7 +55,7 @@ jobs:
           sudo apt-get -y install apparmor-profiles
           sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
       - name: Dokken
-        uses: actionshub/test-kitchen@main
+        uses: actionshub/test-kitchen@2.1.0
         env:
           CHEF_LICENSE: accept-no-persist
           KITCHEN_LOCAL_YAML: kitchen.dokken.yml
