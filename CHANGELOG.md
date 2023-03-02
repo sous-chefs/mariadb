@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Standardise files with files in sous-chefs/repo-management
+
 ## 5.2.8 - *2023-02-23*
 
 Standardise files with files in sous-chefs/repo-management
@@ -17,8 +19,6 @@ Standardise files with files in sous-chefs/repo-management
 Standardise files with files in sous-chefs/repo-management
 
 ## 5.2.5 - *2022-12-13*
-
-Standardise files with files in sous-chefs/repo-management
 
 Standardise files with files in sous-chefs/repo-management
 

@@ -72,7 +72,7 @@ Out the box, MariaDB does not bootstrap a Galera cluster. In addition to bootstr
 
 Following on from the previous example, to do this you should specific the `:bootstrap` action:
 
-```
+```ruby
 mariadb_galera_configuration 'MariaDB Galera Server Configuration' do
   version '10.3'
   cluster_name 'my_cluster_name'
@@ -83,7 +83,7 @@ end
 
 This should only be done by one node in cluster you're going to create, other nodes will want to use the `:join` action to join the cluster:
 
-```
+```ruby
 mariadb_galera_configuration 'MariaDB Galera Server Configuration' do
   version '10.3'
   cluster_name 'my_cluster_name'

@@ -33,7 +33,7 @@ end
 
 will become the file fake.cnf in the include dir (depend on your platform), which contain:
 
-```
+```ruby
 [mysqld]
 foo=bar
 ```
@@ -50,7 +50,7 @@ end
 
 will become the file fake.cnf in the include dir (depend on your platform), which contain:
 
-```
+```ruby
 [mysqld]
 # Here i am
 foo=bar
