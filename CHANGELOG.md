@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## 5.2.10 - *2023-03-02*
+
+Patched the ability to use a distro's own repo for the MariaDB packages
+
 ## 5.2.9 - *2023-03-02*
 
 Standardise files with files in sous-chefs/repo-management
