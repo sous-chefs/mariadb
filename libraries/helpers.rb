@@ -221,7 +221,24 @@ module MariaDBCookbook
 
     # determine the platform specific server package name
     def server_pkg_name
-      platform_family?('debian') ? "mariadb-server-#{new_resource.version}" : 'MariaDB-server'
+      if new_resource.setup_repo
+        # MariaDB's own respository
+        platform_family?('debian') ? "mariadb-server-#{new_resource.version}" : 'MariaDB-server'
+      else
+        # Stock distro repository
+        'mariadb-server'
+      end
+    end
+
+    # determine the platform specific client package name
+    def client_pkg_name
+      if new_resource.setup_repo
+        # MariaDB's own repository
+        platform_family?('debian') ? "mariadb-client-#{new_resource.version}" : 'MariaDB-client'
+      else
+        # Stock distro repository
+        platform_family?('debian') ? 'mariadb-client' : 'mariadb'
+      end
     end
 
     # given the base URL build the complete URL string for a yum repo
