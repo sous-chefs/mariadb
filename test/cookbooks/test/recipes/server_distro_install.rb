@@ -4,7 +4,7 @@ if platform_family?('rhel')
 end
 
 mariadb_server_install 'package' do
-  action [:install]
+  action [:install, :create]
   setup_repo false
   password 'gsql'
 end
