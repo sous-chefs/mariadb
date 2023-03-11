@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 5.2.10 - *2023-03-11*
 
 - Cleanup various CI issues
 
