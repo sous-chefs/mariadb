@@ -74,8 +74,10 @@ jobs:
         suite:
           - "repository"
           - "client-install"
+          - "client-distro-install"
           - "server-install-103"
           - "server-install-104"
+          - "server-distro-install"
           - "configuration"
           - "server-configuration"
           - "resources"
