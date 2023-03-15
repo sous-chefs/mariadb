@@ -54,10 +54,10 @@ action :install do
 end
 
 action :create do
-  find_resource(:service, 'mariadb') do
-    service_name lazy { platform_service_name }
-    supports restart: true, status: true, reload: true
-    action :nothing
+
+  # Ensure that the database is running.
+  service 'mariadb' do
+    action [:enable, :start]
   end
 
   # here we want to generate a new password if: 1- the user passed 'generate' to the password argument
@@ -74,48 +74,22 @@ action :create do
   # Generate a random password or set a password defined with node['mariadb']['server_root_password'].
   # The password is set or change at each run. It is good for security if you choose to set a random password and
   # allow you to change the root password if needed.
-  set_password_command = "USE mysql;\n"
-  set_password_command += if new_resource.version.to_f <= 10.3
-                            "UPDATE user SET password=PASSWORD('#{mariadb_root_password}') WHERE User='root';\n"
-                          else
-                            "ALTER USER root@localhost IDENTIFIED VIA unix_socket OR mysql_native_password USING PASSWORD('#{mariadb_root_password}');\n"
-                          end
-  set_password_command += "FLUSH PRIVILEGES;\n"
+  set_password_command = "USE mysql; "
+  set_password_command += "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('#{mariadb_root_password}'); "
+  set_password_command += "FLUSH PRIVILEGES;"
 
-  file 'generate-mariadb-root-password' do
-    path "#{data_dir}/recovery.conf"
+  execute 'setup root DB password' do
+    command "mysql -B -uroot -e \"#{set_password_command}\""
+    not_if { ::File.exist?("#{data_dir}/chef-configured.lock") }
+  end
+
+  file 'create-idempotence-lock' do
+    path "#{data_dir}/chef-configured.lock"
+    content ''
     owner 'mysql'
     group 'root'
-    mode '640'
-    sensitive true
-    content set_password_command
-    action :nothing
-  end
-
-  pid_file = default_pid_file.nil? ? '/var/run/mysqld/mysqld.pid' : default_pid_file
-  pid_dir = ::File.dirname(pid_file)
-
-  # because some distros may not take care of the pid file location directory, we manage it ourselves
-  directory pid_dir do
-    owner 'mysql'
-    group 'mysql'
-    mode '755'
-    recursive true
-    action :nothing
-  end
-
-  # make sure that mysqld is not running, and then set the root password and make sure the mysqld process is killed after setting the password
-  execute 'apply-mariadb-root-password' do
-    user 'mysql'
-    # TODO, I really dislike the sleeps here, should come up with a better way to do this
-    command "(test -f #{pid_file} && kill `cat #{pid_file}` && sleep #{new_resource.install_sleep}); /usr/sbin/mysqld -u root --pid-file=#{pid_file} --init-file=#{data_dir}/recovery.conf&>/dev/null& sleep #{new_resource.install_sleep} && (test -f #{pid_file} && kill `cat #{pid_file}`)"
-    notifies :enable, "service[#{platform_service_name}]", :before
-    notifies :stop, "service[#{platform_service_name}]", :before
-    notifies :create, 'file[generate-mariadb-root-password]', :before
-    notifies :create, "directory[#{pid_dir}]", :before
-    notifies :start, "service[#{platform_service_name}]", :immediately
-    action :run
-    not_if "mysql -B -uroot -p#{mariadb_root_password} -e 'SELECT 1;' > /dev/null"
+    mode '0440'
+    action :create_if_missing
   end
 end
 

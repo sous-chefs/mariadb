@@ -272,11 +272,15 @@ module MariaDBCookbook
     end
 
     def default_pid_file
-      case node['platform_family']
-      when 'rhel', 'fedora', 'amazon'
-        nil
-      when 'debian'
-        '/var/run/mysqld/mysqld.pid'
+      if !new_resource.setup_repo
+        '/var/run/mariadb/mariadb.pid'
+      else
+        case node['platform_family']
+        when 'rhel', 'fedora', 'amazon'
+          nil
+        when 'debian'
+          '/var/run/mysqld/mysqld.pid'
+        end
       end
     end
 
@@ -286,6 +290,18 @@ module MariaDBCookbook
         '/usr/lib64/galera/libgalera_smm.so'
       when 'debian'
         '/usr/lib/galera/libgalera_smm.so'
+      end
+    end
+
+    def default_mysqld_path
+      case node['platform_family']
+      when 'rhel', 'fedora', 'amazon'
+        if new_resource.setup_repo
+          '/usr/sbin/mysqld'
+        end
+        '/usr/libexec/mysqld'
+      when 'debian'
+        '/usr/sbin/mysqld'
       end
     end
 
