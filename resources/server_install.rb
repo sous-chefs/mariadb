@@ -54,7 +54,6 @@ action :install do
 end
 
 action :create do
-
   # Ensure that the database is running.
   service 'mariadb' do
     action [:enable, :start]
@@ -74,9 +73,9 @@ action :create do
   # Generate a random password or set a password defined with node['mariadb']['server_root_password'].
   # The password is set or change at each run. It is good for security if you choose to set a random password and
   # allow you to change the root password if needed.
-  set_password_command = "USE mysql; "
+  set_password_command = 'USE mysql; '
   set_password_command += "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('#{mariadb_root_password}'); "
-  set_password_command += "FLUSH PRIVILEGES;"
+  set_password_command += 'FLUSH PRIVILEGES;'
 
   execute 'setup root DB password' do
     command "mysql -B -uroot -e \"#{set_password_command}\""
