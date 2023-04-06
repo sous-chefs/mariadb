@@ -272,12 +272,12 @@ module MariaDBCookbook
     end
 
     def default_pid_file
-      if !new_resource.setup_repo
+      if defined?(new_resource) && !new_resource.setup_repo
         '/var/run/mariadb/mariadb.pid'
       else
         case node['platform_family']
         when 'rhel', 'fedora', 'amazon'
-          nil
+          '/var/run/mariadb/mariadb.pid'
         when 'debian'
           '/var/run/mysqld/mysqld.pid'
         end
@@ -298,11 +298,37 @@ module MariaDBCookbook
       when 'rhel', 'fedora', 'amazon'
         if new_resource.setup_repo
           '/usr/sbin/mysqld'
+        else
+          '/usr/libexec/mysqld'
         end
-        '/usr/libexec/mysqld'
       when 'debian'
         '/usr/sbin/mysqld'
       end
+    end
+
+    # Get the query to use when sending a change password command, dependant on the version of the database.
+    def mariadb_password_command(mariadb_root_password)
+      cmd = shell_out('mysql --version')
+      if cmd.exitstatus != 0
+        Chef::Log.fatal('MariaDB is not installed!')
+        raise 'Package Error'
+      end
+
+      # Parse out the MariaDB version
+      sql_version = Gem::Version.new(cmd.stdout.split[4].tr('-MariaDB,', '').strip)
+
+      password_command = "USE mysql;\n"
+
+      # Check to see which query we should use in order to change the user's password
+      password_command += if sql_version < Gem::Version.new(10.4)
+                            "UPDATE user SET password=PASSWORD('#{mariadb_root_password}') WHERE User='root';\n"
+                          else
+                            "ALTER USER root@localhost IDENTIFIED VIA unix_socket OR mysql_native_password USING PASSWORD('#{mariadb_root_password}');\n"
+                          end
+
+      password_command += "FLUSH PRIVILEGES;\n"
+
+      password_command
     end
 
     def mariadb_status_value(variable)
