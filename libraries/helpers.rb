@@ -323,7 +323,7 @@ module MariaDBCookbook
       if sql_version < Gem::Version.new(10.4)
         # Extra check for wheter this is a debian-based system.
         if node['platform_family'] == 'debian'
-        password_command += "UPDATE user SET plugin='mysql_native_password' WHERE user='root';\n"
+          password_command += "UPDATE user SET plugin='mysql_native_password' WHERE user='root';\n"
         end
         password_command += "UPDATE user SET password=PASSWORD('#{mariadb_root_password}') WHERE User='root';\n"
       else
