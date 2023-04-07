@@ -29,7 +29,7 @@ property :external_pid_file, String,        default: lazy { "/var/run/mysql/#{ve
 property :password,          [String, nil], default: 'generate'
 property :port,              Integer,       default: 3306
 property :initdb_locale,     String,        default: 'UTF-8'
-property :install_sleep,     Integer,       default: 20, desired_state: false
+property :install_sleep,     Integer,       default: 10, desired_state: false
 
 action :install do
   node.run_state['mariadb'] ||= {}

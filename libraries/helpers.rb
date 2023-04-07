@@ -321,7 +321,7 @@ module MariaDBCookbook
 
       # Check to see which query we should use in order to change the user's password
       password_command += if sql_version < Gem::Version.new(10.4)
-                            "UPDATE user SET password=PASSWORD('#{mariadb_root_password}') WHERE User='root';\n"
+                            "UPDATE user SET password=PASSWORD('#{mariadb_root_password}'), plugin='mysql_native_password' WHERE User='root';\n"
                           else
                             "ALTER USER root@localhost IDENTIFIED VIA unix_socket OR mysql_native_password USING PASSWORD('#{mariadb_root_password}');\n"
                           end
