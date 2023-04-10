@@ -22,13 +22,7 @@ include MariaDBCookbook::Helpers
 
 property :version,           String,        default: '10.3'
 property :setup_repo,        [true, false], default: true
-property :mycnf_file,        String,        default: lazy { "#{conf_dir}/my.cnf" }
-property :extconf_directory, String,        default: lazy { ext_conf_dir }
-property :data_directory,    String,        default: lazy { data_dir }
-property :external_pid_file, String,        default: lazy { "/var/run/mysql/#{version}-main.pid" }
 property :password,          [String, nil], default: 'generate'
-property :port,              Integer,       default: 3306
-property :initdb_locale,     String,        default: 'UTF-8'
 property :install_sleep,     Integer,       default: 5, desired_state: false
 
 action :install do
@@ -92,7 +86,7 @@ action :create do
     action :nothing
   end
 
-  pid_file = default_pid_file.nil? ? '/var/run/mysqld/mysqld.pid' : default_pid_file
+  pid_file = default_pid_file.nil? || '/var/run/mysqld/mysqld.pid'
   pid_dir = ::File.dirname(pid_file)
 
   # because some distros may not take care of the pid file location directory, we manage it ourselves
