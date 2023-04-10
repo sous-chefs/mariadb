@@ -257,7 +257,7 @@ module MariaDBCookbook
     def default_pid_file
       case node['platform_family']
       when 'rhel', 'fedora', 'amazon'
-        nil
+        '/run/mysqld/mysqld.pid'
       when 'debian'
         '/var/run/mysqld/mysqld.pid'
       end

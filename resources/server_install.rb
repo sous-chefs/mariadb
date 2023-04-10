@@ -86,7 +86,7 @@ action :create do
     action :nothing
   end
 
-  pid_file = default_pid_file.nil? || '/var/run/mysqld/mysqld.pid'
+  pid_file = default_pid_file
   pid_dir = ::File.dirname(pid_file)
 
   # because some distros may not take care of the pid file location directory, we manage it ourselves
