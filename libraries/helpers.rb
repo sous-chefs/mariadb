@@ -221,7 +221,24 @@ module MariaDBCookbook
 
     # determine the platform specific server package name
     def server_pkg_name
-      platform_family?('debian') ? "mariadb-server-#{new_resource.version}" : 'MariaDB-server'
+      if new_resource.setup_repo
+        # MariaDB's own respository
+        platform_family?('debian') ? "mariadb-server-#{new_resource.version}" : 'MariaDB-server'
+      else
+        # Stock distro repository
+        'mariadb-server'
+      end
+    end
+
+    # determine the platform specific client package name
+    def client_pkg_name
+      if new_resource.setup_repo
+        # MariaDB's own repository
+        platform_family?('debian') ? "mariadb-client-#{new_resource.version}" : 'MariaDB-client'
+      else
+        # Stock distro repository
+        platform_family?('debian') ? 'mariadb-client' : 'mariadb'
+      end
     end
 
     # given the base URL build the complete URL string for a yum repo
@@ -255,11 +272,15 @@ module MariaDBCookbook
     end
 
     def default_pid_file
-      case node['platform_family']
-      when 'rhel', 'fedora', 'amazon'
-        nil
-      when 'debian'
-        '/var/run/mysqld/mysqld.pid'
+      if defined?(new_resource) && !new_resource.setup_repo
+        '/var/run/mariadb/mariadb.pid'
+      else
+        case node['platform_family']
+        when 'rhel', 'fedora', 'amazon'
+          '/var/run/mariadb/mariadb.pid'
+        when 'debian'
+          '/var/run/mysqld/mysqld.pid'
+        end
       end
     end
 
@@ -270,6 +291,48 @@ module MariaDBCookbook
       when 'debian'
         '/usr/lib/galera/libgalera_smm.so'
       end
+    end
+
+    def default_mysqld_path
+      case node['platform_family']
+      when 'rhel', 'fedora', 'amazon'
+        if new_resource.setup_repo
+          '/usr/sbin/mysqld'
+        else
+          '/usr/libexec/mysqld'
+        end
+      when 'debian'
+        '/usr/sbin/mysqld'
+      end
+    end
+
+    # Get the query to use when sending a change password command, dependant on the version of the database.
+    def mariadb_password_command(mariadb_root_password)
+      cmd = shell_out('mysql --version')
+      if cmd.exitstatus != 0
+        Chef::Log.fatal('MariaDB is not installed!')
+        raise 'Package Error'
+      end
+
+      # Parse out the MariaDB version
+      sql_version = Gem::Version.new(cmd.stdout.split[4].tr('-MariaDB,', '').strip)
+
+      password_command = "USE mysql;\n"
+
+      # Check to see which query we should use in order to change the user's password
+      if sql_version < Gem::Version.new(10.4)
+        # Extra check for wheter this is a debian-based system.
+        if node['platform_family'] == 'debian'
+          password_command += "UPDATE user SET plugin='mysql_native_password' WHERE user='root';\n"
+        end
+        password_command += "UPDATE user SET password=PASSWORD('#{mariadb_root_password}') WHERE User='root';\n"
+      else
+        password_command += "ALTER USER root@localhost IDENTIFIED VIA unix_socket OR mysql_native_password USING PASSWORD('#{mariadb_root_password}');\n"
+      end
+
+      password_command += "FLUSH PRIVILEGES;\n"
+
+      password_command
     end
 
     def mariadb_status_value(variable)

@@ -34,6 +34,9 @@ suites:
   - name: client_install
     run_list:
       - recipe[test::client_install]
+  - name: client_distro_install
+    run_list:
+      - recipe[test::client_distro_install]
   - name: server_install_10.3
     run_list:
       - recipe[test::server_install]
@@ -50,6 +53,9 @@ suites:
     verifier:
       inspec_tests:
         - path: test/integration/server_install
+  - name: server_distro_install
+    run_list:
+      - recipe[test::server_distro_install]
   - name: configuration
     run_list:
       - recipe[test::configuration]

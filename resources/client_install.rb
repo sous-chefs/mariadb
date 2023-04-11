@@ -27,10 +27,9 @@ action :install do
     only_if { new_resource.setup_repo }
   end
 
-  case node['platform_family']
-  when 'debian'
-    package "mariadb-client-#{new_resource.version}"
-  when 'rhel', 'fedora', 'amazon'
-    package 'MariaDB-client'
-  end
+  package client_pkg_name
+end
+
+action_class do
+  include MariaDBCookbook::Helpers
 end

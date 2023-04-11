@@ -1,0 +1,10 @@
+---
+name: client_distro_install
+title: MariaDB client integration tests
+maintainer: Nicolas Blanc
+copyright_email: sinfomicien@gmail.com
+license: Apache
+summary: Check that the client is installed and working using the distro's own package
+version: 0.0.1
+supports:
+  - os-family: unix
