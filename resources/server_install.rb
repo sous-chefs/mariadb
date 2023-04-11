@@ -20,7 +20,7 @@ unified_mode true
 
 include MariaDBCookbook::Helpers
 
-property :version,           String,        default: '10.3'
+property :version,           String,        default: '10.11'
 property :setup_repo,        [true, false], default: true
 property :mycnf_file,        String,        default: lazy { "#{conf_dir}/my.cnf" }
 property :extconf_directory, String,        default: lazy { ext_conf_dir }
