@@ -6,7 +6,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Update test matrix
+- Update default MariaDB version to 10.11 (current LTS)
+
 ## 5.2.16 - *2023-04-11*
+
+Standardise files with files in sous-chefs/repo-management
 
 ## 5.2.15 - *2023-04-07*
 

@@ -7,7 +7,13 @@ name: CI
 
 jobs:
   lint-unit:
-    uses: sous-chefs/.github/.github/workflows/lint-unit.yml@2.0.1
+    uses: sous-chefs/.github/.github/workflows/lint-unit.yml@2.0.2
+    permissions:
+      actions: write
+      checks: write
+      pull-requests: write
+      statuses: write
+      issues: write
 
   integration:
     needs: lint-unit
@@ -16,61 +22,19 @@ jobs:
       matrix:
         os:
           - almalinux-8
+          # - amazonlinux-2023
+          - centos-7
+          - centos-stream-8
           - debian-10
+          - rockylinux-8
+          - ubuntu-1804
+          - ubuntu-2004
           # TODO: need to update to using newer versions of MariaDB for this to
           # work
           # - debian-11
-          - centos-7
-          - centos-stream-8
           # TODO: need to update to using newer versions of MariaDB for this to
           # work
           # - fedora-latest
-          - ubuntu-1804
-          - ubuntu-2004
-          - rockylinux-8
-        suite:
-          - "repository"
-          - "client-install"
-          - "client-distro-install"
-          - "server-install-103"
-          - "server-install-104"
-          - "server-distro-install"
-          - "configuration"
-          - "server-configuration"
-          - "resources"
-          - "replication"
-          - "datadir"
-          - "port"
-          - "galera-configuration"
-      fail-fast: false
-
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-      - name: Install Chef
-        uses: actionshub/chef-install@2.0.4
-      - name: Disable apparmor for mysqld
-        run: |
-          set -x
-          sudo apt-get -y remove mysql-server --purge
-          sudo apt-get -y install apparmor-profiles
-          sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
-      - name: Dokken
-        uses: actionshub/test-kitchen@2.1.0
-        env:
-          CHEF_LICENSE: accept-no-persist
-          KITCHEN_LOCAL_YAML: kitchen.dokken.yml
-        with:
-          suite: ${{ matrix.suite }}
-          os: ${{ matrix.os }}
-
-  integration-amazonlinux:
-    needs: lint-unit
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        os:
-          - amazonlinux-2
         suite:
           - "repository"
           - "client-install"
