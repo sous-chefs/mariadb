@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 5.2.17 - *2023-04-12*
 
 - Update test matrix
 - Update default MariaDB version to 10.11 (current LTS)
