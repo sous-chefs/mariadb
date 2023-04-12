@@ -22,7 +22,7 @@ Name                                   | Types             | Description        
 `innodb_flush_log_at_trx_commit`       | Integer           |                                                               | `2`                                       | no
 `options`                              | Hash              |                                                               | `{}`                                      | no
 `server_id`                            | Integer           |                                                               | `100`                                     | no
-`version`                              | String            | Version of MariaDB installed                                  | `10.3`                                    | no
+`version`                              | String            | Version of MariaDB installed                                  | `10.11`                                   | no
 `wsrep_node_address_interface`         | String, NilClass  |                                                               | `nil`                                     | no
 `wsrep_node_incoming_address_interface`| String, NilClass  |                                                               | `nil`                                     | no
 `wsrep_node_port`                      | Integer, NilClass |                                                               | `nil`                                     | no
@@ -50,7 +50,7 @@ Then use a Chef search to find other nodes and add these hosts to the gcomm addr
 
 ```ruby
 mariadb_galera_configuration 'MariaDB Galera Server Configuration' do
-  version '10.3'
+  version '10.11'
   cluster_name 'my_cluster_name'
   cluster_search_query "mycookbook_galera_cluster_name:my_cluster_name"
 end
@@ -60,7 +60,7 @@ If you don't want to have a dynamic node galera node management, you can manuall
 
 ```ruby
 mariadb_galera_configuration 'MariaDB Galera Server Configuration' do
-  version '10.3'
+  version '10.11'
   cluster_name 'my_cluster_name'
   gcomm_address 'gcomm://node1.fqdn,node2.fqdn'
 end
@@ -74,7 +74,7 @@ Following on from the previous example, to do this you should specific the `:boo
 
 ```ruby
 mariadb_galera_configuration 'MariaDB Galera Server Configuration' do
-  version '10.3'
+  version '10.11'
   cluster_name 'my_cluster_name'
   cluster_search_query "mycookbook_galera_cluster_name:my_cluster_name AND mariadb_galera_bootstrapped:true"
   action [:create, :bootstrap]
@@ -85,7 +85,7 @@ This should only be done by one node in cluster you're going to create, other no
 
 ```ruby
 mariadb_galera_configuration 'MariaDB Galera Server Configuration' do
-  version '10.3'
+  version '10.11'
   cluster_name 'my_cluster_name'
   cluster_search_query "mycookbook_galera_cluster_name:my_cluster_name AND mariadb_galera_bootstrapped:true"
   action [:create, :join]

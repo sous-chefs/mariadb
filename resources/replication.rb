@@ -20,7 +20,7 @@ unified_mode true
 include MariaDBCookbook::Helpers
 
 property :connection_name,             String,         name_property: true
-property :version,                     String,         default: '10.3'
+property :version,                     String,         default: '10.11'
 property :host,                        [String, nil],  default: 'localhost', desired_state: false
 property :port,                        [Integer, nil], default: 3306,        desired_state: false
 property :user,                        [String, nil],  default: 'root',      desired_state: false

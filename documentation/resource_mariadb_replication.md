@@ -15,7 +15,7 @@ The resource name need to be 'default' if your don't want to use a named connect
 
 Name                                   | Types             | Description                                                   | Default                                   | Required?
 ---------------------------------------| ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
-`version`                              | String            | Version of MariaDB installed                                  | `10.3`                                    | no
+`version`                              | String            | Version of MariaDB installed                                  | `10.11`                                   | no
 `cookbook`                             | String            |                                                               | `mariadb`                                 | no
 `connection_name`                      | String            | The resource name                                             |                                           | yes
 `host`                                 | String, nil       |                                                               | `localhost`                               | no

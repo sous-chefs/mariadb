@@ -37,22 +37,9 @@ suites:
   - name: client_distro_install
     run_list:
       - recipe[test::client_distro_install]
-  - name: server_install_10.3
+  - name: server_install
     run_list:
       - recipe[test::server_install]
-    attributes:
-      mariadb_server_test_version: '10.3'
-    verifier:
-      inspec_tests:
-        - path: test/integration/server_install
-  - name: server_install_10.4
-    run_list:
-      - recipe[test::server_install]
-    attributes:
-      mariadb_server_test_version: '10.4'
-    verifier:
-      inspec_tests:
-        - path: test/integration/server_install
   - name: server_distro_install
     run_list:
       - recipe[test::server_distro_install]

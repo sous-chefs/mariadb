@@ -4,7 +4,7 @@ case os.family
 
 when 'redhat'
 
-  describe yum.repo('mariadb10.3') do
+  describe yum.repo('mariadb10.11') do
     it { should exist }
     it { should be_enabled }
   end
@@ -15,14 +15,14 @@ when 'debian'
 
   when 'debian'
 
-    describe apt('http://mariadb.mirrors.ovh.net/MariaDB/repo/10.3/debian') do
+    describe apt('http://mariadb.mirrors.ovh.net/MariaDB/repo/10.11/debian') do
       it { should exist }
       it { should be_enabled }
     end
 
   when 'ubuntu'
 
-    describe apt('http://mariadb.mirrors.ovh.net/MariaDB/repo/10.3/ubuntu') do
+    describe apt('http://mariadb.mirrors.ovh.net/MariaDB/repo/10.11/ubuntu') do
       it { should exist }
       it { should be_enabled }
     end

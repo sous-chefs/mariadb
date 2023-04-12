@@ -12,9 +12,9 @@ RSpec.describe MariaDBCookbook::Helpers do
       allow(subject).to receive(:[]).with('platform_family').and_return(platform_family)
     end
 
-    let(:version) { '10.3' }
+    let(:version) { '10.11' }
 
-    context 'with rhel family and MariaDB 10.3' do
+    context 'with rhel family and MariaDB 10.11' do
       let(:platform_family) { 'rhel' }
 
       it 'returns the correct path' do
@@ -22,7 +22,7 @@ RSpec.describe MariaDBCookbook::Helpers do
       end
     end
 
-    context 'with debian family and MariaDB 10.3' do
+    context 'with debian family and MariaDB 10.11' do
       let(:platform_family) { 'debian' }
 
       it 'returns the correct path' do

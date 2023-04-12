@@ -10,15 +10,15 @@ This resource installs mariadb client packages.
 
 Name                | Types             | Description                                                   | Default                                   | Required?
 ------------------- | ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
-`version`           | String            | Version of MariaDB to install                                 | `10.3`                                    | no
+`version`           | String            | Version of MariaDB to install                                 | `10.11`                                   | no
 `setup_repo`        | Boolean           | Define if you want to add the MariaDB repository              | `true`                                    | no
 
 ### Examples
 
-To install '10.3' version:
+To install '10.11' version:
 
 ```ruby
 mariadb_client_install 'MariaDB Client install' do
-  version '10.3'
+  version '10.11'
 end
 ```

@@ -28,7 +28,7 @@ property :gcomm_address,                         [String, nil]
 property :innodb_flush_log_at_trx_commit,        Integer,        default: 2
 property :options,                               Hash,           default: {}
 property :server_id,                             Integer,        default: 100
-property :version,                               String,         default: '10.3'
+property :version,                               String,         default: '10.11'
 property :wsrep_node_address_interface,          [String, nil]
 property :wsrep_node_incoming_address_interface, String
 property :wsrep_node_port,                       [Integer, nil], default: nil

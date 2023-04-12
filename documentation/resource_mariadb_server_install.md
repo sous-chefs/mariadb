@@ -11,7 +11,7 @@ This resource installs mariadb server packages.
 
 Name                            | Types             | Description                                                   | Default                                   | Required?
 ------------------------------- | ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
-`version`                       | String            | Version of MariaDB to install                                 | `10.3`                                    | no
+`version`                       | String            | Version of MariaDB to install                                 | `10.11`                                   | no
 `setup_repo`                    | Boolean           | Define if you want to add the MariaDB repository              | `true`                                    | no
 `password`                      | String, nil       | Pass in a password, or have the cookbook generate one for you | `generate`                                | no
 `install_sleep`                 | Integer           | Number of seconds to sleep in between install commands        | `5`                                       | no
@@ -20,10 +20,10 @@ Name                            | Types             | Description               
 
 ## Examples
 
-To install '10.3' version:
+To install '10.11' version:
 
 ```ruby
 mariadb_server_install 'MariaDB Server install' do
-  version '10.3'
+  version '10.11'
 end
 ```

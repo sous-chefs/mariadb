@@ -8,7 +8,7 @@
 
 Name                            | Types             | Description                                                   | Default                                          | Required?
 ------------------------------- | ----------------- | ------------------------------------------------------------- | ------------------------------------------------ | ---------
-`version`                       | String            | Version of MariaDB installed                                  | `10.3`                                           | no
+`version`                       | String            | Version of MariaDB installed                                  | `10.11`                                          | no
 `cookbook`                      | String            |                                                               | `mariadb`                                        | no
 `mycnf_file`                    | String            |                                                               | `"#{conf_dir}my.cnf"` (1)                        | no
 `extra_configuration_directory` | String,           |                                                               | `ext_conf_dir` (2)                               | no
@@ -98,7 +98,7 @@ Name                            | Types             | Description               
 
 ```ruby
 mariadb_server_configuration 'MariaDB Server Configuration' do
-  version '10.3'
+  version '10.11'
   client_host 'localhost'
 end
 ```
