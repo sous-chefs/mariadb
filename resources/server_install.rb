@@ -20,7 +20,7 @@ unified_mode true
 
 include MariaDBCookbook::Helpers
 
-property :version,           String,        default: '10.3'
+property :version,           String,        default: '10.11'
 property :setup_repo,        [true, false], default: true
 property :password,          [String, nil], default: 'generate'
 property :install_sleep,     Integer,       default: 5, desired_state: false
@@ -45,6 +45,11 @@ action :install do
     only_if { selinux_enabled? }
     action :install
   end
+
+  # Ensure that the database is running.
+  service 'mariadb' do
+    action [:enable, :start]
+  end
 end
 
 action :create do
@@ -68,13 +73,9 @@ action :create do
   # Generate a random password or set a password defined with node['mariadb']['server_root_password'].
   # The password is set or change at each run. It is good for security if you choose to set a random password and
   # allow you to change the root password if needed.
-  set_password_command = "USE mysql;\n"
-  set_password_command += if new_resource.version.to_f <= 10.3
-                            "UPDATE user SET password=PASSWORD('#{mariadb_root_password}') WHERE User='root';\n"
-                          else
-                            "ALTER USER root@localhost IDENTIFIED VIA unix_socket OR mysql_native_password USING PASSWORD('#{mariadb_root_password}');\n"
-                          end
-  set_password_command += "FLUSH PRIVILEGES;\n"
+
+  # Generate the query to send to the database in order to update the root password
+  set_password_command = mariadb_password_command(mariadb_root_password)
 
   file 'generate-mariadb-root-password' do
     path "#{data_dir}/recovery.conf"
@@ -97,12 +98,11 @@ action :create do
     recursive true
     action :nothing
   end
-
   # make sure that mysqld is not running, and then set the root password and make sure the mysqld process is killed after setting the password
   execute 'apply-mariadb-root-password' do
     user 'mysql'
     # TODO, I really dislike the sleeps here, should come up with a better way to do this
-    command "(test -f #{pid_file} && kill `cat #{pid_file}` && sleep #{new_resource.install_sleep}); /usr/sbin/mysqld -u root --pid-file=#{pid_file} --init-file=#{data_dir}/recovery.conf&>/dev/null& sleep #{new_resource.install_sleep} && (test -f #{pid_file} && kill `cat #{pid_file}`)"
+    command "(test -f #{pid_file} && kill `cat #{pid_file}` && sleep #{new_resource.install_sleep}); #{default_mysqld_path} -u root --pid-file=#{pid_file} --init-file=#{data_dir}/recovery.conf&>/dev/null& sleep #{new_resource.install_sleep} && (test -f #{pid_file} && kill `cat #{pid_file}`) && sleep #{new_resource.install_sleep}"
     notifies :enable, "service[#{platform_service_name}]", :before
     notifies :stop, "service[#{platform_service_name}]", :before
     notifies :create, 'file[generate-mariadb-root-password]', :before

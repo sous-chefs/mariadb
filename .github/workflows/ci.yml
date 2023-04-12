@@ -22,23 +22,26 @@ jobs:
       matrix:
         os:
           - almalinux-8
+          # - amazonlinux-2023
+          - centos-7
+          - centos-stream-8
           - debian-10
+          - rockylinux-8
+          - ubuntu-1804
+          - ubuntu-2004
           # TODO: need to update to using newer versions of MariaDB for this to
           # work
           # - debian-11
-          - centos-7
-          - centos-stream-8
           # TODO: need to update to using newer versions of MariaDB for this to
           # work
           # - fedora-latest
-          - ubuntu-1804
-          - ubuntu-2004
-          - rockylinux-8
         suite:
           - "repository"
           - "client-install"
+          - "client-distro-install"
           - "server-install-103"
           - "server-install-104"
+          - "server-distro-install"
           - "configuration"
           - "server-configuration"
           - "resources"
