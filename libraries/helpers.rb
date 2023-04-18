@@ -306,6 +306,18 @@ module MariaDBCookbook
       end
     end
 
+    def default_selinux_module_path
+      if platform_family?('rhel', 'fedora', 'amazon')
+        '/usr/share/mariadb/policy/selinux'
+      else
+        if new_resource.setup_repo
+          '/usr/share/mariadb/policy/selinux'
+        else
+          '/usr/share/mysql/policy/selinux'
+        end
+      end
+    end
+
     # Get the query to use when sending a change password command, dependant on the version of the database.
     def mariadb_password_command(mariadb_root_password)
       cmd = shell_out('mysql --version')

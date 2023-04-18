@@ -47,8 +47,8 @@ action :install do
   # This should get automatically installed via the package, but in case it doesn't ensure it does here
   # https://mariadb.com/kb/en/selinux/
   selinux_module 'mariadb' do
-    base_dir '/usr/share/mysql/policy/selinux'
-    only_if { selinux_enabled? }
+    base_dir default_selinux_module_path
+    only_if { selinux_enabled? && Dir.exist?(default_selinux_module_path) }
     action :install
   end
 
