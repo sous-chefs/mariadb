@@ -6,8 +6,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
-## 5.2.19 - *2023-04-18*
-
 Patched the ability to use SELinux with `setup_repo` disabled
 
 ## 5.2.18 - *2023-04-16*
