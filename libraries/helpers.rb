@@ -309,12 +309,10 @@ module MariaDBCookbook
     def default_selinux_module_path
       if platform_family?('rhel', 'fedora', 'amazon')
         '/usr/share/mariadb/policy/selinux'
+      elsif new_resource.setup_repo
+        '/usr/share/mariadb/policy/selinux'
       else
-        if new_resource.setup_repo
-          '/usr/share/mariadb/policy/selinux'
-        else
-          '/usr/share/mysql/policy/selinux'
-        end
+        '/usr/share/mysql/policy/selinux'
       end
     end
 
