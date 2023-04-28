@@ -26,9 +26,6 @@ property :password,          [String, nil], default: 'generate'
 property :install_sleep,     Integer,       default: 5, desired_state: false
 
 action :install do
-  node.run_state['mariadb'] ||= {}
-  node.run_state['mariadb']['version'] = new_resource.version
-
   mariadb_client_install 'Install MariaDB Client' do
     version new_resource.version
     setup_repo new_resource.setup_repo

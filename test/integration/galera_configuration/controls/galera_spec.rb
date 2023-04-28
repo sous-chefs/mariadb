@@ -1,9 +1,14 @@
-if os.redhat?
-  include_dir = '/etc/my.cnf.d'
-  libgalera_smm_path = '/usr/lib64/galera/libgalera_smm.so'
-else
+if os.debian?
   include_dir = '/etc/mysql/conf.d'
   libgalera_smm_path = '/usr/lib/galera/libgalera_smm.so'
+else
+  include_dir = '/etc/my.cnf.d'
+  mariadb_version = Gem::Version.new(file('/tmp/mariadb_version').content)
+  libgalera_smm_path = if mariadb_version >= Gem::Version.new('10.4')
+                         '/usr/lib64/galera-4/libgalera_smm.so'
+                       else
+                         '/usr/lib64/galera/libgalera_smm.so'
+                       end
 end
 
 galera_config_file = "#{include_dir}/90-galera.cnf"
@@ -44,7 +49,7 @@ control 'mariadb_galera_configuration' do
     wsrep_sst_method = mariabackup
     wsrep_sst_auth = sstuser:some_secret_password
     wsrep_provider = #{libgalera_smm_path}
-    wsrep_slave_threads = 8
+    wsrep_slave_threads = #{file('/tmp/cpu_cores').content.to_i * 4}
     wsrep_node_address = #{ip_address}
   EOF
 

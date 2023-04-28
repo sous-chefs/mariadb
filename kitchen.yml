@@ -17,12 +17,12 @@ verifier:
 
 platforms:
   - name: almalinux-8
-  - name: amazonlinux-2
+  # - name: amazonlinux-2023
   - name: debian-10
   - name: debian-11
   - name: centos-7
   - name: centos-stream-8
-  - name: fedora-latest
+  # - name: fedora-latest
   - name: ubuntu-18.04
   - name: ubuntu-20.04
   - name: rockylinux-8
@@ -31,49 +31,129 @@ suites:
   - name: repository
     run_list:
       - recipe[test::repository]
+    excludes:
+      - debian-11
   - name: client_install
     run_list:
       - recipe[test::client_install]
+    excludes:
+      - debian-11
   - name: client_distro_install
     run_list:
       - recipe[test::client_distro_install]
-  - name: server_install_10.3
+  - name: server_install
+    run_list:
+      - recipe[test::server_install]
+    excludes:
+      - debian-11
+  - name: server_install_10.11
     run_list:
       - recipe[test::server_install]
     attributes:
-      mariadb_server_test_version: '10.3'
+      mariadb_server_test_version: '10.11'
     verifier:
       inspec_tests:
         - path: test/integration/server_install
-  - name: server_install_10.4
-    run_list:
-      - recipe[test::server_install]
-    attributes:
-      mariadb_server_test_version: '10.4'
-    verifier:
-      inspec_tests:
-        - path: test/integration/server_install
+    excludes:
+      - ubuntu-18.04
+      - centos-7
   - name: server_distro_install
     run_list:
       - recipe[test::server_distro_install]
   - name: configuration
     run_list:
       - recipe[test::configuration]
+    excludes:
+      - debian-11
   - name: server_configuration
     run_list:
       - recipe[test::server_configuration]
+    excludes:
+      - debian-11
+  - name: server_configuration_10.11
+    run_list:
+      - recipe[test::server_configuration]
+    attributes:
+      mariadb_server_test_version: '10.11'
+    verifier:
+      inspec_tests:
+        - path: test/integration/server_configuration
+    excludes:
+      - ubuntu-18.04
+      - centos-7
   - name: resources
     run_list:
       - recipe[test::user_database]
+    excludes:
+      - debian-11
+  - name: resources_10.11
+    run_list:
+      - recipe[test::user_database]
+    attributes:
+      mariadb_server_test_version: '10.11'
+    verifier:
+      inspec_tests:
+        - path: test/integration/resources
+    excludes:
+      - ubuntu-18.04
+      - centos-7
   - name: replication
     run_list:
       - recipe[test::replication]
+    excludes:
+      - debian-11
+  - name: replication_10.11
+    run_list:
+      - recipe[test::replication]
+    attributes:
+      mariadb_server_test_version: '10.11'
+    verifier:
+      inspec_tests:
+        - path: test/integration/replication
+    excludes:
+      - ubuntu-18.04
+      - centos-7
   - name: datadir
     run_list:
       - recipe[test::datadir]
+    excludes:
+      - debian-11
+  - name: datadir_10.11
+    run_list:
+      - recipe[test::datadir]
+    verifier:
+      inspec_tests:
+        - path: test/integration/datadir
+    excludes:
+      - ubuntu-18.04
+      - centos-7
   - name: port
     run_list:
       - recipe[test::port]
+    excludes:
+      - debian-11
+  - name: port_10.11
+    run_list:
+      - recipe[test::port]
+    verifier:
+      inspec_tests:
+        - path: test/integration/port
+    excludes:
+      - ubuntu-18.04
+      - centos-7
   - name: galera_configuration
     run_list:
       - recipe[test::galera_configuration]
+    excludes:
+      - debian-11
+  - name: galera_configuration_10.11
+    run_list:
+      - recipe[test::galera_configuration]
+    attributes:
+      mariadb_server_test_version: '10.11'
+    verifier:
+      inspec_tests:
+        - path: test/integration/galera_configuration
+    excludes:
+      - ubuntu-18.04
+      - centos-7

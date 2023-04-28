@@ -66,6 +66,26 @@ module MariaDBCookbook
       cmd.stdout
     end
 
+    def mariadb_version
+      cmd = shell_out('mysql -V')
+      v = cmd.stdout.split[4].match(/^\d+\.\d+/) # returns nil if no match
+      unless v
+        Chef::Log.fatal('Error obtaining MySQL version!')
+        raise 'Error obtaining MySQL version!'
+      end
+      Gem::Version.new(v.to_s)
+    end
+
+    def ctrl_hash(user, password, host, port, socket)
+      lsocket = if socket && host == 'localhost'
+                  socket
+                elsif host == 'localhost'
+                  default_socket
+                end
+      { user: user, password: password
+      }.merge!(lsocket.nil? ? { host: host, port: port } : { socket: lsocket })
+    end
+
     def parse_one_row(row, titles)
       return_hash = {}
       index = 0
@@ -160,30 +180,20 @@ module MariaDBCookbook
       false
     end
 
-    def data_dir(_version = node.run_state['mariadb']['version'])
+    def data_dir
       '/var/lib/mysql'
     end
 
-    def conf_dir(_version = node.run_state['mariadb']['version'])
-      case node['platform_family']
-      when 'rhel', 'fedora', 'amazon'
-        '/etc'
-      when 'debian'
-        '/etc/mysql'
-      end
+    def conf_dir
+      platform_family?('debian') ? '/etc/mysql' : '/etc'
     end
 
-    def ext_conf_dir(_version = node.run_state['mariadb']['version'])
-      case node['platform_family']
-      when 'rhel', 'fedora', 'amazon'
-        "#{conf_dir}/my.cnf.d"
-      when 'debian'
-        "#{conf_dir}/conf.d"
-      end
+    def ext_conf_dir
+      platform_family?('debian') ? "#{conf_dir}/conf.d" : "#{conf_dir}/my.cnf.d"
     end
 
     # determine the platform specific service name
-    def platform_service_name(_version = node.run_state['mariadb']['version'])
+    def platform_service_name
       'mariadb'
     end
 
@@ -215,29 +225,28 @@ module MariaDBCookbook
       if platform_family?('rhel', 'fedora', 'amazon')
         'MariaDB-backup'
       else
-        new_resource.version == '10.3' ? 'mariadb-backup' : "mariadb-backup-#{new_resource.version}"
+        'mariadb-backup'
       end
     end
 
     # determine the platform specific server package name
     def server_pkg_name
-      if new_resource.setup_repo
-        # MariaDB's own respository
-        platform_family?('debian') ? "mariadb-server-#{new_resource.version}" : 'MariaDB-server'
+      if !platform_family?('debian') && new_resource.setup_repo
+        'MariaDB-server'
       else
-        # Stock distro repository
         'mariadb-server'
       end
     end
 
     # determine the platform specific client package name
     def client_pkg_name
-      if new_resource.setup_repo
-        # MariaDB's own repository
-        platform_family?('debian') ? "mariadb-client-#{new_resource.version}" : 'MariaDB-client'
+      if platform_family?('debian')
+        'mariadb-client'
+      elsif new_resource.setup_repo
+        'MariaDB-client'
       else
         # Stock distro repository
-        platform_family?('debian') ? 'mariadb-client' : 'mariadb'
+        'mariadb'
       end
     end
 
@@ -251,9 +260,9 @@ module MariaDBCookbook
       release = yum_releasever
       # Treat Alma and Rocky as RHEL
       if platform?('almalinux', 'rocky', 'amazon')
-        "rhel#{release}-#{node['kernel']['machine'] == 'x86_64' ? 'amd64' : '$basearch'}"
+        "rhel/#{release}/$basearch"
       else
-        "#{node['platform']}#{release}-#{node['kernel']['machine'] == 'x86_64' ? 'amd64' : '$basearch'}"
+        "#{node['platform']}/#{release}/$basearch"
       end
     end
 
@@ -263,33 +272,21 @@ module MariaDBCookbook
     end
 
     def default_socket
-      case node['platform_family']
-      when 'rhel', 'fedora', 'amazon'
-        '/var/lib/mysql/mysql.sock'
-      when 'debian'
-        '/var/run/mysqld/mysqld.sock'
-      end
+      platform_family?('debian') ? '/var/run/mysqld/mysqld.sock' : '/var/lib/mysql/mysql.sock'
     end
 
     def default_pid_file
-      if defined?(new_resource) && !new_resource.setup_repo
-        '/var/run/mariadb/mariadb.pid'
-      else
-        case node['platform_family']
-        when 'rhel', 'fedora', 'amazon'
-          '/var/run/mariadb/mariadb.pid'
-        when 'debian'
-          '/var/run/mysqld/mysqld.pid'
-        end
-      end
+      platform_family?('debian') ? '/var/run/mysqld/mysqld.pid' : '/var/run/mariadb/mariadb.pid'
     end
 
     def default_libgalera_smm_path
-      case node['platform_family']
-      when 'rhel', 'fedora', 'amazon'
-        '/usr/lib64/galera/libgalera_smm.so'
-      when 'debian'
+      if platform_family?('debian')
         '/usr/lib/galera/libgalera_smm.so'
+      elsif mariadb_version >= Gem::Version.new('10.4')
+        # mariadb 10.4+ changed the path to libgalera on RHEL-based systems
+        '/usr/lib64/galera-4/libgalera_smm.so'
+      else
+        '/usr/lib64/galera/libgalera_smm.so'
       end
     end
 
@@ -316,21 +313,20 @@ module MariaDBCookbook
       end
     end
 
+    def default_encoding
+      mariadb_version >= Gem::Version.new('10.6') ? 'utf8mb3' : 'utf8'
+    end
+
+    def default_collation
+      mariadb_version >= Gem::Version.new('10.6') ? 'utf8mb3_general_ci' : 'utf8_general_ci'
+    end
+
     # Get the query to use when sending a change password command, dependant on the version of the database.
     def mariadb_password_command(mariadb_root_password)
-      cmd = shell_out('mysql --version')
-      if cmd.exitstatus != 0
-        Chef::Log.fatal('MariaDB is not installed!')
-        raise 'Package Error'
-      end
-
-      # Parse out the MariaDB version
-      sql_version = Gem::Version.new(cmd.stdout.split[4].tr('-MariaDB,', '').strip)
-
       password_command = "USE mysql;\n"
 
       # Check to see which query we should use in order to change the user's password
-      if sql_version < Gem::Version.new(10.4)
+      if mariadb_version < Gem::Version.new(10.4)
         # Extra check for wheter this is a debian-based system.
         if node['platform_family'] == 'debian'
           password_command += "UPDATE user SET plugin='mysql_native_password' WHERE user='root';\n"

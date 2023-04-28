@@ -25,9 +25,9 @@ property :port,          [Integer, nil], default: 3306, desired_state: false
 property :user,          [String, nil],  default: 'root', desired_state: false
 property :socket,        [String, nil], desired_state: false
 property :password,      [String, nil], sensitive: true, desired_state: false
-property :encoding,      String,         default: 'utf8'
-property :collation,     String,         default: 'utf8_general_ci'
-property :sql,           String
+property :encoding, String, default: lazy { default_encoding }
+property :collation, String, default: lazy { default_collation }
+property :sql, String
 
 action :create do
   if current_resource.nil?
@@ -59,9 +59,7 @@ action :query do
 end
 
 load_current_value do
-  lsocket = (socket && host == 'localhost') ? socket : nil
-  ctrl = { user: user, password: password
-                   }.merge!(lsocket.nil? ? { host: host, port: port } : { socket: lsocket })
+  ctrl = ctrl_hash(user, password, host, port, socket)
   query = "SHOW DATABASES LIKE '#{database_name}'"
   results = execute_sql(query, nil, ctrl).split("\n")
   current_value_does_not_exist! if results.count == 0
@@ -79,10 +77,14 @@ end
 action_class do
   include MariaDBCookbook::Helpers
 
+  def ctrl
+    ctrl_hash(
+      new_resource.user, new_resource.password, new_resource.host, new_resource.port, new_resource.socket
+    )
+  end
+
   def run_query(query, database)
-    socket = (new_resource.socket && new_resource.host == 'localhost') ? new_resource.socket : nil
-    ctrl_hash = { host: new_resource.host, port: new_resource.port, user: new_resource.user, password: new_resource.password, socket: socket }
     Chef::Log.debug("#{@new_resource}: Performing query [#{query}]")
-    execute_sql(query, database, ctrl_hash)
+    execute_sql(query, database, ctrl)
   end
 end
