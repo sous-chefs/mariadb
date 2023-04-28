@@ -47,7 +47,9 @@ jobs:
           - "replication"
           - "replication-1011"
           - "datadir"
+          - "datadir-1011"
           - "port"
+          - "port-1011"
           - "galera-configuration"
           - "galera-configuration-1011"
         exclude:
@@ -60,6 +62,10 @@ jobs:
           - os: ubuntu-1804
             suite: "replication-1011"
           - os: ubuntu-1804
+            suite: "datadir-1011"
+          - os: ubuntu-1804
+            suite: "port-1011"
+          - os: ubuntu-1804
             suite: "galera-configuration-1011"
           - os: centos-7
             suite: "server-install-1011"
@@ -69,6 +75,10 @@ jobs:
             suite: "resources-1011"
           - os: centos-7
             suite: "replication-1011"
+          - os: centos-7
+            suite: "datadir-1011"
+          - os: centos-7
+            suite: "port-1011"
           - os: centos-7
             suite: "galera-configuration-1011"
           - os: debian-11
