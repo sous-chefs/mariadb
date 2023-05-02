@@ -26,29 +26,85 @@ jobs:
           - centos-7
           - centos-stream-8
           - debian-10
+          - debian-11
           - rockylinux-8
           - ubuntu-1804
           - ubuntu-2004
-          # TODO: need to update to using newer versions of MariaDB for this to
-          # work
-          # - debian-11
-          # TODO: need to update to using newer versions of MariaDB for this to
-          # work
+          # Latest fedora (38 at time of writing) does not have any mariadb packages yet
           # - fedora-latest
         suite:
           - "repository"
           - "client-install"
           - "client-distro-install"
-          - "server-install-103"
-          - "server-install-104"
+          - "server-install"
+          - "server-install-1011"
           - "server-distro-install"
           - "configuration"
           - "server-configuration"
+          - "server-configuration-1011"
           - "resources"
+          - "resources-1011"
           - "replication"
+          - "replication-1011"
           - "datadir"
+          - "datadir-1011"
           - "port"
+          - "port-1011"
           - "galera-configuration"
+          - "galera-configuration-1011"
+        exclude:
+          - os: ubuntu-1804
+            suite: "server-install-1011"
+          - os: ubuntu-1804
+            suite: "server-configuration-1011"
+          - os: ubuntu-1804
+            suite: "resources-1011"
+          - os: ubuntu-1804
+            suite: "replication-1011"
+          - os: ubuntu-1804
+            suite: "datadir-1011"
+          - os: ubuntu-1804
+            suite: "port-1011"
+          - os: ubuntu-1804
+            suite: "galera-configuration-1011"
+          - os: centos-7
+            suite: "server-install-1011"
+          - os: centos-7
+            suite: "server-configuration-1011"
+          - os: centos-7
+            suite: "resources-1011"
+          - os: centos-7
+            suite: "replication-1011"
+          - os: centos-7
+            suite: "datadir-1011"
+          - os: centos-7
+            suite: "port-1011"
+          - os: centos-7
+            suite: "galera-configuration-1011"
+          - os: debian-11
+            suite: "repository"
+          - os: debian-11
+            suite: "client-install"
+          - os: debian-11
+            suite: "client-distro-install"
+          - os: debian-11
+            suite: "server-install"
+          - os: debian-11
+            suite: "server-distro-install"
+          - os: debian-11
+            suite: "configuration"
+          - os: debian-11
+            suite: "server-configuration"
+          - os: debian-11
+            suite: "resources"
+          - os: debian-11
+            suite: "replication"
+          - os: debian-11
+            suite: "datadir"
+          - os: debian-11
+            suite: "port"
+          - os: debian-11
+            suite: "galera-configuration"
       fail-fast: false
 
     steps:
@@ -59,6 +115,7 @@ jobs:
       - name: Disable apparmor for mysqld
         run: |
           set -x
+          sudo apt-get update
           sudo apt-get -y remove mysql-server --purge
           sudo apt-get -y install apparmor-profiles
           sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld

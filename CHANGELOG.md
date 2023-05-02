@@ -6,6 +6,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Remove version suffix from package names for debian-based OSes
+- Put the mysql control credentials in to a reusable method
+- Remove unnecessary method arguments and setting of version in run_state
+- Fix default_pid_file method
+- Add tests for 10.11
+- Extend unit tests
+- Fix libgalera install path issue on MariaDB 10.4+
+- Fix resource idempotency issues with MariaDB 10.5 and 10.6
+- Simplify conditionals in helpers.rb
+- Alter yum repo path to match what MariaDB recommend
+
 ## 5.2.19 - *2023-04-18*
 
 - Patched the ability to use SELinux with `setup_repo` disabled

@@ -10,10 +10,10 @@ control 'port_changed' do
     it { should be_listening }
   end
 
-  includedir = '/etc/mysql/conf.d'
-  mysql_config_file = '/etc/mysql/my.cnf'
-  case os[:family]
-  when 'centos', 'redhat'
+  if os.debian?
+    includedir = '/etc/mysql/conf.d'
+    mysql_config_file = '/etc/mysql/my.cnf'
+  else
     includedir = '/etc/my.cnf.d'
     mysql_config_file = '/etc/my.cnf'
   end

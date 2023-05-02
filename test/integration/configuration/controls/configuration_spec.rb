@@ -3,7 +3,7 @@
 # includedir = '/etc/mysql/conf.d'
 extra_config_file = '/etc/mysql/conf.d/extra_innodb.cnf'
 case os[:family]
-when 'centos', 'redhat', 'amazon'
+when 'centos', 'redhat', 'amazon', 'fedora'
   # includedir = '/etc/my.cnf.d'
   extra_config_file = '/etc/my.cnf.d/extra_innodb.cnf'
 end

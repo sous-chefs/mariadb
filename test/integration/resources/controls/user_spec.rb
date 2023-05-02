@@ -42,6 +42,8 @@ control 'mariadb_user' do
   end
 
   describe sql.query("show grants for 'spaces'@'127.0.0.1'") do
-    its('output') { should include 'GRANT LOCK TABLES, REPLICATION CLIENT ON *.* TO `spaces`@`127.0.0.1`' }
+    mariadb_version = Gem::Version.new(file('/tmp/mariadb_version').content)
+    repl_priv = mariadb_version >= Gem::Version.new('10.5') ? 'BINLOG MONITOR' : 'REPLICATION CLIENT'
+    its('output') { should include "GRANT LOCK TABLES, #{repl_priv} ON *.* TO `spaces`@`127.0.0.1`" }
   end
 end
