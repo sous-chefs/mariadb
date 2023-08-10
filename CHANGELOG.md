@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Treat redhat like other members of the platform_family when generating yum repo url
+
 ## 5.3.2 - *2023-07-10*
 
 ## 5.3.1 - *2023-05-17*
