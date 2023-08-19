@@ -259,7 +259,7 @@ module MariaDBCookbook
     def yum_repo_platform_string
       release = yum_releasever
       # Treat Alma and Rocky as RHEL
-      if platform?('almalinux', 'rocky', 'amazon')
+      if platform?('almalinux', 'rocky', 'amazon', 'redhat')
         "rhel/#{release}/$basearch"
       else
         "#{node['platform']}/#{release}/$basearch"
