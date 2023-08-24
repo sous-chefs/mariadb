@@ -10,8 +10,9 @@ This resource installs mariadb client packages.
 
 Name                | Types             | Description                                                   | Default                                   | Required?
 ------------------- | ----------------- | ------------------------------------------------------------- | ----------------------------------------- | ---------
-`version`           | String            | Version of MariaDB to install                                 | `10.3`                                    | no
+`version`           | String            | Version of MariaDB to install                                 | `10.11`                                   | no
 `setup_repo`        | Boolean           | Define if you want to add the MariaDB repository              | `true`                                    | no
+`package_action`    | :install, :upgrade| Package action behaviour                                      | `:install`                                | no
 
 ### Examples
 
