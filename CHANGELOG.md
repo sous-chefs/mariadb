@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Allow changing action behaviour of the package resource (:install, :upgrade)
+
 ## 5.4.0 - *2023-08-19*
 
 - Treat redhat like other members of the platform_family when generating yum repo url

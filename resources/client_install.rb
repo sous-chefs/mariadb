@@ -18,8 +18,9 @@
 provides :mariadb_client_install
 unified_mode true
 
-property :version,    String, default: '10.11'
-property :setup_repo, [true, false], default: true
+property :version,        String, default: '10.11'
+property :setup_repo,     [true, false], default: true
+property :package_action, [:install, :upgrade], default: :install
 
 action :install do
   mariadb_repository 'Add mariadb.org repository' do
@@ -27,7 +28,9 @@ action :install do
     only_if { new_resource.setup_repo }
   end
 
-  package client_pkg_name
+  package client_pkg_name do
+    action new_resource.package_action
+  end
 end
 
 action_class do

@@ -20,18 +20,22 @@ unified_mode true
 
 include MariaDBCookbook::Helpers
 
-property :version,           String,        default: '10.11'
-property :setup_repo,        [true, false], default: true
-property :password,          [String, nil], default: 'generate'
-property :install_sleep,     Integer,       default: 5, desired_state: false
+property :version,           String,               default: '10.11'
+property :setup_repo,        [true, false],        default: true
+property :password,          [String, nil],        default: 'generate'
+property :install_sleep,     Integer,              default: 5, desired_state: false
+property :package_action,    [:install, :upgrade], default: :install
 
 action :install do
   mariadb_client_install 'Install MariaDB Client' do
     version new_resource.version
     setup_repo new_resource.setup_repo
+    package_action new_resource.package_action
   end
 
-  package server_pkg_name
+  package server_pkg_name do
+    action new_resource.package_action
+  end
 
   selinux_install 'mariadb' if selinux_enabled?
 
