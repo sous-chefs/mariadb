@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
 ## 5.5.3 - *2024-05-06*
 
 ## 5.5.2 - *2023-11-01*
