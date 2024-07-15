@@ -6,7 +6,7 @@ description      'Installs/Configures MariaDB'
 source_url       'https://github.com/sous-chefs/mariadb'
 issues_url       'https://github.com/sous-chefs/mariadb/issues'
 chef_version     '>= 15.3'
-version          '5.5.4'
+version          '5.5.5'
 
 supports 'ubuntu', '>= 18.04'
 supports 'debian', '>= 9.0'
