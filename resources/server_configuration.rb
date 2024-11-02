@@ -54,7 +54,7 @@ property :mysqld_sort_buffer_size,        String,            default: '4M'
 property :mysqld_bulk_insert_buffer_size, String,            default: '16M'
 property :mysqld_tmp_table_size,          String,            default: '32M'
 property :mysqld_max_heap_table_size,     String,            default: '32M'
-property :mysqld_myisam_recover,          String,            default: 'BACKUP'
+property :mysqld_myisam_recover_options,  String,            default: 'BACKUP'
 property :mysqld_key_buffer_size,         String,            default: '128M'
 property :mysqld_open_files_limit,        [Integer, nil],    default: nil
 property :mysqld_table_open_cache,        Integer,           default: 400
@@ -100,6 +100,12 @@ property :replication_expire_logs_days,   Integer,           default: 10
 property :replication_max_binlog_size,    String,            default: '100M'
 property :replication_options,            Hash,              default: {}
 
+deprecated_property_alias(
+  'mysqld_myisam_recover',
+  'mysqld_myisam_recover_options',
+  'Please `mysqld_myisam_recover_options` as `mysqld_myisam_recover` and its associated mariadb setting is deprecated'
+)
+
 action :modify do
   template new_resource.mycnf_file do
     source 'my.cnf.erb'
@@ -137,7 +143,7 @@ action :modify do
               mysqld_bulk_insert_buffer_size: new_resource.mysqld_bulk_insert_buffer_size,
               mysqld_tmp_table_size: new_resource.mysqld_tmp_table_size,
               mysqld_max_heap_table_size: new_resource.mysqld_max_heap_table_size,
-              mysqld_myisam_recover: new_resource.mysqld_myisam_recover,
+              mysqld_myisam_recover_options: new_resource.mysqld_myisam_recover_options,
               mysqld_key_buffer_size: new_resource.mysqld_key_buffer_size,
               mysqld_open_files_limit: new_resource.mysqld_open_files_limit,
               mysqld_table_open_cache: new_resource.mysqld_table_open_cache,
