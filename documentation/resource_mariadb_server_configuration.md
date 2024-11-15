@@ -42,7 +42,7 @@ Name                            | Types             | Description               
 `mysqld_bulk_insert_buffer_size`| String            |                                                               | `16M`                                            | no
 `mysqld_tmp_table_size`         | String            |                                                               | `32M`                                            | no
 `mysqld_max_heap_table_size`    | String            |                                                               | `32M`                                            | no
-`mysqld_myisam_recover`         | String            |                                                               | `BACKUP`                                         | no
+`mysqld_myisam_recover_options` | String            |                                                               | `BACKUP`                                         | no
 `mysqld_key_buffer_size`        | String            |                                                               | `128M`                                           | no
 `mysqld_open_files_limit`       | Integer, nil      |                                                               | `nil`                                            | no
 `mysqld_table_open_cache`       | Integer           |                                                               | `400`                                            | no
