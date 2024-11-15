@@ -222,7 +222,7 @@ module MariaDBCookbook
     end
 
     def mariadbbackup_pkg_name
-      if platform_family?('rhel', 'fedora', 'amazon')
+      if platform_family?('rhel', 'fedora')
         'MariaDB-backup'
       else
         'mariadb-backup'
@@ -257,18 +257,12 @@ module MariaDBCookbook
 
     # build the platform string that makes up the final component of the yum repo URL
     def yum_repo_platform_string
-      release = yum_releasever
       # Treat Alma and Rocky as RHEL
-      if platform?('almalinux', 'rocky', 'amazon', 'redhat')
-        "rhel/#{release}/$basearch"
+      if platform?('almalinux', 'rocky', 'redhat')
+        'rhel/$releasever/$basearch'
       else
-        "#{node['platform']}/#{release}/$basearch"
+        "#{node['platform']}/$releasever/$basearch"
       end
-    end
-
-    # on amazon use the RHEL 7 packages. Otherwise use the releasever yum variable
-    def yum_releasever
-      platform?('amazon') ? '7' : '$releasever'
     end
 
     def default_socket
@@ -292,7 +286,7 @@ module MariaDBCookbook
 
     def default_mysqld_path
       case node['platform_family']
-      when 'rhel', 'fedora', 'amazon'
+      when 'rhel', 'fedora'
         if new_resource.setup_repo
           '/usr/sbin/mysqld'
         else
@@ -304,7 +298,7 @@ module MariaDBCookbook
     end
 
     def default_selinux_module_path
-      if platform_family?('rhel', 'fedora', 'amazon')
+      if platform_family?('rhel', 'fedora')
         '/usr/share/mariadb/policy/selinux'
       elsif new_resource.setup_repo
         '/usr/share/mariadb/policy/selinux'

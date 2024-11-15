@@ -18,9 +18,9 @@
 provides :mariadb_repository
 unified_mode true
 
-property :version,            String, default: '10.3'
+property :version,            String, default: '11.6'
 property :enable_mariadb_org, [true, false], default: true
-property :yum_gpg_key_uri,    String, default: 'https://yum.mariadb.org/RPM-GPG-KEY-MariaDB'
+property :yum_gpg_key_uri,    String, default: 'https://mirror.mariadb.org/yum/RPM-GPG-KEY-MariaDB'
 property :apt_gpg_keyserver,  String, default: 'keyserver.ubuntu.com'
 property :apt_gpg_key,        String, default: lazy {
   if node['lsb']['codename'] == 'buster' || node['lsb']['codename'] == 'buster/sid'
@@ -32,12 +32,12 @@ property :apt_gpg_key,        String, default: lazy {
   end
 }
 property :apt_key_proxy,      [String, false], default: false
-property :apt_repository_uri, String, default: 'http://mariadb.mirrors.ovh.net/MariaDB/repo'
+property :apt_repository_uri, String, default: 'https://mirror.mariadb.org/repo'
 
 action :add do
   case node['platform_family']
 
-  when 'rhel', 'fedora', 'amazon'
+  when 'rhel', 'fedora'
     remote_file "/etc/pki/rpm-gpg/RPM-GPG-KEY-MariaDB-#{new_resource.version}" do
       source new_resource.yum_gpg_key_uri
     end
@@ -52,7 +52,7 @@ action :add do
     yum_repository "MariaDB #{new_resource.version}" do
       repositoryid "mariadb#{new_resource.version}"
       description "MariaDB.org #{new_resource.version}"
-      baseurl     yum_repo_url('http://yum.mariadb.org')
+      baseurl     yum_repo_url('https://mirror.mariadb.org/yum')
       enabled     new_resource.enable_mariadb_org
       options     opts
       gpgcheck    true
