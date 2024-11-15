@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 6.0.0 - *2024-11-15*
 
 - Update supported platforms
 - Default to MariaDB 11.6 from 10.3
