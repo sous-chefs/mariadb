@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 6.1.0 - *2024-11-15*
 
 - Resource: `mariadb_server_configuration`:
   - Property `mysqld_myisam_recover` -- renamed to --> `mysqld_myisam_recover_options`
