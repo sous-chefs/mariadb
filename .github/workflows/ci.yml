@@ -22,89 +22,37 @@ jobs:
       matrix:
         os:
           - almalinux-8
-          # - amazonlinux-2023
-          - centos-7
-          - centos-stream-8
-          - debian-10
+          - almalinux-9
+          - centos-stream-9
           - debian-11
+          - debian-12
           - rockylinux-8
-          - ubuntu-1804
+          - rockylinux-9
           - ubuntu-2004
-          # Latest fedora (38 at time of writing) does not have any mariadb packages yet
-          # - fedora-latest
+          - ubuntu-2204
+          - ubuntu-2404
         suite:
           - "repository"
+          - "repository-10"
           - "client-install"
+          - "client-install-10"
           - "client-distro-install"
           - "server-install"
-          - "server-install-1011"
+          - "server-install-10"
           - "server-distro-install"
           - "configuration"
           - "server-configuration"
-          - "server-configuration-1011"
+          - "server-configuration-10"
           - "resources"
-          - "resources-1011"
+          - "resources-10"
           - "replication"
-          - "replication-1011"
+          - "replication-10"
           - "datadir"
-          - "datadir-1011"
+          - "datadir-10"
           - "port"
-          - "port-1011"
+          - "port-10"
           - "galera-configuration"
-          - "galera-configuration-1011"
-        exclude:
-          - os: ubuntu-1804
-            suite: "server-install-1011"
-          - os: ubuntu-1804
-            suite: "server-configuration-1011"
-          - os: ubuntu-1804
-            suite: "resources-1011"
-          - os: ubuntu-1804
-            suite: "replication-1011"
-          - os: ubuntu-1804
-            suite: "datadir-1011"
-          - os: ubuntu-1804
-            suite: "port-1011"
-          - os: ubuntu-1804
-            suite: "galera-configuration-1011"
-          - os: centos-7
-            suite: "server-install-1011"
-          - os: centos-7
-            suite: "server-configuration-1011"
-          - os: centos-7
-            suite: "resources-1011"
-          - os: centos-7
-            suite: "replication-1011"
-          - os: centos-7
-            suite: "datadir-1011"
-          - os: centos-7
-            suite: "port-1011"
-          - os: centos-7
-            suite: "galera-configuration-1011"
-          - os: debian-11
-            suite: "repository"
-          - os: debian-11
-            suite: "client-install"
-          - os: debian-11
-            suite: "client-distro-install"
-          - os: debian-11
-            suite: "server-install"
-          - os: debian-11
-            suite: "server-distro-install"
-          - os: debian-11
-            suite: "configuration"
-          - os: debian-11
-            suite: "server-configuration"
-          - os: debian-11
-            suite: "resources"
-          - os: debian-11
-            suite: "replication"
-          - os: debian-11
-            suite: "datadir"
-          - os: debian-11
-            suite: "port"
-          - os: debian-11
-            suite: "galera-configuration"
+          - "galera-configuration-10"
       fail-fast: false
 
     steps:
