@@ -18,7 +18,7 @@
 provides :mariadb_repository
 unified_mode true
 
-property :version,            String, default: '11.6'
+property :version,            String, default: '11.4'
 property :enable_mariadb_org, [true, false], default: true
 property :yum_gpg_key_uri,    String, default: 'https://mirror.mariadb.org/yum/RPM-GPG-KEY-MariaDB'
 property :apt_gpg_keyserver,  String, default: 'keyserver.ubuntu.com'

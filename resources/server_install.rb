@@ -20,7 +20,7 @@ unified_mode true
 
 include MariaDBCookbook::Helpers
 
-property :version,           String,               default: '10.11'
+property :version,           String,               default: '11.4'
 property :setup_repo,        [true, false],        default: true
 property :password,          [String, nil],        default: 'generate'
 property :install_sleep,     Integer,              default: 5, desired_state: false
