@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Standardise files with files in sous-chefs/repo-management
+
 ## 6.2.0 - *2024-11-19*
 
 - Switch default from 11.6 to 11.4
