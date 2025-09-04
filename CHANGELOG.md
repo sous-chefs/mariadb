@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
 ## 6.2.2 - *2025-09-04*
 
 ## 6.2.1 - *2025-06-08*
