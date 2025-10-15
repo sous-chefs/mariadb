@@ -230,7 +230,7 @@ action :grant do
   test_sql << " AND Db='#{new_resource.database_name}'" if new_resource.database_name
   test_sql_results = run_query test_sql
 
-  incorrect_privs = true if test_sql_results.split("\n").count == 0
+  incorrect_privs = true if test_sql_results.split("\n").none?
   # These should all be 'Y'
   unless test_sql_results.split("\n").count <= 1
     parsed_result = parse_mysql_batch_result(test_sql_results)
@@ -249,7 +249,7 @@ action :grant do
   # Repair
   if incorrect_privs
     converge_by "Granting privs for '#{new_resource.username}'@'#{new_resource.host}'" do
-      repair_sql = "GRANT #{new_resource.privileges.map(&:upcase).join(', ').gsub(/_/, ' ')}"
+      repair_sql = "GRANT #{new_resource.privileges.map(&:upcase).join(', ').gsub('_', ' ')}"
       repair_sql << " ON #{db_name}.#{tbl_name}"
       repair_sql << " TO '#{new_resource.username}'@'#{new_resource.host}' IDENTIFIED BY"
       repair_sql << if new_resource.password.is_a?(HashedPassword)
