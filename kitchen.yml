@@ -3,7 +3,7 @@ driver:
   name: vagrant
 
 provisioner:
-  name: chef_infra
+  name: policyfile_zero
   product_name: <%= ENV['CHEF_PRODUCT_NAME'] || 'chef' %>
   product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
   chef_license: accept-no-persist
@@ -11,6 +11,7 @@ provisioner:
   multiple_converge: 2
   deprecations_as_errors: true
   log_level: <%= ENV['CHEF_LOG_LEVEL'] || 'auto' %>
+  policyfile: Policyfile.rb
 
 verifier:
   name: inspec
@@ -29,104 +30,104 @@ platforms:
 
 suites:
   - name: repository
-    run_list:
-      - recipe[test::repository]
+    provisioner:
+      named_run_list: repository
   - name: repository-10
-    run_list:
-      - recipe[test::repository]
+    provisioner:
+      named_run_list: repository
     attributes:
       mariadb_server_test_version: '10.11'
     verifier:
       inspec_tests:
         - path: test/integration/repository
   - name: client_install
-    run_list:
-      - recipe[test::client_install]
+    provisioner:
+      named_run_list: client_install
   - name: client_install-10
-    run_list:
-      - recipe[test::client_install]
+    provisioner:
+      named_run_list: client_install
     attributes:
       mariadb_server_test_version: '10.11'
     verifier:
       inspec_tests:
         - path: test/integration/client_install
   - name: client_distro_install
-    run_list:
-      - recipe[test::client_distro_install]
+    provisioner:
+      named_run_list: client_distro_install
   - name: server_install
-    run_list:
-      - recipe[test::server_install]
+    provisioner:
+      named_run_list: server_install
   - name: server_install-10
-    run_list:
-      - recipe[test::server_install]
+    provisioner:
+      named_run_list: server_install
     attributes:
       mariadb_server_test_version: '10.11'
     verifier:
       inspec_tests:
         - path: test/integration/server_install
   - name: server_distro_install
-    run_list:
-      - recipe[test::server_distro_install]
+    provisioner:
+      named_run_list: server_distro_install
   - name: configuration
-    run_list:
-      - recipe[test::configuration]
+    provisioner:
+      named_run_list: configuration
   - name: server_configuration
-    run_list:
-      - recipe[test::server_configuration]
+    provisioner:
+      named_run_list: server_configuration
   - name: server_configuration_10
-    run_list:
-      - recipe[test::server_configuration]
+    provisioner:
+      named_run_list: server_configuration
     attributes:
       mariadb_server_test_version: '10.11'
     verifier:
       inspec_tests:
         - path: test/integration/server_configuration
   - name: resources
-    run_list:
-      - recipe[test::user_database]
+    provisioner:
+      named_run_list: user_database
   - name: resources_10
-    run_list:
-      - recipe[test::user_database]
+    provisioner:
+      named_run_list: user_database
     attributes:
       mariadb_server_test_version: '10.11'
     verifier:
       inspec_tests:
         - path: test/integration/resources
   - name: replication
-    run_list:
-      - recipe[test::replication]
+    provisioner:
+      named_run_list: replication
   - name: replication_10
-    run_list:
-      - recipe[test::replication]
+    provisioner:
+      named_run_list: replication
     attributes:
       mariadb_server_test_version: '10.11'
     verifier:
       inspec_tests:
         - path: test/integration/replication
   - name: datadir
-    run_list:
-      - recipe[test::datadir]
+    provisioner:
+      named_run_list: datadir
   - name: datadir_10
-    run_list:
-      - recipe[test::datadir]
+    provisioner:
+      named_run_list: datadir
     verifier:
       inspec_tests:
         - path: test/integration/datadir
   - name: port
-    run_list:
-      - recipe[test::port]
+    provisioner:
+      named_run_list: port
   - name: port_10
-    run_list:
-      - recipe[test::port]
+    provisioner:
+      named_run_list: port
     verifier:
       inspec_tests:
         - path: test/integration/port
   - name: galera_configuration
-    run_list:
-      - recipe[test::galera_configuration]
+    provisioner:
+      named_run_list: galera_configuration
   - name: galera_configuration_10
-    run_list:
-      - recipe[test::galera_configuration]
+    provisioner:
+      named_run_list: galera_configuration
     attributes:
       mariadb_server_test_version: '10.11'
     verifier:
