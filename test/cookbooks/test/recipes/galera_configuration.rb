@@ -4,7 +4,7 @@ mariadb_server_configuration 'MariaDB Server Configuration' do
   version node['mariadb_server_test_version']
 end
 
-include_recipe 'yum-epel'
+yum_epel 'default'
 
 mariadb_galera_configuration 'MariaDB Galera Configuration' do
   version node['mariadb_server_test_version']
