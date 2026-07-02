@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 name 'mariadb'
-default_source :supermarket
 
 run_list 'test::repository'
 
 cookbook 'mariadb', path: '.'
+cookbook 'selinux', git: 'https://github.com/sous-chefs/selinux.git', branch: 'main'
 cookbook 'test', path: './test/cookbooks/test'
+cookbook 'yum-epel', git: 'https://github.com/sous-chefs/yum-epel.git', branch: 'main'
 
 Dir.children('./test/cookbooks/test/recipes').grep(/\.rb\z/).sort.each do |recipe|
   recipe_name = File.basename(recipe, '.rb')

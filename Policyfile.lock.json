@@ -1,5 +1,5 @@
 {
-  "revision_id": "fecd5da79c6a73028d1006ff5ac86ad5a5d295440d410b0bc555471a3f34162d",
+  "revision_id": "09c45a9f6275e0277175a036f6ba4756133489ad68affd2a2d2ec996b7ec1db1",
   "name": "mariadb",
   "run_list": [
     "recipe[test::repository]"
@@ -54,14 +54,12 @@
       "cache_key": null,
       "scm_info": {
         "scm": "git",
-        "remote": null,
-        "revision": "cf6f749d63b1b5f6b9593ddd38639b7696ad2b0d",
+        "remote": "https://github.com/sous-chefs/mariadb.git",
+        "revision": "0e8aa4b017b7477990fe4480eeb28c448d003685",
         "working_tree_clean": false,
         "published": true,
         "synchronized_remote_branches": [
-          "origin/HEAD -> origin/main",
-          "origin/main",
-          "origin/renovate/actions"
+          "origin/policyfile-migration"
         ]
       },
       "source_options": {
@@ -69,14 +67,15 @@
       }
     },
     "selinux": {
-      "version": "6.2.4",
-      "identifier": "c414582aa5688ac843992facf3b65811abf43d2f",
-      "dotted_decimal_identifier": "55191464340449418.56369320551052214.96832922598703",
-      "cache_key": "selinux-6.2.4-supermarket.chef.io",
-      "origin": "https://supermarket.chef.io:443/api/v1/cookbooks/selinux/versions/6.2.4/download",
+      "version": "6.2.5",
+      "identifier": "fa6b54a8fdcd064bd74083e4dc4f304f908b0482",
+      "dotted_decimal_identifier": "70486755534294278.21347295343991887.53118285579394",
+      "cache_key": "selinux-133af3c64e90d339319ddf41f2836d1b4670c9b9",
+      "origin": "https://github.com/sous-chefs/selinux.git",
       "source_options": {
-        "artifactserver": "https://supermarket.chef.io:443/api/v1/cookbooks/selinux/versions/6.2.4/download",
-        "version": "6.2.4"
+        "git": "https://github.com/sous-chefs/selinux.git",
+        "revision": "133af3c64e90d339319ddf41f2836d1b4670c9b9",
+        "branch": "main"
       }
     },
     "test": {
@@ -87,14 +86,12 @@
       "cache_key": null,
       "scm_info": {
         "scm": "git",
-        "remote": null,
-        "revision": "cf6f749d63b1b5f6b9593ddd38639b7696ad2b0d",
+        "remote": "https://github.com/sous-chefs/mariadb.git",
+        "revision": "0e8aa4b017b7477990fe4480eeb28c448d003685",
         "working_tree_clean": false,
         "published": true,
         "synchronized_remote_branches": [
-          "origin/HEAD -> origin/main",
-          "origin/main",
-          "origin/renovate/actions"
+          "origin/policyfile-migration"
         ]
       },
       "source_options": {
@@ -102,14 +99,15 @@
       }
     },
     "yum-epel": {
-      "version": "5.0.9",
-      "identifier": "e001464b1be96e91578d9f2eae7db84345d2c611",
-      "dotted_decimal_identifier": "63051796202645870.40910137395687037.202599073760785",
-      "cache_key": "yum-epel-5.0.9-supermarket.chef.io",
-      "origin": "https://supermarket.chef.io:443/api/v1/cookbooks/yum-epel/versions/5.0.9/download",
+      "version": "5.0.10",
+      "identifier": "3ffd59317825177023566a99bf5940e29163cfd4",
+      "dotted_decimal_identifier": "18011483056645399.31564051454213977.71341846024148",
+      "cache_key": "yum-epel-0ae39de8b609c2904012f4da4cf261b6e3361f74",
+      "origin": "https://github.com/sous-chefs/yum-epel.git",
       "source_options": {
-        "artifactserver": "https://supermarket.chef.io:443/api/v1/cookbooks/yum-epel/versions/5.0.9/download",
-        "version": "5.0.9"
+        "git": "https://github.com/sous-chefs/yum-epel.git",
+        "revision": "0ae39de8b609c2904012f4da4cf261b6e3361f74",
+        "branch": "main"
       }
     }
   },
@@ -127,7 +125,7 @@
       ],
       [
         "selinux",
-        "= 6.2.4"
+        ">= 0.0.0"
       ],
       [
         "test",
@@ -135,7 +133,7 @@
       ],
       [
         "yum-epel",
-        "= 5.0.9"
+        ">= 0.0.0"
       ]
     ],
     "dependencies": {
@@ -145,7 +143,7 @@
           ">= 6.0.0"
         ]
       ],
-      "selinux (6.2.4)": [
+      "selinux (6.2.5)": [
 
       ],
       "test (0.1.0)": [
@@ -162,7 +160,7 @@
           ">= 0.0.0"
         ]
       ],
-      "yum-epel (5.0.9)": [
+      "yum-epel (5.0.10)": [
 
       ]
     }
