@@ -1,5 +1,5 @@
 {
-  "revision_id": "8c40c76592ab6fa22f046a420d207eeca6d09b9964f2225dbcdce57892f51ed1",
+  "revision_id": "6a52eb35f4462da08c71516d3d40d1179556445178d4f6b48b111b248259204f",
   "name": "mariadb",
   "run_list": [
     "recipe[test::repository]"
@@ -48,14 +48,14 @@
   "cookbook_locks": {
     "mariadb": {
       "version": "6.2.3",
-      "identifier": "b33c1fa4b4b7c7b4e585e9f749f6c9a5e5796961",
-      "dotted_decimal_identifier": "50450127436167111.50917859126626806.221714356726113",
+      "identifier": "ef364fe5902278fe1facff52ac05de301cb6ebc2",
+      "dotted_decimal_identifier": "67332236215591544.71529471962950661.244298221546434",
       "source": ".",
       "cache_key": null,
       "scm_info": {
         "scm": "git",
         "remote": "https://github.com/sous-chefs/mariadb.git",
-        "revision": "44ca9b751f6cbad02e90dc0e53735528179a6e98",
+        "revision": "97e09431d9152639ba011db4dd530d7eb18df9e9",
         "working_tree_clean": false,
         "published": true,
         "synchronized_remote_branches": [
@@ -87,7 +87,7 @@
       "scm_info": {
         "scm": "git",
         "remote": "https://github.com/sous-chefs/mariadb.git",
-        "revision": "44ca9b751f6cbad02e90dc0e53735528179a6e98",
+        "revision": "97e09431d9152639ba011db4dd530d7eb18df9e9",
         "working_tree_clean": false,
         "published": true,
         "synchronized_remote_branches": [

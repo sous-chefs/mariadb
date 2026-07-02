@@ -52,7 +52,7 @@ action :add do
     yum_repository "MariaDB #{new_resource.version}" do
       repositoryid "mariadb#{new_resource.version}"
       description "MariaDB.org #{new_resource.version}"
-      baseurl     yum_repo_url('https://dlm.mariadb.com/repo/mariadb-server')
+      baseurl     "https://dlm.mariadb.com/repo/mariadb-server/#{new_resource.version}/yum/#{yum_repo_platform_string}"
       enabled     new_resource.enable_mariadb_org
       options     opts
       gpgcheck    true
