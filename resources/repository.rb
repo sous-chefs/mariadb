@@ -52,7 +52,7 @@ action :add do
     yum_repository "MariaDB #{new_resource.version}" do
       repositoryid "mariadb#{new_resource.version}"
       description "MariaDB.org #{new_resource.version}"
-      baseurl     yum_repo_url('https://mirror.mariadb.org/yum')
+      baseurl     yum_repo_url('https://dlm.mariadb.com/repo/mariadb-server')
       enabled     new_resource.enable_mariadb_org
       options     opts
       gpgcheck    true
@@ -63,6 +63,10 @@ action :add do
     apt_update
     package 'apt-transport-https'
     package 'dirmngr' if (platform?('ubuntu') && node['platform_version'].to_i >= 9) || (platform?('ubuntu') && node['platform_version'].to_i >= 18)
+
+    directory '/etc/apt/keyrings' do
+      mode '0755'
+    end
 
     apt_repository 'mariadb_org_repository' do
       uri          "#{new_resource.apt_repository_uri}/#{new_resource.version}/#{node['platform']}"
