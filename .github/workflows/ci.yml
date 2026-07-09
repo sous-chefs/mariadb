@@ -24,8 +24,8 @@ jobs:
           - almalinux-8
           - almalinux-9
           - centos-stream-9
-          - debian-11
           - debian-12
+          - debian-13
           - rockylinux-8
           - rockylinux-9
           - ubuntu-2004
@@ -54,12 +54,15 @@ jobs:
           - "galera-configuration"
           - "galera-configuration-10"
       fail-fast: false
+      max-parallel: 8
 
     steps:
       - name: Check out code
         uses: actions/checkout@v7
       - name: Install Chef
         uses: actionshub/chef-install@6.0.0
+      - name: Install cookbooks
+        run: chef install Policyfile.rb
       - name: Disable apparmor for mysqld
         run: |
           set -x

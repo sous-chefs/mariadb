@@ -1,0 +1,168 @@
+{
+  "revision_id": "6a52eb35f4462da08c71516d3d40d1179556445178d4f6b48b111b248259204f",
+  "name": "mariadb",
+  "run_list": [
+    "recipe[test::repository]"
+  ],
+  "named_run_lists": {
+    "client_distro_install": [
+      "recipe[test::client_distro_install]"
+    ],
+    "client_install": [
+      "recipe[test::client_install]"
+    ],
+    "configuration": [
+      "recipe[test::configuration]"
+    ],
+    "datadir": [
+      "recipe[test::datadir]"
+    ],
+    "galera_configuration": [
+      "recipe[test::galera_configuration]"
+    ],
+    "port": [
+      "recipe[test::port]"
+    ],
+    "replication": [
+      "recipe[test::replication]"
+    ],
+    "repository": [
+      "recipe[test::repository]"
+    ],
+    "server_configuration": [
+      "recipe[test::server_configuration]"
+    ],
+    "server_distro_install": [
+      "recipe[test::server_distro_install]"
+    ],
+    "server_install": [
+      "recipe[test::server_install]"
+    ],
+    "user_database": [
+      "recipe[test::user_database]"
+    ]
+  },
+  "included_policy_locks": [
+
+  ],
+  "cookbook_locks": {
+    "mariadb": {
+      "version": "6.2.3",
+      "identifier": "ef364fe5902278fe1facff52ac05de301cb6ebc2",
+      "dotted_decimal_identifier": "67332236215591544.71529471962950661.244298221546434",
+      "source": ".",
+      "cache_key": null,
+      "scm_info": {
+        "scm": "git",
+        "remote": "https://github.com/sous-chefs/mariadb.git",
+        "revision": "97e09431d9152639ba011db4dd530d7eb18df9e9",
+        "working_tree_clean": false,
+        "published": true,
+        "synchronized_remote_branches": [
+          "origin/policyfile-migration"
+        ]
+      },
+      "source_options": {
+        "path": "."
+      }
+    },
+    "selinux": {
+      "version": "6.2.5",
+      "identifier": "fa6b54a8fdcd064bd74083e4dc4f304f908b0482",
+      "dotted_decimal_identifier": "70486755534294278.21347295343991887.53118285579394",
+      "cache_key": "selinux-133af3c64e90d339319ddf41f2836d1b4670c9b9",
+      "origin": "https://github.com/sous-chefs/selinux.git",
+      "source_options": {
+        "git": "https://github.com/sous-chefs/selinux.git",
+        "revision": "133af3c64e90d339319ddf41f2836d1b4670c9b9",
+        "branch": "main"
+      }
+    },
+    "test": {
+      "version": "0.1.0",
+      "identifier": "39433597a339b213084555825c6cd05cfd6fd184",
+      "dotted_decimal_identifier": "16117971128891826.5357118437874796.229097807532420",
+      "source": "test/cookbooks/test",
+      "cache_key": null,
+      "scm_info": {
+        "scm": "git",
+        "remote": "https://github.com/sous-chefs/mariadb.git",
+        "revision": "97e09431d9152639ba011db4dd530d7eb18df9e9",
+        "working_tree_clean": false,
+        "published": true,
+        "synchronized_remote_branches": [
+          "origin/policyfile-migration"
+        ]
+      },
+      "source_options": {
+        "path": "test/cookbooks/test"
+      }
+    },
+    "yum-epel": {
+      "version": "5.0.10",
+      "identifier": "3ffd59317825177023566a99bf5940e29163cfd4",
+      "dotted_decimal_identifier": "18011483056645399.31564051454213977.71341846024148",
+      "cache_key": "yum-epel-0ae39de8b609c2904012f4da4cf261b6e3361f74",
+      "origin": "https://github.com/sous-chefs/yum-epel.git",
+      "source_options": {
+        "git": "https://github.com/sous-chefs/yum-epel.git",
+        "revision": "0ae39de8b609c2904012f4da4cf261b6e3361f74",
+        "branch": "main"
+      }
+    }
+  },
+  "default_attributes": {
+
+  },
+  "override_attributes": {
+
+  },
+  "solution_dependencies": {
+    "Policyfile": [
+      [
+        "mariadb",
+        ">= 0.0.0"
+      ],
+      [
+        "selinux",
+        ">= 0.0.0"
+      ],
+      [
+        "test",
+        ">= 0.0.0"
+      ],
+      [
+        "yum-epel",
+        ">= 0.0.0"
+      ]
+    ],
+    "dependencies": {
+      "mariadb (6.2.3)": [
+        [
+          "selinux",
+          ">= 6.0.0"
+        ]
+      ],
+      "selinux (6.2.5)": [
+
+      ],
+      "test (0.1.0)": [
+        [
+          "mariadb",
+          ">= 0.0.0"
+        ],
+        [
+          "selinux",
+          ">= 0.0.0"
+        ],
+        [
+          "yum-epel",
+          ">= 0.0.0"
+        ]
+      ],
+      "yum-epel (5.0.10)": [
+
+      ]
+    }
+  }
+}
