@@ -1,5 +1,5 @@
 {
-  "revision_id": "b1dde75b60b0877efcf51b5059505e29be8d5bb81f6fcb68021852b88e513f26",
+  "revision_id": "6a52eb35f4462da08c71516d3d40d1179556445178d4f6b48b111b248259204f",
   "name": "mariadb",
   "run_list": [
     "recipe[test::repository]"
@@ -48,19 +48,18 @@
   "cookbook_locks": {
     "mariadb": {
       "version": "6.2.3",
-      "identifier": "961706852c53d9a390d33ad29382427fc5b35114",
-      "dotted_decimal_identifier": "42246563278115801.46039658103214978.73116545143060",
+      "identifier": "ef364fe5902278fe1facff52ac05de301cb6ebc2",
+      "dotted_decimal_identifier": "67332236215591544.71529471962950661.244298221546434",
       "source": ".",
       "cache_key": null,
       "scm_info": {
         "scm": "git",
-        "remote": "git@github.com:sous-chefs/mariadb.git",
-        "revision": "43d4d5f0df0fff4c79bce7156013e42a3d8cd652",
+        "remote": "https://github.com/sous-chefs/mariadb.git",
+        "revision": "97e09431d9152639ba011db4dd530d7eb18df9e9",
         "working_tree_clean": false,
         "published": true,
         "synchronized_remote_branches": [
-          "origin/HEAD -> origin/main",
-          "origin/main"
+          "origin/policyfile-migration"
         ]
       },
       "source_options": {
@@ -81,19 +80,18 @@
     },
     "test": {
       "version": "0.1.0",
-      "identifier": "853755af137cbb9b8bf32038fdc1ea5c17e8ea0c",
-      "dotted_decimal_identifier": "37497013051555003.43782497724071361.257681259031052",
+      "identifier": "39433597a339b213084555825c6cd05cfd6fd184",
+      "dotted_decimal_identifier": "16117971128891826.5357118437874796.229097807532420",
       "source": "test/cookbooks/test",
       "cache_key": null,
       "scm_info": {
         "scm": "git",
-        "remote": "git@github.com:sous-chefs/mariadb.git",
-        "revision": "43d4d5f0df0fff4c79bce7156013e42a3d8cd652",
+        "remote": "https://github.com/sous-chefs/mariadb.git",
+        "revision": "97e09431d9152639ba011db4dd530d7eb18df9e9",
         "working_tree_clean": false,
         "published": true,
         "synchronized_remote_branches": [
-          "origin/HEAD -> origin/main",
-          "origin/main"
+          "origin/policyfile-migration"
         ]
       },
       "source_options": {
