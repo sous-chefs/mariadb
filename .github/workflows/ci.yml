@@ -53,6 +53,21 @@ jobs:
           - "port-10"
           - "galera-configuration"
           - "galera-configuration-10"
+        exclude:
+          - os: debian-13
+            suite: "repository-10"
+          - os: debian-13
+            suite: "client-install-10"
+          - os: debian-13
+            suite: "server-install-10"
+          - os: debian-13
+            suite: "server-configuration-10"
+          - os: debian-13
+            suite: "resources-10"
+          - os: debian-13
+            suite: "replication-10"
+          - os: debian-13
+            suite: "galera-configuration-10"
       fail-fast: false
       max-parallel: 8
 
