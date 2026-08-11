@@ -46,4 +46,14 @@ control 'mariadb_user' do
     repl_priv = mariadb_version >= Gem::Version.new('10.5') ? 'BINLOG MONITOR' : 'REPLICATION CLIENT'
     its('output') { should include "GRANT LOCK TABLES, #{repl_priv} ON *.* TO `spaces`@`127.0.0.1`" }
   end
+
+  describe command("mysql --protocol=TCP -h 127.0.0.1 -u password_preservation -e 'SELECT 1'") do
+    its('exit_status') { should_not eq 0 }
+    its('stderr') { should match(/Access denied/) }
+  end
+
+  describe command("mysql --protocol=TCP -h 127.0.0.1 -u password_preservation -ppreserved_secret -e 'SELECT 1'") do
+    its('exit_status') { should eq 0 }
+    its('stdout') { should match(/1/) }
+  end
 end
