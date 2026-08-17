@@ -244,19 +244,20 @@ action :grant do
     end
   end
 
-  password_up_to_date = incorrect_privs || test_user_password
-
   # Repair
   if incorrect_privs
     converge_by "Granting privs for '#{new_resource.username}'@'#{new_resource.host}'" do
       repair_sql = "GRANT #{new_resource.privileges.map(&:upcase).join(', ').gsub('_', ' ')}"
       repair_sql << " ON #{db_name}.#{tbl_name}"
-      repair_sql << " TO '#{new_resource.username}'@'#{new_resource.host}' IDENTIFIED BY"
-      repair_sql << if new_resource.password.is_a?(HashedPassword)
-                      " PASSWORD '#{new_resource.password}'"
-                    else
-                      " '#{new_resource.password}'"
-                    end
+      repair_sql << " TO '#{new_resource.username}'@'#{new_resource.host}'"
+      if new_resource.property_is_set?(:password)
+        repair_sql << ' IDENTIFIED BY'
+        repair_sql << if new_resource.password.is_a?(HashedPassword)
+                        " PASSWORD '#{new_resource.password}'"
+                      else
+                        " '#{new_resource.password}'"
+                      end
+      end
       repair_sql << ' REQUIRE SSL' if new_resource.require_ssl
       repair_sql << ' REQUIRE X509' if new_resource.require_x509
       repair_sql << ' WITH GRANT OPTION' if new_resource.grant_option
@@ -266,9 +267,9 @@ action :grant do
       run_query(repair_sql)
       run_query('FLUSH PRIVILEGES')
     end
-  else
+  elsif new_resource.property_is_set?(:password) && !test_user_password
     # The grants are correct, but perhaps the password needs updating?
-    update_user_password unless password_up_to_date
+    update_user_password
   end
 end
 

@@ -19,7 +19,7 @@ Name              | Types                  | Description                        
 `ctrl_port`       | String                 | port of the host to connect to                               | `node['mariadb']['mysqld']['port']`       | no
 `username`        | String                 | The database user to be managed                              | `name` if not defined                     | no
 `host`            | String                 | The host from which the user is allowed to connect           | `localhost`                               | no
-`password`        | String, HashedPassword | password the user will be asked for to connect               |                                           | yes
+`password`        | String, HashedPassword | password to set; omission preserves an existing password     |                                           | no
 `privileges`      | Array                  |                                                              | `[:all]`                                  | no
 `database_name`   | String                 |                                                              |                                           | no
 `table`           | String                 |                                                              |                                           | no
