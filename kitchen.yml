@@ -22,6 +22,8 @@ platforms:
   - name: centos-stream-9
   - name: debian-12
   - name: debian-13
+    attributes:
+      mariadb_server_test_version: '11.8'
   - name: rockylinux-8
   - name: rockylinux-9
   - name: ubuntu-20.04
@@ -33,6 +35,8 @@ suites:
     provisioner:
       named_run_list: repository
   - name: repository-10
+    excludes:
+      - debian-13
     provisioner:
       named_run_list: repository
     attributes:
@@ -44,6 +48,8 @@ suites:
     provisioner:
       named_run_list: client_install
   - name: client_install-10
+    excludes:
+      - debian-13
     provisioner:
       named_run_list: client_install
     attributes:
@@ -58,6 +64,8 @@ suites:
     provisioner:
       named_run_list: server_install
   - name: server_install-10
+    excludes:
+      - debian-13
     provisioner:
       named_run_list: server_install
     attributes:
@@ -75,6 +83,8 @@ suites:
     provisioner:
       named_run_list: server_configuration
   - name: server_configuration_10
+    excludes:
+      - debian-13
     provisioner:
       named_run_list: server_configuration
     attributes:
@@ -86,6 +96,8 @@ suites:
     provisioner:
       named_run_list: user_database
   - name: resources_10
+    excludes:
+      - debian-13
     provisioner:
       named_run_list: user_database
     attributes:
@@ -97,6 +109,8 @@ suites:
     provisioner:
       named_run_list: replication
   - name: replication_10
+    excludes:
+      - debian-13
     provisioner:
       named_run_list: replication
     attributes:
@@ -126,6 +140,8 @@ suites:
     provisioner:
       named_run_list: galera_configuration
   - name: galera_configuration_10
+    excludes:
+      - debian-13
     provisioner:
       named_run_list: galera_configuration
     attributes:
