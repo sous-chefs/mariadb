@@ -160,6 +160,27 @@ mariadb_user 'spaces' do
   action :grant
 end
 
+mariadb_database 'password_preservation' do
+  password 'gsql'
+  action :create
+end
+
+mariadb_user 'password_preservation' do
+  password 'preserved_secret'
+  ctrl_password 'gsql'
+  host '127.0.0.1'
+  action :create
+end
+
+mariadb_user 'grant password_preservation without a password' do
+  username 'password_preservation'
+  database_name 'password_preservation'
+  ctrl_password 'gsql'
+  host '127.0.0.1'
+  privileges [:select]
+  action :grant
+end
+
 mariadb_database 'flush privileges' do
   database_name 'databass'
   password 'gsql'

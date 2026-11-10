@@ -43,6 +43,8 @@ platforms:
       pid_one_command: /bin/systemd
 
   - name: debian-13
+    attributes:
+      mariadb_server_test_version: '11.8'
     driver:
       image: dokken/debian-13
       pid_one_command: /usr/lib/systemd/systemd
