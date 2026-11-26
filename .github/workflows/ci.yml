@@ -82,13 +82,15 @@ jobs:
         uses: actionshub/chef-install@6.0.0
       - name: Install cookbooks
         run: chef install Policyfile.rb
-      - name: Disable apparmor for mysqld
+      - name: Unload the runner's MySQL AppArmor profile if present
         run: |
           set -x
           sudo apt-get update
           sudo apt-get -y remove mysql-server --purge
           sudo apt-get -y install apparmor-profiles
-          sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
+          if [ -f /etc/apparmor.d/usr.sbin.mysqld ]; then
+            sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
+          fi
       - name: Dokken
         uses: actionshub/test-kitchen@3.0.0
         env:
