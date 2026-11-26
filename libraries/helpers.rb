@@ -257,8 +257,8 @@ module MariaDBCookbook
 
     # build the platform string that makes up the final component of the yum repo URL
     def yum_repo_platform_string
-      # Treat Alma and Rocky as RHEL
-      if platform?('almalinux', 'rocky', 'redhat')
+      # MariaDB publishes current RHEL-compatible RPMs under the RHEL path.
+      if platform?('almalinux', 'rocky', 'redhat') || (platform_family?('rhel') && node['platform_version'].to_i >= 8)
         'rhel/$releasever/$basearch'
       else
         "#{node['platform']}/$releasever/$basearch"
