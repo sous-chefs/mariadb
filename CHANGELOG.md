@@ -7,6 +7,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 Standardise files with files in sous-chefs/repo-management
 Standardise files with files in sous-chefs/repo-management
 
+## [6.2.4](https://github.com/sous-chefs/mariadb/compare/v6.2.3...v6.2.4) (2026-08-16)
+
+
+### Bug Fixes
+
+* **ci:** Update workflows to use release pipeline ([#399](https://github.com/sous-chefs/mariadb/issues/399)) ([90690b6](https://github.com/sous-chefs/mariadb/commit/90690b6b3de975a83a89bfb6ca9f68dee82dae00))
+* migrate to Policyfile ([#410](https://github.com/sous-chefs/mariadb/issues/410)) ([43d4d5f](https://github.com/sous-chefs/mariadb/commit/43d4d5f0df0fff4c79bce7156013e42a3d8cd652))
+
 ## [6.2.3](https://github.com/sous-chefs/mariadb/compare/6.2.2...v6.2.3) (2025-10-15)
 
 
