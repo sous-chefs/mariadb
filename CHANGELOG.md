@@ -7,6 +7,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 Standardise files with files in sous-chefs/repo-management
 Standardise files with files in sous-chefs/repo-management
 
+## [6.2.5](https://github.com/sous-chefs/mariadb/compare/v6.2.4...v6.2.5) (2026-11-26)
+
+
+### Bug Fixes
+
+* preserve passwords when granting privileges ([c1faf3d](https://github.com/sous-chefs/mariadb/commit/c1faf3d598176829bc21665d04967eee9af48461))
+
 ## [6.2.4](https://github.com/sous-chefs/mariadb/compare/v6.2.3...v6.2.4) (2026-08-16)
 
 
