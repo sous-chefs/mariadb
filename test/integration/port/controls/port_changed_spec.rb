@@ -2,8 +2,8 @@ control 'port_changed' do
   impact 1.0
   title 'test everyhting when port changed'
   describe service('mysql') do
-    it { should be_enabled   }
-    it { should be_running   }
+    it { should be_enabled }
+    it { should be_running }
   end
 
   describe port('3307') do

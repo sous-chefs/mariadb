@@ -3,8 +3,8 @@ control 'mariadb_replication' do
   title 'test creation and removal of replication'
 
   describe service('mysql') do
-    it { should be_enabled   }
-    it { should be_running   }
+    it { should be_enabled }
+    it { should be_running }
   end
 
   describe port('3306') do

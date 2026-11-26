@@ -53,8 +53,8 @@ action :add do
       repositoryid "mariadb#{new_resource.version}"
       description "MariaDB.org #{new_resource.version}"
       baseurl     "https://dlm.mariadb.com/repo/mariadb-server/#{new_resource.version}/yum/#{yum_repo_platform_string}"
-      enabled     new_resource.enable_mariadb_org
-      options     opts
+      enabled new_resource.enable_mariadb_org
+      options opts
       gpgcheck    true
       gpgkey      "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-MariaDB-#{new_resource.version}"
     end

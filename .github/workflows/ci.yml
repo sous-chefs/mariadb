@@ -22,6 +22,13 @@ jobs:
   integration:
     needs: lint-unit
     runs-on: ubuntu-latest
+    env:
+      # Finish Git maintenance before Chef copies dependency clones.
+      GIT_CONFIG_COUNT: '2'
+      GIT_CONFIG_KEY_0: maintenance.autoDetach
+      GIT_CONFIG_VALUE_0: 'false'
+      GIT_CONFIG_KEY_1: gc.autoDetach
+      GIT_CONFIG_VALUE_1: 'false'
     strategy:
       matrix:
         os:
@@ -32,7 +39,6 @@ jobs:
           - debian-13
           - rockylinux-8
           - rockylinux-9
-          - ubuntu-2004
           - ubuntu-2204
           - ubuntu-2404
         suite:
@@ -57,6 +63,27 @@ jobs:
           - "port-10"
           - "galera-configuration"
           - "galera-configuration-10"
+        include:
+          # MariaDB's current upstream repositories no longer serve Ubuntu 20.04.
+          - os: ubuntu-2004
+            suite: "client-distro-install"
+          - os: ubuntu-2004
+            suite: "server-distro-install"
+        exclude:
+          - os: debian-13
+            suite: "repository-10"
+          - os: debian-13
+            suite: "client-install-10"
+          - os: debian-13
+            suite: "server-install-10"
+          - os: debian-13
+            suite: "server-configuration-10"
+          - os: debian-13
+            suite: "resources-10"
+          - os: debian-13
+            suite: "replication-10"
+          - os: debian-13
+            suite: "galera-configuration-10"
       fail-fast: false
       max-parallel: 8
 
@@ -67,13 +94,17 @@ jobs:
         uses: actionshub/chef-install@6.0.0
       - name: Install cookbooks
         run: chef install Policyfile.rb
-      - name: Disable apparmor for mysqld
+      - name: Unload the runner's MySQL AppArmor profile if present
         run: |
           set -x
           sudo apt-get update
           sudo apt-get -y remove mysql-server --purge
           sudo apt-get -y install apparmor-profiles
-          sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
+          profiles=/sys/kernel/security/apparmor/profiles
+          if sudo test -r "$profiles" && sudo grep -q '^/usr/sbin/mysqld (' "$profiles"; then
+            # The host profile can remain loaded even when its source file is absent.
+            printf '%s\n' '/usr/sbin/mysqld { }' | sudo apparmor_parser --remove
+          fi
       - name: Dokken
         uses: actionshub/test-kitchen@3.0.0
         env:
