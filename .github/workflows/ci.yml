@@ -39,7 +39,6 @@ jobs:
           - debian-13
           - rockylinux-8
           - rockylinux-9
-          - ubuntu-2004
           - ubuntu-2204
           - ubuntu-2404
         suite:
@@ -64,6 +63,12 @@ jobs:
           - "port-10"
           - "galera-configuration"
           - "galera-configuration-10"
+        include:
+          # MariaDB's current upstream repositories no longer serve Ubuntu 20.04.
+          - os: ubuntu-2004
+            suite: "client-distro-install"
+          - os: ubuntu-2004
+            suite: "server-distro-install"
         exclude:
           - os: debian-13
             suite: "repository-10"
