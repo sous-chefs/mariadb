@@ -22,6 +22,13 @@ jobs:
   integration:
     needs: lint-unit
     runs-on: ubuntu-latest
+    env:
+      # Finish Git maintenance before Chef copies dependency clones.
+      GIT_CONFIG_COUNT: '2'
+      GIT_CONFIG_KEY_0: maintenance.autoDetach
+      GIT_CONFIG_VALUE_0: 'false'
+      GIT_CONFIG_KEY_1: gc.autoDetach
+      GIT_CONFIG_VALUE_1: 'false'
     strategy:
       matrix:
         os:
