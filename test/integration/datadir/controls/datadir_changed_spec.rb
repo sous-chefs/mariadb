@@ -3,8 +3,8 @@ control 'mariadb_replication' do
   title 'test change of data directory'
 
   describe service('mysql') do
-    it { should be_enabled   }
-    it { should be_running   }
+    it { should be_enabled }
+    it { should be_running }
   end
 
   describe port('3306') do
